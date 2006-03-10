@@ -19,12 +19,11 @@
 package org.formic.ant.type;
 
 import org.apache.tools.ant.BuildException;
-import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.taskdefs.condition.Condition;
 import org.apache.tools.ant.taskdefs.condition.ConditionBase;
 
-import org.formic.Installer;
+import org.formic.Log;
 
 /**
  * Represents a branch to another path if the child condition(s) evaluate to
@@ -68,7 +67,7 @@ public class Branch
   {
     Condition condition = (Condition)getConditions().nextElement();
     boolean result = condition.eval();
-    Installer.debug("Branch to path '" + path + "' condition = " + result);
+    Log.debug("Branch to path '" + path + "' condition = " + result);
 
     return result;
   }
