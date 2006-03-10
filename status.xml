@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: Eric Van Dewoestine
+-->
+<status>
+  <developers>
+    <person name="Eric Van Dewoestine" email="ervandew@yahoo.com" id="ervandew"/>
+  </developers>
+
+  <todo>
+    <actions priority="high">
+      <action context="ui" dev="ervandew">
+        Create api based form builder via
+        <a href="http://www.jgoodies.com/downloads/libraries.html">jgoodies</a>.
+      </action>
+      <action context="native" dev="ervandew">
+        <ul>
+          <li>
+            Use <a href="http://launch4j.sourceforge.net/">launch4j</a> to wrap
+            generated installer in a Windows executable.<br/>
+            <a href="http://nsis.sourceforge.net/Add_uninstall_information_to_Add/Remove_Programs">
+              Add un-installer registry keys
+            </a>
+            via
+            <a href="http://www.jniwrapper.com/pages/winpack/features">
+              WinPack
+            </a>
+            or
+            <a href="https://sourceforge.net/projects/jregistrykey/">
+              jRegistryKey
+            </a>.
+          </li>
+          <li>
+            Wrap generated installer in a self extracting shell script for unix
+            based systems.
+          </li>
+        </ul>
+      </action>
+    </actions>
+
+    <actions priority="medium">
+      <action context="console" dev="ervandew">
+        Allow console based installs using
+        <a href="http://www.pitman.co.za/projects/charva/">charva</a>.
+      </action>
+      <action context="diff" dev="ervandew">
+        Add diff panel for upgrading config files.
+        <ul>
+          <li>
+            <a href="http://www.darwinsys.com/freeware/Diff.java">
+              http://www.darwinsys.com/freeware/Diff.java
+            </a>
+          </li>
+          <li>
+            <a href="http://www.bmsi.com/java/#diff">
+              http://www.bmsi.com/java/#diff
+            </a>
+          </li>
+          <li>
+            <a href="http://www.cs.princeton.edu/introcs/96optimization/Diff.java.html">
+              http://www.cs.princeton.edu/introcs/96optimization/Diff.java.html
+            </a>
+          </li>
+          <li>
+            <a href="http://www.incava.org/projects/java-diff/">
+              http://www.incava.org/projects/java-diff/
+            </a>
+          </li>
+        </ul>
+      </action>
+      <action context="form_builder" dev="ervandew">
+        Support <a href="https://abeille.dev.java.net/">abeille</a> graphical
+        form builder.
+      </action>
+    </actions>
+
+    <actions priority="low">
+    </actions>
+  </todo>
+
+  <changes>
+    <release version="0.1.0" date="unreleased">
+      <!--action dev="ervandew" type="" context="">
+      </action-->
+    </release>
+  </changes>
+
+</status>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: Eric Van Dewoestine
+-->
+<project name="build" default="build" basedir=".">
+
+  <property environment="env"/>
+  <property file="src/ant/build.properties"/>
+
+  <import file="src/ant/docs.xml"/>
+  <import file="src/ant/test.xml"/>
+
+  <!-- classpath -->
+  <path id="classpath">
+    <fileset dir="lib" includes="*.jar"/>
+    <fileset dir="ant" includes="lib/*.jar"/>
+  </path>
+
+  <!--
+    - Initialize the build.
+    -->
+  <target name="init">
+    <mkdir dir="build/classes"/>
+    <mkdir dir="build/dist"/>
+  </target>
+
+  <!--
+    - Main target for building the library.
+    -->
+  <target name="build" depends="init"
+      description="Compiles the src and builds the jar file.">
+
+    <property name="deprecation" value="false"/>
+    <javac destdir="build/classes" debug="on" optimize="false"
+        target="${javac.target}" source="${javac.target}"
+        deprecation="${deprecation}">
+      <src path="src/java"/>
+      <include name="**/*.java"/>
+      <classpath refid="classpath"/>
+    </javac>
+
+    <!-- build jar files -->
+    <jar jarfile="build/dist/formic.jar">
+      <fileset dir="build/classes">
+        <include name="**/*.class"/>
+      </fileset>
+      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+        <include name="**/*"/>
+        <exclude name="**/package.html"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+    </jar>
+
+    <!-- copy ant over to build dir -->
+    <copy todir="build">
+      <fileset dir="." includes="ant/**/*"/>
+    </copy>
+    <chmod file="build/ant/bin/ant" perm="755"/>
+
+    <!-- copy formic jar(s) to ant -->
+    <copy todir="build/ant/lib">
+      <fileset dir="build/dist" includes="*.jar"/>
+      <fileset dir="lib" includes="*.jar"/>
+    </copy>
+  </target>
+
+  <!--
+    - Delete any generated artifacts of the build.
+    -->
+  <target name="clean" description="Deletes the build directory.">
+    <delete dir="build"/>
+    <delete dir="dist"/>
+  </target>
+
+  <!--
+    - Target for creating distributable archives.
+    -->
+  <target name="dist" depends="clean,build,javadoc,docs"
+      description="Creates the distributable jars.">
+    <mkdir dir="dist"/>
+    <move todir="build/doc">
+      <fileset dir="build" includes="site/**/*"/>
+    </move>
+
+    <zip destfile="dist/formic-${formic.version}.zip">
+      <zipfileset prefix="formic-${formic.version}/"
+          dir="." excludesfile="src/ant/exclude.properties">
+        <include name="src/java/**/*"/>
+        <include name="src/samples/**/*"/>
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+      </zipfileset>
+      <zipfileset prefix="formic-${formic.version}/"
+          dir="build" excludesfile="src/ant/exclude.properties">
+        <include name="ant/**/*"/>
+        <include name="doc/api/**/*"/>
+        <include name="doc/site/**/*"/>
+      </zipfileset>
+    </zip>
+
+    <tar destfile="dist/formic-${formic.version}.tar.gz" compression="gzip">
+      <tarfileset prefix="formic-${formic.version}/"
+          dir="." excludesfile="src/ant/exclude.properties">
+        <include name="src/java/**/*"/>
+        <include name="src/samples/**/*"/>
+        <include name="LICENSE"/>
+        <include name="NOTICE"/>
+      </tarfileset>
+      <tarfileset prefix="formic-${formic.version}/"
+          dir="build" excludesfile="src/ant/exclude.properties">
+        <include name="ant/**/*"/>
+        <exclude name="ant/bin/ant"/>
+        <include name="doc/api/**/*"/>
+        <include name="doc/site/**/*"/>
+      </tarfileset>
+      <tarfileset prefix="formic-${formic.version}/"
+          dir="build" mode="755"
+          excludesfile="src/ant/exclude.properties">
+        <include name="ant/bin/ant"/>
+      </tarfileset>
+    </tar>
+  </target>
+
+</project>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Formic installer framework.
+  Copyright (C) 2004 - 2006  Eric Van Dewoestine
+
+  This library is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
+
+  This library is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
+
+  You should have received a copy of the GNU Lesser General Public
+  License along with this library; if not, write to the Free Software
+  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+-->
+
+<!--
+Forrest site.xml
+
+This file contains an outline of the site's information content.  It is used to:
+- Generate the website menus (though these can be overridden - see docs)
+- Provide semantic, location-independent aliases for internal 'site:' URIs, eg
+<link href="site:changes"> links to changes.html (or ../changes.html if in
+  subdir).
+- Provide aliases for external URLs in the external-refs section.  Eg, <link
+  href="ext:cocoon"> links to http://cocoon.apache.org/
+
+See http://forrest.apache.org/docs/linking.html for more info
+-->
+
+<site label="formic" href=""
+  xmlns="http://apache.org/forrest/linkmap/1.0" tab="">
+
+   <!-- Note: No matter what you configure here, Forrest will always try to load
+       index.html when you request http://yourHost/.
+       'How can I use a start-up-page other than index.html?' in the FAQs has more
+       information tells you how to change that.
+   -->
+  <about label="About" tab="home">
+    <index label="Index / News" href="index.html" description="Welcome to formic"/>
+    <changes label="Change History" href="changes.html"
+      description="Change History"/>
+    <todo label="Todo" href="todo.html" description="Todo"/>
+    <download label="Downloads" description="Downloads" href="ext:downloads"/>
+    <related label="Related Projects">
+      <antigen label="Antigen" href="ext:antigen"
+          description="Tool that makes it easy to wrap up your Ant build script as an executable jar file with a GUI."/>
+      <antinstaller label="AntInstaller" href="ext:antinstaller"
+          description="Enables you to quickly build installers for your applications using an XML config file and all the power of Ant."/>
+      <antform label="AntForm" href="ext:antform"
+          description="Java application designed to add form interaction to Ant scripts."/>
+    </related>
+  </about>
+
+  <external-refs>
+    <downloads href="http://sourceforge.net/project/showfiles.php?group_id=161801"/>
+    <license href="http://www.gnu.org/copyleft/lesser.html"/>
+
+    <vim href="http://www.vim.org"/>
+    <ant href="http://ant.apache.org/"/>
+
+    <antigen href="http://antigen.sourceforge.net/"/>
+    <antinstaller href="http://antinstaller.sourceforge.net/"/>
+    <antform href="http://antforms.sourceforge.net/"/>
+
+    <forrest href="http://forrest.apache.org/"/>
+    <cocoon href="http://cocoon.apache.org/"/>
+    <xml.apache.org href="http://xml.apache.org/"/>
+  </external-refs>
+
+</site>

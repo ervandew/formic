@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: Eric Van Dewoestine
+-->
+
+<!--
+  - Sample build file that creates both a windows and linux installer.
+  -->
+<project xmlns:formic="antlib:org.formic.ant"
+    name="installer" default="installer">
+
+  <target name="installer">
+    <formic:package os="linux"
+        destfile="build/test.tar.gz" compression="gzip">
+      <tarfileset dir=".">
+        <include name="src/java/**/*"/>
+      </tarfileset>
+    </formic:package>
+  </target>
+
+</project>
