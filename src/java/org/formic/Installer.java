@@ -18,6 +18,8 @@
  */
 package org.formic;
 
+import java.awt.Dimension;
+
 import java.io.IOException;
 
 import java.lang.reflect.Constructor;
@@ -25,9 +27,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import java.text.MessageFormat;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.Properties;
 import java.util.ResourceBundle;
@@ -53,69 +53,40 @@ import org.formic.util.ResourceBundleAggregate;
  */
 public class Installer
 {
-  public static String CONSOLE_MODE = "formic.console";
-
   private static ResourceBundleAggregate resourceBundle;
-  private static boolean consoleMode = Boolean.parseBoolean(
-      System.getProperty(CONSOLE_MODE));
   private static Properties steps = new Properties();
-  private static Map properties = new HashMap();
   private static Project project;
+  private static Dimension dimension;
 
   /**
    * Runs the installer.
    *
+   * @param _properties Installer properties (height, width, etc.)
    * @param _paths List of wizard paths.
+   * @param _consoleMode true if running in console mode, false otherwise.
    *
    * @return true if the installation completed successfully, false if the user
    * canceled or the installation was aborted.
    */
-  public static boolean run (List _paths)
+  public static boolean run (
+      Properties _properties, List _paths, boolean _consoleMode)
   {
-    if(!Installer.isConsoleMode()){
-      return runSwingInstaller(_paths);
+    if(!_consoleMode){
+      setLookAndFeel(_properties);
+
+      dimension = new Dimension(
+        Integer.parseInt(_properties.getProperty("wizard.width")),
+        Integer.parseInt(_properties.getProperty("wizard.height")));
+
+      Wizard wizard = WizardBuilder.build(_paths);
+      wizard.showInFrame(getString("title"));
+      wizard.waitFor();
+
+      return !wizard.wasCanceled();
     }else{
-      throw new UnsupportedOperationException(getString("console.not.supported"));
+      throw new UnsupportedOperationException(
+          getString("console.not.supported"));
     }
-  }
-
-  /**
-   * Runs a swing based installer.
-   *
-   * @param _paths The installer paths.
-   *
-   * @return true if the installation completed successfully, false if the user
-   * canceled or the installation was aborted.
-   */
-  public static boolean runSwingInstaller (List _paths)
-  {
-    setLookAndFeel();
-
-    Wizard wizard = WizardBuilder.build(_paths);
-    wizard.showInFrame("Installer Wizard");
-    wizard.waitFor();
-
-    return !wizard.wasCanceled();
-  }
-
-  /**
-   * Sets the initial properties for the wizard.
-   *
-   * @param _properties
-   */
-  public static void initProperties (Map _properties)
-  {
-    properties = _properties;
-  }
-
-  /**
-   * Gets the installer properties.
-   *
-   * @return Map of properties.
-   */
-  public static Map getProperties ()
-  {
-    return properties;
   }
 
   /**
@@ -201,26 +172,6 @@ public class Installer
   }
 
   /**
-   * Determines if the installer is running in console mode.
-   *
-   * @return true if in console mode, false otherwise.
-   */
-  public static boolean isConsoleMode ()
-  {
-    return consoleMode;
-  }
-
-  /**
-   * Specifies whether the installer is running in console mode.
-   *
-   * @param _consoleMode true if in console mode, false otherwise.
-   */
-  public static void setConsoleMode (boolean _consoleMode)
-  {
-    consoleMode = _consoleMode;
-  }
-
-  /**
    * Loads step name to step class mappings from the supplied resource.
    *
    * @param _resource The resource.
@@ -270,15 +221,15 @@ public class Installer
   /**
    * Sets the look and feel.
    */
-  private static void setLookAndFeel ()
+  private static void setLookAndFeel (Properties _properties)
   {
     try {
-      String laf = (String)properties.get("wizard.laf");
+      String laf = _properties.getProperty("wizard.laf");
 
       if(laf != null){
         // plastic settings
         if(laf.startsWith("com.jgoodies.looks.plastic")){
-          String theme = (String)properties.get("wizard.theme");
+          String theme = _properties.getProperty("wizard.theme");
 
           if(theme != null){
             PlasticLookAndFeel.setPlasticTheme(
@@ -301,45 +252,16 @@ public class Installer
   public static void setProject (Project _project)
   {
     project = _project;
+    Log.setProject(project);
   }
 
   /**
-   * Logs a debug message.
+   * Gets the dimension to use for the installer window (gui only).
    *
-   * @param _message The message.
+   * @return The dimension of the installer window.
    */
-  public static void debug (String _message)
+  public static Dimension getDimension ()
   {
-    project.log(_message, Project.MSG_DEBUG);
-  }
-
-  /**
-   * Logs an info message.
-   *
-   * @param _message The message.
-   */
-  public static void info (String _message)
-  {
-    project.log(_message, Project.MSG_INFO);
-  }
-
-  /**
-   * Logs a warn message.
-   *
-   * @param _message The message.
-   */
-  public static void warn (String _message)
-  {
-    project.log(_message, Project.MSG_WARN);
-  }
-
-  /**
-   * Logs an error message.
-   *
-   * @param _message The message.
-   */
-  public static void error (String _message)
-  {
-    project.log(_message, Project.MSG_ERR);
+    return dimension;
   }
 }

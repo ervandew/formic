@@ -56,11 +56,11 @@ public class InstallerTask
   {
     Installer.setProject(getProject());
     Installer.setResourceBundle(ResourceBundle.getBundle(resources));
-    Installer.setConsoleMode(Boolean.parseBoolean(
-          getProject().getProperty(Installer.CONSOLE_MODE)));
-    Installer.initProperties(getProperties());
 
-    if(!Installer.isConsoleMode()){
+    boolean consoleMode = Boolean.parseBoolean(
+        getProject().getProperty("formic.console"));
+
+    if(!consoleMode){
       Installer.loadStepNames(
           "/org/formic/swing/wizard/step/steps.properties");
       if(swingSteps != null){
@@ -74,7 +74,7 @@ public class InstallerTask
       }
     }
 
-    boolean completed = Installer.run(paths);
+    boolean completed = Installer.run(getProperties(), paths, consoleMode);
     if(property != null && completed){
       getProject().setProperty(property, String.valueOf(completed));
     }
