@@ -22,12 +22,14 @@
               Add un-installer registry keys
             </a>
             via
-            <a href="http://www.jniwrapper.com/pages/winpack/features">
-              WinPack
-            </a>
-            or
             <a href="https://sourceforge.net/projects/jregistrykey/">
               jRegistryKey
+            </a>.<br/>
+            Support Windows service management with
+            <a href="http://www.sw4me.com/wiki/Winserv">Winserv</a>.<br/>
+            Support creating java services with
+            <a href="http://wrapper.tanukisoftware.org/doc/english/introduction.html">
+              Java Service Wrapper
             </a>.
           </li>
           <li>
