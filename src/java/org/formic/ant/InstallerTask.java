@@ -32,6 +32,8 @@ import org.formic.Installer;
 
 import org.formic.ant.type.Path;
 
+import org.formic.wizard.WizardBuilder;
+
 /**
  * Ant task that initializes the installer.
  *
@@ -43,8 +45,7 @@ public class InstallerTask
 {
   private String property;
   private String resources;
-  private String swingSteps;
-  private String consoleSteps;
+  private String steps;
   private List paths = new ArrayList();
   private Properties properties = new Properties();
 
@@ -60,18 +61,9 @@ public class InstallerTask
     boolean consoleMode = Boolean.parseBoolean(
         getProject().getProperty("formic.console"));
 
-    if(!consoleMode){
-      Installer.loadStepNames(
-          "/org/formic/swing/wizard/step/steps.properties");
-      if(swingSteps != null){
-        Installer.loadStepNames(swingSteps);
-      }
-    }else{
-      Installer.loadStepNames(
-          "/org/formic/console/wizard/step/steps.properties");
-      if(consoleSteps != null){
-        Installer.loadStepNames(consoleSteps);
-      }
+    WizardBuilder.loadSteps("/org/formic/wizard/steps.properties");
+    if(steps != null){
+      WizardBuilder.loadSteps(steps);
     }
 
     boolean completed = Installer.run(getProperties(), paths, consoleMode);
@@ -102,25 +94,14 @@ public class InstallerTask
   }
 
   /**
-   * Sets the classpath resource containing the mappings for swing step names to
-   * swing step classes.
+   * Sets the classpath resource containing the mappings for step names to
+   * step classes.
    *
-   * @param swingSteps The swingSteps.
+   * @param steps The steps.
    */
-  public void setSwingSteps (String swingSteps)
+  public void setSteps (String steps)
   {
-    this.swingSteps = swingSteps;
-  }
-
-  /**
-   * Sets the classpath resource containing the mappings for console step names
-   * to console step classes.
-   *
-   * @param consoleSteps The consoleSteps.
-   */
-  public void setConsoleSteps (String consoleSteps)
-  {
-    this.consoleSteps = consoleSteps;
+    this.steps = steps;
   }
 
   /**

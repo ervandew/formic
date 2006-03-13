@@ -20,11 +20,6 @@ package org.formic;
 
 import java.awt.Dimension;
 
-import java.io.IOException;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
-
 import java.text.MessageFormat;
 
 import java.util.List;
@@ -40,13 +35,13 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
-import org.formic.swing.wizard.Wizard;
-import org.formic.swing.wizard.WizardBuilder;
-
 import org.formic.util.ResourceBundleAggregate;
 
+import org.formic.wizard.Wizard;
+import org.formic.wizard.WizardBuilder;
+
 /**
- * Installer class that hold installer resources, etc.
+ * Installer class that holds installer resources, etc.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
@@ -54,7 +49,6 @@ import org.formic.util.ResourceBundleAggregate;
 public class Installer
 {
   private static ResourceBundleAggregate resourceBundle;
-  private static Properties steps = new Properties();
   private static Project project;
   private static Dimension dimension;
 
@@ -77,16 +71,13 @@ public class Installer
       dimension = new Dimension(
         Integer.parseInt(_properties.getProperty("wizard.width")),
         Integer.parseInt(_properties.getProperty("wizard.height")));
-
-      Wizard wizard = WizardBuilder.build(_paths);
-      wizard.showInFrame(getString("title"));
-      wizard.waitFor();
-
-      return !wizard.wasCanceled();
-    }else{
-      throw new UnsupportedOperationException(
-          getString("console.not.supported"));
     }
+
+    Wizard wizard = WizardBuilder.build(_paths, _consoleMode);
+    wizard.show();
+    wizard.waitFor();
+
+    return !wizard.wasCanceled();
   }
 
   /**
@@ -169,53 +160,6 @@ public class Installer
   {
     String message = getString(_key);
     return MessageFormat.format(message, _args);
-  }
-
-  /**
-   * Loads step name to step class mappings from the supplied resource.
-   *
-   * @param _resource The resource.
-   */
-  public static void loadStepNames (String _resource)
-  {
-    try{
-      steps.load(Installer.class.getResourceAsStream(_resource));
-    }catch(NullPointerException npe){
-      throw new RuntimeException(getString("resource.not.found", _resource));
-    }catch(IOException ioe){
-      throw new RuntimeException(ioe);
-    }
-  }
-
-  /**
-   * Gets an instance of the step with the supplied name.
-   *
-   * @param _name The step name.
-   * @param _properties The step properties.
-   * @return The step.
-   */
-  public static Object getStep (String _name, Properties _properties)
-  {
-    try{
-      String classname = steps.getProperty(_name);
-      if(classname == null){
-        throw new RuntimeException(getString("step.not.found", _name));
-      }
-      Constructor constructor =
-        Class.forName(classname).getConstructor(
-            new Class[]{String.class, Properties.class});
-      return constructor.newInstance(new Object[]{_name, _properties});
-    }catch(InvocationTargetException ite){
-      Throwable target = ite.getTargetException();
-      if(target instanceof IllegalArgumentException){
-        throw (IllegalArgumentException)target;
-      }
-      throw new RuntimeException(target);
-    }catch(RuntimeException re){
-      throw re;
-    }catch(Exception e){
-      throw new RuntimeException(getString("step.error.loading", _name), e);
-    }
   }
 
   /**
