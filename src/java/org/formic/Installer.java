@@ -67,14 +67,14 @@ public class Installer
   {
     if(!_consoleMode){
       setLookAndFeel(_properties);
-
-      dimension = new Dimension(
-        Integer.parseInt(_properties.getProperty("wizard.width")),
-        Integer.parseInt(_properties.getProperty("wizard.height")));
     }
 
+    dimension = new Dimension(
+      Integer.parseInt(_properties.getProperty("wizard.width")),
+      Integer.parseInt(_properties.getProperty("wizard.height")));
+
     Wizard wizard = WizardBuilder.build(_paths, _consoleMode);
-    wizard.show();
+    wizard.showWizard();
     wizard.waitFor();
 
     return !wizard.wasCanceled();

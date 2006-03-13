@@ -29,7 +29,7 @@ public interface Wizard
   /**
    * Displays the wizard to the user.
    */
-  public void show ();
+  public void showWizard ();
 
   /**
    * Forces the current thread to block until the user completes the wizard.

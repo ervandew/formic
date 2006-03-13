@@ -38,6 +38,9 @@ import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
 
+import org.formic.wizard.console.ConsoleWizard;
+import org.formic.wizard.console.ConsoleWizardStep;
+
 import org.formic.wizard.gui.GuiWizard;
 import org.formic.wizard.gui.GuiWizardStep;
 
@@ -101,7 +104,7 @@ public class WizardBuilder
       buildPath(main, paths, new HashMap());
 
     if(_consoleMode){
-      //return new ConsoleWizard(new MultiPathModel(mainPath));
+      return new ConsoleWizard(new MultiPathModel(mainPath));
     }
     return new GuiWizard(new MultiPathModel(mainPath));
   }
@@ -202,7 +205,7 @@ public class WizardBuilder
         constructor.newInstance(new Object[]{_name, _properties});
 
       if(consoleMode){
-        //return new ConsoleWizardStep(step);
+        return new ConsoleWizardStep(step);
       }
       return new GuiWizardStep(step);
     }catch(InvocationTargetException ite){
