@@ -72,8 +72,8 @@ public interface WizardStep
    * <p/>
    * Should be used to layout the components for this step.
    *
-   * @return The step display (gui mode should return a javax.swing.JComponent,
-   * console mode should return charvax.swing.JComponent).
+   * @return The step display (gui mode should return a java.awt.Component,
+   * console mode should return charva.awt.Component).
    */
   public Object init ();
 
