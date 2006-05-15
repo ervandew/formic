@@ -52,44 +52,18 @@ public interface WizardStep
   public Icon getIcon ();
 
   /**
-   * Gets the component factory that can be used to create components for this
-   * step.
-   *
-   * @return ComponentFactory suitable for creating swing components if running
-   * in gui mode, or console components if running in console mode.
-   */
-  public ComponentFactory getComponentFactory ();
-
-  /**
-   * Used to inject the ComponentFactory to use.
-   *
-   * @param _componentFactory ComponentFactory.
-   */
-  public void setComponentFactory (ComponentFactory _componentFactory);
-
-  /**
-   * Invoked the first time this step is to be displayed.
+   * Invoked the first time this step is to be displayed in gui mode.
    * <p/>
-   * Should be used to layout the components for this step.
-   *
-   * @return The step display (gui mode should return a java.awt.Component,
-   * console mode should return charva.awt.Component).
+   * Used to layout the components for the gui version of the step.
    */
-  public Object init ();
+  public javax.swing.JComponent initGui ();
 
   /**
-   * Invoked the first time this step is to be displayed (gui only).
+   * Invoked the first time this step is to be displayed in console mode.
    * <p/>
-   * This should be used to perform any setup that is specific to the gui.
+   * Used to layout the components for the console version of the step.
    */
-  public void initGui ();
-
-  /**
-   * Invoked the first time this step is to be displayed (console only).
-   * <p/>
-   * This should be used to perform any setup that is specific to the console.
-   */
-  public void initConsole ();
+  public charvax.swing.JComponent initConsole ();
 
   /**
    * Invoked before this step is displayed.

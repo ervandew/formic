@@ -24,7 +24,6 @@ import javax.swing.Icon;
 
 import org.formic.Installer;
 
-import org.formic.wizard.ComponentFactory;
 import org.formic.wizard.WizardStep;
 
 import org.pietschy.wizard.WizardModel;
@@ -44,7 +43,6 @@ public abstract class AbstractStep
   private String description;
   private boolean valid = true;
   private Properties properties;
-  private ComponentFactory componentFactory;
 
   private PropertyChangeSupport changeSupport;
 
@@ -102,22 +100,6 @@ public abstract class AbstractStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initGui()
-   */
-  public void initGui ()
-  {
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initConsole()
-   */
-  public void initConsole ()
-  {
-  }
-
-  /**
-   * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#prepare()
    */
   public void prepare ()
@@ -147,24 +129,6 @@ public abstract class AbstractStep
   public void setValid (boolean _valid)
   {
     changeSupport.firePropertyChange("valid", valid, valid = _valid);
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#getComponentFactory()
-   */
-  public ComponentFactory getComponentFactory ()
-  {
-    return componentFactory;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#setComponentFactory(ComponentFactory)
-   */
-  public void setComponentFactory (ComponentFactory _componentFactory)
-  {
-    componentFactory = _componentFactory;
   }
 
   /**

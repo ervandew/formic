@@ -19,6 +19,7 @@ import java.awt.BorderLayout;
 
 import java.util.Properties;
 
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 
@@ -49,9 +50,9 @@ public class WelcomeStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#init()
+   * @see org.formic.wizard.WizardStep#initGui()
    */
-  public Object init ()
+  public JComponent initGui ()
   {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
@@ -64,5 +65,14 @@ public class WelcomeStep
 
     panel.add(content, BorderLayout.CENTER);
     return panel;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#initConsole()
+   */
+  public charvax.swing.JComponent initConsole ()
+  {
+    return null;
   }
 }

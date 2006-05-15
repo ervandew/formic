@@ -20,13 +20,13 @@ import java.awt.GridLayout;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.KeyEvent;
 
 import java.net.URL;
 
 import java.util.Properties;
 
 import javax.swing.ButtonGroup;
+import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
@@ -39,6 +39,19 @@ import org.formic.wizard.gui.event.HyperlinkListener;
 /**
  * Step that displays a license agreement and requires the user to accept it to
  * proceed.
+ * <p/>
+ * <b>Properties</b>
+ * <table class="properties">
+ *   <tr>
+ *     <th>Name</th><th>Description</th>
+ *     <th>Required</th><th>Possible Values</th><th>Default</th>
+ *   </tr>
+ *   <tr>
+ *     <td>license.url</td>
+ *     <td>Defines the url containing the license content.</td>
+ *     <td>true</td><td>&nbsp;</td><td>none</td>
+ *   </tr>
+ * </table>
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
@@ -50,7 +63,7 @@ public class LicenseStep
   private static final String DECLINE = "Decline";
 
   /**
-   * Constructs the welcome step.
+   * Constructs this step.
    */
   public LicenseStep (String _name, Properties _properties)
   {
@@ -64,9 +77,9 @@ public class LicenseStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#init()
+   * @see org.formic.wizard.WizardStep#initGui()
    */
-  public Object init ()
+  public JComponent initGui ()
   {
     JPanel panel = new JPanel();
     try{
@@ -115,5 +128,14 @@ public class LicenseStep
       throw new RuntimeException(e);
     }
     return panel;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#initConsole()
+   */
+  public charvax.swing.JComponent initConsole ()
+  {
+    return null;
   }
 }
