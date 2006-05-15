@@ -31,6 +31,8 @@ import java.util.Properties;
 
 import org.apache.tools.ant.BuildException;
 
+import org.apache.tools.ant.taskdefs.condition.ConditionBase;
+
 import org.formic.Installer;
 import org.formic.Log;
 
@@ -38,13 +40,15 @@ import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
 
-import org.formic.wizard.console.ConsoleWizard;
-import org.formic.wizard.console.ConsoleWizardStep;
+import org.formic.wizard.impl.ConsoleWizard;
+import org.formic.wizard.impl.ConsoleWizardStep;
+import org.formic.wizard.impl.GuiWizard;
+import org.formic.wizard.impl.GuiWizardStep;
 
-import org.formic.wizard.gui.GuiWizard;
-import org.formic.wizard.gui.GuiWizardStep;
+import org.pietschy.wizard.WizardModel;
 
 import org.pietschy.wizard.models.BranchingPath;
+import org.pietschy.wizard.models.Condition;
 import org.pietschy.wizard.models.MultiPathModel;
 import org.pietschy.wizard.models.SimplePath;
 
@@ -219,6 +223,35 @@ public class WizardBuilder
     }catch(Exception e){
       throw new RuntimeException(
           Installer.getString("step.error.loading", _name), e);
+    }
+  }
+
+  /**
+   * Implementation of {@link Condition} that delegates to an ant condition.
+   */
+  private static class WizardCondition
+    implements Condition
+  {
+    private ConditionBase antCondition;
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param antCondition The antCondition for this instance.
+     */
+    public WizardCondition (ConditionBase antCondition)
+    {
+      this.antCondition = antCondition;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see org.pietschy.wizard.models.Condition#evaluate(WizardModel)
+     */
+    public boolean evaluate (WizardModel _model)
+    {
+      return ((org.apache.tools.ant.taskdefs.condition.Condition)
+          antCondition).eval();
     }
   }
 }
