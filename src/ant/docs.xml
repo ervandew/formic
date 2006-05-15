@@ -11,10 +11,12 @@
       description="Generates the javadocs from the src.">
     <mkdir dir="build/doc/api"/>
 
-    <javadoc packagenames="org.formic" destdir="build/doc/api">
+    <javadoc packagenames="org.formic" destdir="build/doc/api"
+        stylesheetfile="src/ant/javadoc_stylesheet.css">
       <classpath refid="classpath"/>
       <fileset dir="src">
         <include name="**/*.java"/>
+        <exclude name="**/impl/**/*.java"/>
       </fileset>
     </javadoc>
   </target>
