@@ -51,6 +51,9 @@
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
       </fileset>
+      <fileset dir="src">
+        <include name="images/**/*"/>
+      </fileset>
     </jar>
 
     <!-- copy ant over to build dir -->
