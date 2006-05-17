@@ -43,13 +43,14 @@ import org.formic.wizard.impl.ConsoleWizard;
 import org.formic.wizard.impl.ConsoleWizardStep;
 import org.formic.wizard.impl.GuiWizard;
 import org.formic.wizard.impl.GuiWizardStep;
-import org.formic.wizard.impl.MultiPathModel;
+
+import org.formic.wizard.impl.models.BranchingPath;
+import org.formic.wizard.impl.models.MultiPathModel;
+import org.formic.wizard.impl.models.SimplePath;
 
 import org.pietschy.wizard.WizardModel;
 
-import org.pietschy.wizard.models.BranchingPath;
 import org.pietschy.wizard.models.Condition;
-import org.pietschy.wizard.models.SimplePath;
 
 /**
  * Class for building wizards.
@@ -134,9 +135,12 @@ public class WizardBuilder
         Step step = (Step)next;
         Log.debug("Adding step '" + step.getName() +
             " to path '" + _path.getName() + "'");
-        SimplePath simplePath = new SimplePath((org.pietschy.wizard.WizardStep)
+        SimplePath simplePath = new SimplePath(step.getName(),
+            (org.pietschy.wizard.WizardStep)
             getStep(step.getName(), step.getProperties()));
         if(path != null){
+          Log.debug("Setting next path for '" + getPathName(simplePath) +
+              "' to path '" + getPathName(path) + "'");
           simplePath.setNextPath(path);
         }else{
           lastPath = simplePath;
@@ -162,12 +166,16 @@ public class WizardBuilder
         }
 
         if(branchPath instanceof SimplePath){
+          Log.debug("Setting next path for '" + getPathName(branchPath) +
+              "' to path '" + getPathName(path) + "'");
           ((SimplePath)branchPath).setNextPath(path);
         }
 
-        BranchingPath branchingPath = new BranchingPath();
-        branchingPath.addBranch(branchPath, new WizardCondition(branch));
+        BranchingPath branchingPath = new BranchingPath(branch.getPath());
+        branchingPath.addBranch(0, branchPath, new WizardCondition(branch));
         if(path != null){
+          Log.debug("Adding static path for '" + getPathName(branchingPath) +
+              "' containing path '" + getPathName(path) + "'");
           branchingPath.addBranch(path, new StaticCondition(true));
         }else{
           lastPath = branchingPath;
@@ -243,6 +251,20 @@ public class WizardBuilder
       throw new RuntimeException(
           Installer.getString("step.error.loading", _name), e);
     }
+  }
+
+  /**
+   * Gets the name of the supplied path.
+   *
+   * @param path The path.
+   * @return The name.
+   */
+  private static String getPathName (org.pietschy.wizard.models.Path path)
+  {
+    if(path instanceof SimplePath){
+      return ((SimplePath)path).getName();
+    }
+    return ((BranchingPath)path).getName();
   }
 
   /**
