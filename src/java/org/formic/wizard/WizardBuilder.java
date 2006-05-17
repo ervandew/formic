@@ -24,7 +24,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -44,12 +43,12 @@ import org.formic.wizard.impl.ConsoleWizard;
 import org.formic.wizard.impl.ConsoleWizardStep;
 import org.formic.wizard.impl.GuiWizard;
 import org.formic.wizard.impl.GuiWizardStep;
+import org.formic.wizard.impl.MultiPathModel;
 
 import org.pietschy.wizard.WizardModel;
 
 import org.pietschy.wizard.models.BranchingPath;
 import org.pietschy.wizard.models.Condition;
-import org.pietschy.wizard.models.MultiPathModel;
 import org.pietschy.wizard.models.SimplePath;
 
 /**
@@ -124,13 +123,29 @@ public class WizardBuilder
   private static org.pietschy.wizard.models.Path buildPath (
       Path _path, Map _paths, Map _built)
   {
+    // add steps and branches.
     org.pietschy.wizard.models.Path path = null;
-    if(_path.getBranches().size() > 0){
-      path = new BranchingPath();
+    org.pietschy.wizard.models.Path lastPath = null;
+    for (int ii = _path.getSteps().size() - 1; ii >= 0; ii--){
+      Object next = _path.getSteps().get(ii);
 
-      // add branches
-      for (Iterator ii = _path.getBranches().iterator(); ii.hasNext();){
-        Branch branch = (Branch)ii.next();
+      // steps
+      if(next instanceof Step){
+        Step step = (Step)next;
+        Log.debug("Adding step '" + step.getName() +
+            " to path '" + _path.getName() + "'");
+        SimplePath simplePath = new SimplePath((org.pietschy.wizard.WizardStep)
+            getStep(step.getName(), step.getProperties()));
+        if(path != null){
+          simplePath.setNextPath(path);
+        }else{
+          lastPath = simplePath;
+        }
+        path = simplePath;
+
+      // branches
+      }else{
+        Branch branch = (Branch)next;
         if(!_paths.containsKey(branch.getPath())){
           throw new BuildException(
             "No path '" + branch.getPath() + "' found for branch in '" +
@@ -146,40 +161,44 @@ public class WizardBuilder
               (Path)_paths.get(branch.getPath()), _paths, _built);
         }
 
-        ((BranchingPath)path).addBranch(branchPath, new WizardCondition(branch));
-      }
-    }else{
-      path = new SimplePath();
-
-      // set next path
-      if(_path.getNextpath() != null){
-        if(!_paths.containsKey(_path.getNextpath())){
-          throw new BuildException(
-            "No path '" + _path.getNextpath() +
-            "' found for nextpath attribute on path '" + _path.getName() + "'");
+        if(branchPath instanceof SimplePath){
+          ((SimplePath)branchPath).setNextPath(path);
         }
 
-        Log.debug("Setting next path for '" + _path.getName() +
-            "' to '" + _path.getNextpath() + "'");
-
-        org.pietschy.wizard.models.Path nextPath =
-          (org.pietschy.wizard.models.Path)_built.get(_path.getNextpath());
-        if(nextPath == null){
-          nextPath = buildPath(
-              (Path)_paths.get(_path.getNextpath()), _paths, _built);
+        BranchingPath branchingPath = new BranchingPath();
+        branchingPath.addBranch(branchPath, new WizardCondition(branch));
+        if(path != null){
+          branchingPath.addBranch(path, new StaticCondition(true));
+        }else{
+          lastPath = branchingPath;
         }
-
-        ((SimplePath)path).setNextPath(nextPath);
+        path = branchingPath;
       }
     }
 
-    // add steps
-    for (Iterator ii = _path.getSteps().iterator(); ii.hasNext();){
-      Step step = (Step)ii.next();
-      Log.debug("Adding step '" + step.getName() +
-          " to path '" + _path.getName() + "'");
-      path.addStep((org.pietschy.wizard.WizardStep)
-          getStep(step.getName(), step.getProperties()));
+    // set next path
+    if(_path.getNextpath() != null){
+      if(!_paths.containsKey(_path.getNextpath())){
+        throw new BuildException(
+          "No path '" + _path.getNextpath() +
+          "' found for nextpath attribute on path '" + _path.getName() + "'");
+      }
+
+      Log.debug("Setting next path for '" + _path.getName() +
+          "' to '" + _path.getNextpath() + "'");
+
+      org.pietschy.wizard.models.Path nextPath =
+        (org.pietschy.wizard.models.Path)_built.get(_path.getNextpath());
+      if(nextPath == null){
+        nextPath = buildPath(
+            (Path)_paths.get(_path.getNextpath()), _paths, _built);
+      }
+
+      if(lastPath instanceof SimplePath){
+        ((SimplePath)lastPath).setNextPath(nextPath);
+      }else{
+        ((BranchingPath)lastPath).addBranch(path, new StaticCondition(true));
+      }
     }
 
     _built.put(_path.getName(), path);
@@ -252,6 +271,35 @@ public class WizardBuilder
     {
       return ((org.apache.tools.ant.taskdefs.condition.Condition)
           antCondition).eval();
+    }
+  }
+
+  /**
+   * Implementation of {@link Condition} that returns the value it was
+   * construted with.
+   */
+  private static class StaticCondition
+    implements Condition
+  {
+    private boolean value;
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param value The value for this instance.
+     */
+    public StaticCondition (boolean value)
+    {
+      this.value = value;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see org.pietschy.wizard.models.Condition#evaluate(WizardModel)
+     */
+    public boolean evaluate (WizardModel _model)
+    {
+      return value;
     }
   }
 }

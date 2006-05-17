@@ -35,7 +35,6 @@ public class Path
   private String name;
   private String nextpath;
   private List steps = new ArrayList();
-  private List branches = new ArrayList();
 
   /**
    * Gets the name of the path.
@@ -104,16 +103,6 @@ public class Path
    */
   public void addConfiguredBranch (Branch _branch)
   {
-    branches.add(_branch);
-  }
-
-  /**
-   * Gets the configures branches.
-   *
-   * @return List of Branch.
-   */
-  public List getBranches ()
-  {
-    return branches;
+    steps.add(_branch);
   }
 }
