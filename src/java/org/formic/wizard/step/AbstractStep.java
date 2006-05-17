@@ -15,12 +15,17 @@
  */
 package org.formic.wizard.step;
 
+import java.awt.Toolkit;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
+
+import java.net.URL;
 
 import java.util.Properties;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 
 import org.formic.Installer;
 
@@ -37,10 +42,14 @@ import org.pietschy.wizard.WizardModel;
 public abstract class AbstractStep
   implements WizardStep
 {
+  private static final String DEFAULT_ICON = "/images/wizard.png";
+
   protected WizardModel wizardModel;
 
   private String title;
   private String description;
+  private String iconPath;
+  private Icon icon;
   private boolean valid = true;
   private Properties properties;
 
@@ -55,6 +64,7 @@ public abstract class AbstractStep
   {
     title = Installer.getString(_name + ".title");
     description = Installer.getString(_name + ".description");
+    iconPath = Installer.getString(_name + ".icon");
     properties = _properties;
 
     changeSupport = new PropertyChangeSupport(this);
@@ -79,6 +89,32 @@ public abstract class AbstractStep
   }
 
   /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#getIcon()
+   */
+  public Icon getIcon ()
+  {
+    if(icon == null){
+      String path = getIconPath();
+      path = path != null ? path : DEFAULT_ICON;
+      URL url = AbstractStep.class.getResource(path);
+
+      icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(url));
+    }
+    return icon;
+  }
+
+  /**
+   * Gets the configured path to the icon.
+   *
+   * @return The path to the icon resource or null if none.
+   */
+  protected String getIconPath ()
+  {
+    return iconPath;
+  }
+
+  /**
    * Gets the value for the supplied property.
    *
    * @param _name The property name.
@@ -87,15 +123,6 @@ public abstract class AbstractStep
   public String getProperty (String _name)
   {
     return properties.getProperty(_name);
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#getIcon()
-   */
-  public Icon getIcon ()
-  {
-    return null;
   }
 
   /**

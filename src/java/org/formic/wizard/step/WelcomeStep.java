@@ -37,6 +37,8 @@ import org.formic.wizard.gui.event.HyperlinkListener;
 public class WelcomeStep
   extends AbstractStep
 {
+  private static final String ICON = "/images/home.png";
+
   private String name;
 
   /**
@@ -46,6 +48,16 @@ public class WelcomeStep
   {
     super(_name, _properties);
     name = _name;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see AbstractStep#getIconPath()
+   */
+  protected String getIconPath ()
+  {
+    String path = super.getIconPath();
+    return path != null ? path : ICON;
   }
 
   /**

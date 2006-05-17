@@ -33,12 +33,24 @@ import javax.swing.JPanel;
 public class InstallStep
   extends AbstractStep
 {
+  private static final String ICON = "/images/install.png";
+
   /**
    * Constructs this step.
    */
   public InstallStep (String _name, Properties _properties)
   {
     super(_name, _properties);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see AbstractStep#getIconPath()
+   */
+  protected String getIconPath ()
+  {
+    String path = super.getIconPath();
+    return path != null ? path : ICON;
   }
 
   /**

@@ -59,6 +59,8 @@ import org.formic.wizard.gui.event.HyperlinkListener;
 public class LicenseStep
   extends AbstractStep
 {
+  private static final String ICON = "/images/license.png";
+
   private static final String ACCEPT = "Accept";
   private static final String DECLINE = "Decline";
 
@@ -73,6 +75,16 @@ public class LicenseStep
       throw new IllegalArgumentException(
           Installer.getString("license.url.required"));
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see AbstractStep#getIconPath()
+   */
+  protected String getIconPath ()
+  {
+    String path = super.getIconPath();
+    return path != null ? path : ICON;
   }
 
   /**
