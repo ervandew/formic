@@ -67,7 +67,6 @@ public class Branch
   {
     Condition condition = (Condition)getConditions().nextElement();
     boolean result = condition.eval();
-    Log.debug("Branch to path '" + path + "' condition = " + result);
 
     return result;
   }
