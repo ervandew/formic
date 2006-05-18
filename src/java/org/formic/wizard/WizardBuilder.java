@@ -39,10 +39,11 @@ import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
 
-import org.formic.wizard.impl.ConsoleWizard;
-import org.formic.wizard.impl.ConsoleWizardStep;
-import org.formic.wizard.impl.GuiWizard;
-import org.formic.wizard.impl.GuiWizardStep;
+import org.formic.wizard.impl.console.ConsoleWizard;
+import org.formic.wizard.impl.console.ConsoleWizardStep;
+
+import org.formic.wizard.impl.gui.GuiWizard;
+import org.formic.wizard.impl.gui.GuiWizardStep;
 
 import org.formic.wizard.impl.models.BranchingPath;
 import org.formic.wizard.impl.models.MultiPathModel;

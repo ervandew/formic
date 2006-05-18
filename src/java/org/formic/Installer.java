@@ -19,6 +19,10 @@
 package org.formic;
 
 import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.Toolkit;
+
+import java.net.URL;
 
 import java.text.MessageFormat;
 
@@ -51,6 +55,7 @@ public class Installer
   private static ResourceBundleAggregate resourceBundle;
   private static Project project;
   private static Dimension dimension;
+  private static Image image;
 
   /**
    * Runs the installer.
@@ -67,6 +72,13 @@ public class Installer
   {
     if(!_consoleMode){
       setLookAndFeel(_properties);
+
+      String imagePath = _properties.getProperty("wizard.icon");
+      if(imagePath != null){
+        URL url = Installer.class.getResource(imagePath);
+        image = url != null ?
+          Toolkit.getDefaultToolkit().createImage(url) : null;
+      }
     }
 
     dimension = new Dimension(
@@ -207,5 +219,15 @@ public class Installer
   public static Dimension getDimension ()
   {
     return dimension;
+  }
+
+  /**
+   * Gets the wizard image (for frame icon, etc).
+   *
+   * @return The wizard image or null if none.
+   */
+  public static Image getImage ()
+  {
+    return image;
   }
 }
