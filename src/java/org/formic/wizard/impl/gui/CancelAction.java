@@ -37,10 +37,10 @@ public class CancelAction
           Installer.getString("quit.confirm.title"),
           JOptionPane.YES_NO_OPTION);
       if(result == JOptionPane.OK_OPTION){
-        wizard.close();
+        getWizard().cancel();
       }
     }else{
-      wizard.close();
+      getWizard().cancel();
     }
   }
 
@@ -50,9 +50,9 @@ public class CancelAction
    */
   protected void updateState()
   {
-    WizardStep step = wizard.getModel().getActiveStep();
+    WizardStep step = getWizard().getModel().getActiveStep();
     if(step != null){
-      setEnabled(!wizard.getModel().isLastStep(step));
+      setEnabled(!getWizard().getModel().isLastStep(step));
     }
   }
 }
