@@ -33,7 +33,6 @@ public class Path
   extends Typedef
 {
   private String name;
-  private String nextpath;
   private List steps = new ArrayList();
 
   /**
@@ -54,26 +53,6 @@ public class Path
   public void setName (String name)
   {
     this.name = name;
-  }
-
-  /**
-   * Gets the nextpath for this instance.
-   *
-   * @return The nextpath.
-   */
-  public String getNextpath ()
-  {
-    return this.nextpath;
-  }
-
-  /**
-   * Sets the nextpath for this instance.
-   *
-   * @param nextpath The nextpath.
-   */
-  public void setNextpath (String nextpath)
-  {
-    this.nextpath = nextpath;
   }
 
   /**

@@ -104,8 +104,7 @@ public class WizardBuilder
       paths.put(path.getName(), path);
     }
 
-    org.pietschy.wizard.models.Path mainPath =
-      buildPath(main, paths, new HashMap());
+    org.pietschy.wizard.models.Path mainPath = buildPath(main, paths);
 
     if(_consoleMode){
       return new ConsoleWizard(new MultiPathModel(mainPath));
@@ -118,15 +117,13 @@ public class WizardBuilder
    *
    * @param _path The ant path.
    * @param _paths A map of all other paths (except the main one).
-   * @param _built A map of all paths that have been built.
    * @return The wizard path.
    */
   private static org.pietschy.wizard.models.Path buildPath (
-      Path _path, Map _paths, Map _built)
+      Path _path, Map _paths)
   {
     // add steps and branches.
     org.pietschy.wizard.models.Path path = null;
-    org.pietschy.wizard.models.Path lastPath = null;
     for (int ii = _path.getSteps().size() - 1; ii >= 0; ii--){
       Object next = _path.getSteps().get(ii);
 
@@ -142,8 +139,6 @@ public class WizardBuilder
           Log.debug("Setting next path for '" + getPathName(simplePath) +
               "' to path '" + getPathName(path) + "'");
           simplePath.setNextPath(path);
-        }else{
-          lastPath = simplePath;
         }
         path = simplePath;
 
@@ -159,11 +154,7 @@ public class WizardBuilder
         Log.debug("Adding branch '" + branch.getPath() +
             "' to path '" + _path.getName() + "'");
         org.pietschy.wizard.models.Path branchPath =
-          (org.pietschy.wizard.models.Path)_built.get(branch.getPath());
-        if(branchPath == null){
-          branchPath = buildPath(
-              (Path)_paths.get(branch.getPath()), _paths, _built);
-        }
+          buildPath((Path)_paths.get(branch.getPath()), _paths);
 
         if(branchPath instanceof SimplePath){
           Log.debug("Setting next path for '" + getPathName(branchPath) +
@@ -177,39 +168,11 @@ public class WizardBuilder
           Log.debug("Adding static path for '" + getPathName(branchingPath) +
               "' containing path '" + getPathName(path) + "'");
           branchingPath.addBranch(path, new StaticCondition(true));
-        }else{
-          lastPath = branchingPath;
         }
         path = branchingPath;
       }
     }
 
-    // set next path
-    if(_path.getNextpath() != null){
-      if(!_paths.containsKey(_path.getNextpath())){
-        throw new BuildException(
-          "No path '" + _path.getNextpath() +
-          "' found for nextpath attribute on path '" + _path.getName() + "'");
-      }
-
-      Log.debug("Setting next path for '" + _path.getName() +
-          "' to '" + _path.getNextpath() + "'");
-
-      org.pietschy.wizard.models.Path nextPath =
-        (org.pietschy.wizard.models.Path)_built.get(_path.getNextpath());
-      if(nextPath == null){
-        nextPath = buildPath(
-            (Path)_paths.get(_path.getNextpath()), _paths, _built);
-      }
-
-      if(lastPath instanceof SimplePath){
-        ((SimplePath)lastPath).setNextPath(nextPath);
-      }else{
-        ((BranchingPath)lastPath).addBranch(path, new StaticCondition(true));
-      }
-    }
-
-    _built.put(_path.getName(), path);
     return path;
   }
 
