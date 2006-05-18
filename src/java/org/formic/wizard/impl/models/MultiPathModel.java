@@ -109,6 +109,15 @@ public class MultiPathModel
 
   /**
    * {@inheritDoc}
+   * @see org.pietschy.wizard.WizardModel#isLastVisible()
+   */
+  public boolean isLastVisible ()
+  {
+    return false;
+  }
+
+  /**
+   * {@inheritDoc}
    */
   public void reset()
   {
@@ -116,5 +125,14 @@ public class MultiPathModel
     WizardStep firstStep = firstPath.firstStep();
     setActiveStep(firstStep);
     history.push(firstStep);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.AbstractWizardModel#setPreviousAvailable(boolean)
+   */
+  public void setPreviousAvailable (boolean available)
+  {
+    super.setPreviousAvailable(available);
   }
 }

@@ -23,9 +23,13 @@ import java.awt.Image;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import javax.swing.Action;
 import javax.swing.JFrame;
 import javax.swing.RootPaneContainer;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
@@ -34,8 +38,11 @@ import org.formic.Installer;
 
 import org.formic.wizard.Wizard;
 
+import org.formic.wizard.impl.models.MultiPathModel;
+
 import org.pietschy.wizard.WizardFrameCloser;
 import org.pietschy.wizard.WizardModel;
+import org.pietschy.wizard.WizardStep;
 
 /**
  * Extension to default Wizard that provides a {@link #waitFor()} method.
@@ -45,11 +52,12 @@ import org.pietschy.wizard.WizardModel;
  */
 public class GuiWizard
   extends org.pietschy.wizard.Wizard
-  implements Wizard
+  implements Wizard, PropertyChangeListener
 {
   private Semaphore semaphore = new Semaphore(1);
 
   private Action cancelAction;
+  private Action previousAction;
 
   /**
    * Constructs a new instance.
@@ -57,6 +65,9 @@ public class GuiWizard
   public GuiWizard (WizardModel _model)
   {
     super(_model);
+    setDefaultExitMode(org.pietschy.wizard.Wizard.EXIT_ON_FINISH);
+    getModel().addPropertyChangeListener(this);
+
     try{
       semaphore.acquire();
     }catch(Exception e){
@@ -74,6 +85,18 @@ public class GuiWizard
     }catch(Exception e){
       e.printStackTrace();
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.Wizard#getPreviousAction()
+   */
+  public Action getPreviousAction ()
+  {
+    if(previousAction == null){
+      previousAction = super.getPreviousAction();
+    }
+    return previousAction;
   }
 
   /**
@@ -149,5 +172,26 @@ public class GuiWizard
   public void showWizard ()
   {
     showInFrame(Installer.getString("title"), Installer.getImage());
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+   */
+  public void propertyChange (PropertyChangeEvent evt)
+  {
+    if (evt.getPropertyName().equals("activeStep")){
+      final MultiPathModel model = (MultiPathModel)getModel();
+      final WizardStep step = model.getActiveStep();
+      if(step != null){
+        SwingUtilities.invokeLater(new Runnable(){
+          public void run (){
+            boolean previousAvailable = !model.isLastStep(step);
+            getPreviousAction().setEnabled(previousAvailable);
+            model.setPreviousAvailable(previousAvailable);
+          }
+        });
+      }
+    }
   }
 }
