@@ -117,6 +117,18 @@ public class MultiPathModel
   }
 
   /**
+   * Determines if the supplied step is the first step.
+   *
+   * @param step The step.
+   * @return true if the first step, false otherwise.
+   */
+  public boolean isFirstStep (WizardStep step)
+  {
+    Path path = getPathForStep(step);
+    return path.equals(getFirstPath()) && path.isFirstStep(step);
+  }
+
+  /**
    * {@inheritDoc}
    */
   public void reset()
