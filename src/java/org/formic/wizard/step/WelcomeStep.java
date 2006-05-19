@@ -22,6 +22,7 @@ import java.util.Properties;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import org.formic.Installer;
 
@@ -66,14 +67,25 @@ public class WelcomeStep
    */
   public JComponent initGui ()
   {
+    String text = Installer.getString(name + ".text");
+    String html = Installer.getString(name + ".html");
+
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
-    JEditorPane content = new JEditorPane(
-        "text/html", Installer.getString(name + ".text"));
-    content.setEditable(false);
-    content.setOpaque(false);
-    content.addHyperlinkListener(new HyperlinkListener());
-    content.setBorder(null);
+
+    JComponent content = null;
+    if(html != null){
+      JEditorPane editor = new JEditorPane("text/html", html);
+      editor.setEditable(false);
+      editor.setOpaque(false);
+      editor.addHyperlinkListener(new HyperlinkListener());
+      editor.setBorder(null);
+      content = editor;
+    }else{
+      JTextArea area = new JTextArea(text);
+      area.setEditable(false);
+      content = area;
+    }
 
     panel.add(content, BorderLayout.CENTER);
     return panel;

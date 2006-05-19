@@ -31,7 +31,7 @@ import javax.swing.JPanel;
  * @version $Revision$
  */
 public class FinishedStep
-  extends AbstractStep
+  extends WelcomeStep
 {
   private static final String ICON = "/images/finished.png";
 
@@ -51,23 +51,5 @@ public class FinishedStep
   {
     String path = super.getIconPath();
     return path != null ? path : ICON;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initGui()
-   */
-  public JComponent initGui ()
-  {
-    return new JPanel();
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initConsole()
-   */
-  public charvax.swing.JComponent initConsole ()
-  {
-    return null;
   }
 }
