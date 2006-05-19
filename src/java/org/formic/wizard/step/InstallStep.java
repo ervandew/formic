@@ -70,4 +70,13 @@ public class InstallStep
   {
     return null;
   }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#isBusyAnimated()
+   */
+  public boolean isBusyAnimated ()
+  {
+    return false;
+  }
 }

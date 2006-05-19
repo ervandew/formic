@@ -32,6 +32,9 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
+import foxtrot.Job;
+import foxtrot.Worker;
+
 import org.formic.Installer;
 
 import org.formic.wizard.gui.event.HyperlinkListener;
@@ -149,5 +152,25 @@ public class LicenseStep
   public charvax.swing.JComponent initConsole ()
   {
     return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+    setBusy(true);
+    Worker.post(new Job(){
+      public Object run () {
+        try{
+          Thread.sleep(3000);
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+        return null;
+      }
+    });
+    setBusy(false);
   }
 }

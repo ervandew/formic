@@ -50,6 +50,6 @@ public class FinishedStep
   protected String getIconPath ()
   {
     String path = super.getIconPath();
-    return path != null ? path : ICON;
+    return (path != null && !WelcomeStep.ICON.equals(path)) ? path : ICON;
   }
 }

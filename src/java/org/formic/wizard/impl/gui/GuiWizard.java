@@ -27,6 +27,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
@@ -37,12 +38,12 @@ import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
 import org.formic.Installer;
 
 import org.formic.wizard.Wizard;
+import org.formic.wizard.WizardStep;
 
 import org.formic.wizard.impl.models.MultiPathModel;
 
 import org.pietschy.wizard.WizardFrameCloser;
 import org.pietschy.wizard.WizardModel;
-import org.pietschy.wizard.WizardStep;
 
 /**
  * Extension to default Wizard that provides a {@link #waitFor()} method.
@@ -128,6 +129,20 @@ public class GuiWizard
 
   /**
    * {@inheritDoc}
+   * @see org.pietschy.wizard.Wizard#confirmAbort()
+   */
+  protected boolean confirmAbort ()
+  {
+    /*int response = JOptionPane.showConfirmDialog(this,
+        Installer.getString("abort.confirm.text"),
+        Installer.getString("abort.confirm.title"),
+        JOptionPane.YES_NO_CANCEL_OPTION);
+    return response == JOptionPane.YES_OPTION;*/
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#close()
    */
   public void close ()
@@ -182,14 +197,19 @@ public class GuiWizard
   {
     if (evt.getPropertyName().equals("activeStep")){
       final MultiPathModel model = (MultiPathModel)getModel();
-      final WizardStep step = model.getActiveStep();
+      final org.pietschy.wizard.WizardStep step = model.getActiveStep();
       if(step != null){
         SwingUtilities.invokeLater(new Runnable(){
           public void run (){
+            // set whether previous step is enabled or not.
             boolean previousAvailable =
               !model.isFirstStep(step) && !model.isLastStep(step);
             getPreviousAction().setEnabled(previousAvailable);
             model.setPreviousAvailable(previousAvailable);
+
+            // notify step that it is displayed.
+            WizardStep ws = ((GuiWizardStep)step).getStep();
+            ws.displayed();
           }
         });
       }

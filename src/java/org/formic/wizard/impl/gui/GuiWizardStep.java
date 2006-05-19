@@ -19,6 +19,7 @@
 package org.formic.wizard.impl.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Container;
 import java.awt.Dimension;
 
 import java.beans.PropertyChangeEvent;
@@ -26,6 +27,9 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.Icon;
 import javax.swing.JComponent;
+
+import net.java.swingfx.waitwithstyle.MGlassPaneContainer;
+import net.java.swingfx.waitwithstyle.SingleComponentInfiniteProgress;
 
 import org.formic.Installer;
 
@@ -45,6 +49,9 @@ public class GuiWizardStep
   extends PanelWizardStep
   implements PropertyChangeListener
 {
+  private static final SingleComponentInfiniteProgress INIFINITE_PROGRESS =
+    new SingleComponentInfiniteProgress();
+
   private WizardStep step;
   private JComponent component;
 
@@ -58,6 +65,31 @@ public class GuiWizardStep
     super(step.getTitle(), step.getDescription());
     this.step = step;
     step.addPropertyChangeListener(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see PanelWizardStep#setBusy(boolean)
+   */
+  public void setBusy (boolean busy)
+  {
+    super.setBusy(busy);
+
+    // hackish.
+    Container grandparent = getParent().getParent().getParent();
+    Container parent = getParent().getParent();
+
+    if(step.isBusyAnimated()){
+      if(busy){
+        grandparent.remove(parent);
+        MGlassPaneContainer container = new MGlassPaneContainer(parent);
+        grandparent.add(container, BorderLayout.CENTER);
+        container.setGlassPane(INIFINITE_PROGRESS);
+        INIFINITE_PROGRESS.setVisible(true);
+      }else{
+        INIFINITE_PROGRESS.setVisible(false);
+      }
+    }
   }
 
   /**
@@ -97,7 +129,16 @@ public class GuiWizardStep
    */
   public boolean isComplete ()
   {
-    return step.valid();
+    return step.isValid();
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.WizardStep#isBusy()
+   */
+  public boolean isBusy ()
+  {
+    return step.isBusy();
   }
 
   /**
@@ -115,9 +156,22 @@ public class GuiWizardStep
    */
   public void propertyChange (PropertyChangeEvent evt)
   {
-    if("valid".equals(evt.getPropertyName())){
+    if(WizardStep.VALID.equals(evt.getPropertyName())){
       setComplete(((Boolean)evt.getNewValue()).booleanValue());
+    }else if(WizardStep.BUSY.equals(evt.getPropertyName())){
+      boolean busy = ((Boolean)evt.getNewValue()).booleanValue();
+      setBusy(busy);
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.WizardStep#abortBusy()
+   */
+  public void abortBusy ()
+  {
+    step.abort();
+    setBusy(false);
   }
 
   /**
@@ -129,5 +183,15 @@ public class GuiWizardStep
     return new Dimension(
         Installer.getDimension().width - 15,
         Installer.getDimension().height - 130);
+  }
+
+  /**
+   * Gets the underlying step.
+   *
+   * @return The WizardStep.
+   */
+  public WizardStep getStep ()
+  {
+    return step;
   }
 }

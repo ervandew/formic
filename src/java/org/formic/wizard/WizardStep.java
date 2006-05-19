@@ -31,6 +31,16 @@ import javax.swing.Icon;
 public interface WizardStep
 {
   /**
+   * Property name used for property changed events to isValid.
+   */
+  public static final String VALID = "valid";
+
+  /**
+   * Property name used for property changed events to isBusy.
+   */
+  public static final String BUSY = "busy";
+
+  /**
    * Gets the title of this step.
    *
    * @return This step's title.
@@ -68,9 +78,16 @@ public interface WizardStep
   /**
    * Invoked before this step is displayed.
    * <p/>
-   * This method is called on every display of the step, not just the first.
+   * This method is called prior to every display of the step, not just the first.
    */
   public void prepare ();
+
+  /**
+   * Invoked after this step is displayed.
+   * <p/>
+   * This method is called on every display of the step, not just the first.
+   */
+  public void displayed ();
 
   /**
    * Invoked prior to proceeding to the next step.
@@ -78,10 +95,26 @@ public interface WizardStep
   public void proceed ();
 
   /**
+   * Invoked to abort any processing taking place by this step.
+   */
+  public void abort ();
+
+  /**
    * Invoked to determine if the data supplied by the user for this step is
    * valid and if the user may proceed to the next step.
    */
-  public boolean valid ();
+  public boolean isValid ();
+
+  /**
+   * Invoked to determine if the step is busy working on a time consuming task.
+   */
+  public boolean isBusy ();
+
+  /**
+   * Invoked to determine if an animated infinite progress should be displayed
+   * when busy.
+   */
+  public boolean isBusyAnimated ();
 
   /**
    * Adds the supplied PropertyChangeListener.

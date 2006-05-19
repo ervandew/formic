@@ -51,6 +51,7 @@ public abstract class AbstractStep
   private String iconPath;
   private Icon icon;
   private boolean valid = true;
+  private boolean busy;
   private Properties properties;
 
   private PropertyChangeSupport changeSupport;
@@ -135,6 +136,14 @@ public abstract class AbstractStep
 
   /**
    * {@inheritDoc}
+   * @see WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+  }
+
+  /**
+   * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#proceed()
    */
   public void proceed ()
@@ -143,9 +152,17 @@ public abstract class AbstractStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#valid()
+   * @see WizardStep#abort()
    */
-  public boolean valid ()
+  public void abort ()
+  {
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#isValid()
+   */
+  public boolean isValid ()
   {
     return valid;
   }
@@ -155,7 +172,33 @@ public abstract class AbstractStep
    */
   public void setValid (boolean _valid)
   {
-    changeSupport.firePropertyChange("valid", valid, valid = _valid);
+    changeSupport.firePropertyChange(VALID, valid, valid = _valid);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#isBusy()
+   */
+  public boolean isBusy ()
+  {
+    return busy;
+  }
+
+  /**
+   * Sets whether this step is busy.
+   */
+  public void setBusy (boolean _busy)
+  {
+    changeSupport.firePropertyChange(BUSY, busy, busy = _busy);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see WizardStep#isBusyAnimated()
+   */
+  public boolean isBusyAnimated ()
+  {
+    return true;
   }
 
   /**
