@@ -186,7 +186,8 @@ public class GuiWizard
       if(step != null){
         SwingUtilities.invokeLater(new Runnable(){
           public void run (){
-            boolean previousAvailable = !model.isLastStep(step);
+            boolean previousAvailable =
+              !model.isFirstStep(step) && !model.isLastStep(step);
             getPreviousAction().setEnabled(previousAvailable);
             model.setPreviousAvailable(previousAvailable);
           }
