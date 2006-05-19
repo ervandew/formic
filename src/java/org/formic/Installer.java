@@ -44,6 +44,8 @@ import org.formic.util.ResourceBundleAggregate;
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardBuilder;
 
+import org.pietschy.wizard.I18n;
+
 /**
  * Installer class that holds installer resources, etc.
  *
@@ -71,6 +73,8 @@ public class Installer
       Properties _properties, List _paths, boolean _consoleMode)
   {
     if(!_consoleMode){
+      I18n.setBundle(getResourceBundle());
+
       setLookAndFeel(_properties);
 
       String imagePath = _properties.getProperty("wizard.icon");
