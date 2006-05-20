@@ -31,6 +31,11 @@ import javax.swing.Icon;
 public interface WizardStep
 {
   /**
+   * Property name used for property changed events to isCancelEnabled.
+   */
+  public static final String CANCEL = "cancel";
+
+  /**
    * Property name used for property changed events to isValid.
    */
   public static final String VALID = "valid";
@@ -122,6 +127,16 @@ public interface WizardStep
    * when busy.
    */
   public boolean isBusyAnimated ();
+
+  /**
+   * Invoked to determine if the previous button should be enabled.
+   */
+  public boolean isPreviousEnabled ();
+
+  /**
+   * Invoked to determine if the cancel button should be enabled.
+   */
+  public boolean isCancelEnabled ();
 
   /**
    * Adds the supplied PropertyChangeListener.

@@ -51,6 +51,7 @@ public abstract class AbstractStep
   private String description;
   private String iconPath;
   private Icon icon;
+  private boolean cancel = true;
   private boolean valid = true;
   private boolean busy;
   private Properties properties;
@@ -109,9 +110,8 @@ public abstract class AbstractStep
     if(icon == null){
       String path = getIconPath();
       path = path != null ? path : DEFAULT_ICON;
-      URL url = AbstractStep.class.getResource(path);
 
-      icon = new ImageIcon(Toolkit.getDefaultToolkit().createImage(url));
+      icon = new ImageIcon(Installer.getImage(path));
     }
     return icon;
   }
@@ -170,6 +170,14 @@ public abstract class AbstractStep
   }
 
   /**
+   * Sets whether the cancel button is enabled.
+   */
+  public void setCancelEnabled (boolean _cancel)
+  {
+    changeSupport.firePropertyChange(CANCEL, cancel, cancel = _cancel);
+  }
+
+  /**
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isValid()
    */
@@ -210,6 +218,24 @@ public abstract class AbstractStep
   public boolean isBusyAnimated ()
   {
     return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see WizardStep#isPreviousEnabled()
+   */
+  public boolean isPreviousEnabled ()
+  {
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see WizardStep#isCancelEnabled()
+   */
+  public boolean isCancelEnabled ()
+  {
+    return cancel;
   }
 
   /**
