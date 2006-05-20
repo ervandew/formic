@@ -205,6 +205,16 @@ public class Installer
   }
 
   /**
+   * Gets the ant project this installer is running under.
+   *
+   * @return The ant project.
+   */
+  public static Project getProject ()
+  {
+    return project;
+  }
+
+  /**
    * Sets the ant project this installer is running under.
    *
    * @param _project The ant project.
