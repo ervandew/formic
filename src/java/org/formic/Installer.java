@@ -79,9 +79,7 @@ public class Installer
 
       String imagePath = _properties.getProperty("wizard.icon");
       if(imagePath != null){
-        URL url = Installer.class.getResource(imagePath);
-        image = url != null ?
-          Toolkit.getDefaultToolkit().createImage(url) : null;
+        image = getImage(imagePath);
       }
     }
 
@@ -131,9 +129,26 @@ public class Installer
   public static String getString (String _key)
   {
     try{
-      return getResourceBundle().getString(_key);
+      return _key != null ? getResourceBundle().getString(_key) : null;
     }catch(MissingResourceException mre){
       return null;
+    }
+  }
+
+  /**
+   * Gets the value for the supplied resource key.
+   *
+   * @param _key The key.
+   * @param _default The value to return if no value found for the specified
+   * key.
+   * @return The value or the supplied default.
+   */
+  public static String getString (String _key, String _default)
+  {
+    try{
+      return _key != null ? getResourceBundle().getString(_key) : _default;
+    }catch(MissingResourceException mre){
+      return _default;
     }
   }
 
@@ -176,6 +191,24 @@ public class Installer
   {
     String message = getString(_key);
     return MessageFormat.format(message, _args);
+  }
+
+  /**
+   * Gets an image given either the image resource path or a key to lookup the
+   * resource path.
+   *
+   * @param image The path or key.
+   * @return The image or null if not found.
+   */
+  public static Image getImage (String image)
+  {
+    String path = getString(image);
+    if(path == null){
+      path = image;
+    }
+
+    URL url = Installer.class.getResource(path);
+    return url != null ? Toolkit.getDefaultToolkit().createImage(url) : null;
   }
 
   /**
