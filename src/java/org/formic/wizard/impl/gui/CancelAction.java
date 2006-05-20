@@ -2,9 +2,9 @@ package org.formic.wizard.impl.gui;
 
 import java.awt.event.ActionEvent;
 
-import javax.swing.JOptionPane;
-
 import org.formic.Installer;
+
+import org.formic.wizard.gui.dialog.Dialogs;
 
 import org.pietschy.wizard.Wizard;
 import org.pietschy.wizard.WizardAction;
@@ -31,12 +31,7 @@ public class CancelAction
   public void doAction (ActionEvent e)
   {
     if(isEnabled()){
-      int result = JOptionPane.showConfirmDialog(
-          wizard,
-          Installer.getString("quit.confirm.text"),
-          Installer.getString("quit.confirm.title"),
-          JOptionPane.YES_NO_OPTION);
-      if(result == JOptionPane.OK_OPTION){
+      if(Dialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){
         getWizard().cancel();
       }
     }else{
