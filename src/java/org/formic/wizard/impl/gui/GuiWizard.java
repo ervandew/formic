@@ -60,6 +60,8 @@ public class GuiWizard
   private Action cancelAction;
   private Action previousAction;
 
+  private org.pietschy.wizard.WizardStep activeStep;
+
   /**
    * Constructs a new instance.
    */
@@ -193,26 +195,50 @@ public class GuiWizard
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange (final PropertyChangeEvent evt)
   {
     if (evt.getPropertyName().equals("activeStep")){
       final MultiPathModel model = (MultiPathModel)getModel();
       final org.pietschy.wizard.WizardStep step = model.getActiveStep();
+
+      // update step listening.
+      if (activeStep != null){
+         activeStep.removePropertyChangeListener(this);
+      }
+      activeStep = step;
+      activeStep.addPropertyChangeListener(this);
+
       if(step != null){
         SwingUtilities.invokeLater(new Runnable(){
           public void run (){
+            WizardStep ws = ((GuiWizardStep)step).getStep();
+
             // set whether previous step is enabled or not.
             boolean previousAvailable =
-              !model.isFirstStep(step) && !model.isLastStep(step);
+              !model.isFirstStep(step) &&
+              !model.isLastStep(step) &&
+              ws.isPreviousEnabled();
             getPreviousAction().setEnabled(previousAvailable);
             model.setPreviousAvailable(previousAvailable);
 
+            // set whether cancel step is enabled or not.
+            boolean cancelAvailable =
+              !model.isLastStep(step) && ws.isCancelEnabled();
+            getCancelAction().setEnabled(cancelAvailable);
+            //model.setCancelAvailable(cancelAvailable);
+
             // notify step that it is displayed.
-            WizardStep ws = ((GuiWizardStep)step).getStep();
             ws.displayed();
           }
         });
       }
+    }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run (){
+          boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+          getCancelAction().setEnabled(cancelEnabled);
+        }
+      });
     }
   }
 }
