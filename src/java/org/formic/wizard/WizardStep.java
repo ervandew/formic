@@ -41,6 +41,13 @@ public interface WizardStep
   public static final String BUSY = "busy";
 
   /**
+   * Gets the name given to this step.
+   *
+   * @return The step name.
+   */
+  public String getName ();
+
+  /**
    * Gets the title of this step.
    *
    * @return This step's title.

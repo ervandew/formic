@@ -46,6 +46,7 @@ public abstract class AbstractStep
 
   protected WizardModel wizardModel;
 
+  private String name;
   private String title;
   private String description;
   private String iconPath;
@@ -63,12 +64,22 @@ public abstract class AbstractStep
    */
   public AbstractStep (String _name, Properties _properties)
   {
+    name = _name;
     title = Installer.getString(_name + ".title");
     description = Installer.getString(_name + ".description");
     iconPath = Installer.getString(_name + ".icon");
     properties = _properties;
 
     changeSupport = new PropertyChangeSupport(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see WizardStep#getName()
+   */
+  public String getName ()
+  {
+    return this.name;
   }
 
   /**
