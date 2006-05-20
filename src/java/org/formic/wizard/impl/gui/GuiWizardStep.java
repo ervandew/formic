@@ -171,6 +171,9 @@ public class GuiWizardStep
     }else if(WizardStep.BUSY.equals(evt.getPropertyName())){
       boolean busy = ((Boolean)evt.getNewValue()).booleanValue();
       setBusy(busy);
+    }else{ // propagate up the listener chain.
+      firePropertyChange(
+          evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
     }
   }
 
