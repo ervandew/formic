@@ -1,38 +1,44 @@
 package net.java.swingfx.waitwithstyle;
 
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseMotionAdapter;
-import java.awt.event.KeyAdapter;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.ActionEvent;
-import java.awt.image.BufferedImage;
-import java.awt.geom.Area;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Rectangle2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Ellipse2D;
-import java.awt.Rectangle;
+import java.awt.AWTException;
 import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Window;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Graphics;
-import java.awt.AWTException;
 import java.awt.Insets;
-import java.awt.Robot;
-import java.awt.RenderingHints;
-import java.awt.Font;
 import java.awt.Point;
-import java.awt.font.TextLayout;
+import java.awt.Rectangle;
+import java.awt.RenderingHints;
+import java.awt.Robot;
+import java.awt.Window;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseMotionAdapter;
+
 import java.awt.font.FontRenderContext;
+import java.awt.font.TextLayout;
+
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+
+import java.awt.image.BufferedImage;
 
 import javax.swing.JComponent;
-import javax.swing.Timer;
+import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import javax.swing.event.AncestorListener;
+import javax.swing.Timer;
+
 import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 /**
  * A InfiniteProgressPanel-like component, but more efficient. This is the preferred class to use unless you need the
@@ -134,24 +140,34 @@ public class SingleComponentInfiniteProgress extends JComponent
     this(true, numBars, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, null);
   }
 
-  public SingleComponentInfiniteProgress(InfiniteProgressAdapter infiniteProgressAdapter)
+  public SingleComponentInfiniteProgress(
+      InfiniteProgressAdapter infiniteProgressAdapter)
   {
-    this(true, DEFAULT_NUMBER_OF_BARS, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, infiniteProgressAdapter);
+    this(true, DEFAULT_NUMBER_OF_BARS,
+        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
+        infiniteProgressAdapter);
   }
 
   public SingleComponentInfiniteProgress(boolean i_bUseBackBuffer, int numBars)
   {
-    this(i_bUseBackBuffer, numBars, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, null);
+    this(i_bUseBackBuffer, numBars,
+        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, null);
   }
 
-  public SingleComponentInfiniteProgress(boolean i_bUseBackBuffer, InfiniteProgressAdapter infiniteProgressAdapter)
+  public SingleComponentInfiniteProgress(
+      boolean i_bUseBackBuffer, InfiniteProgressAdapter infiniteProgressAdapter)
   {
-    this(i_bUseBackBuffer, DEFAULT_NUMBER_OF_BARS, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, infiniteProgressAdapter);
+    this(i_bUseBackBuffer, DEFAULT_NUMBER_OF_BARS,
+        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
+        infiniteProgressAdapter);
   }
 
-  public SingleComponentInfiniteProgress(int numBars, InfiniteProgressAdapter infiniteProgressAdapter)
+  public SingleComponentInfiniteProgress(
+      int numBars, InfiniteProgressAdapter infiniteProgressAdapter)
   {
-    this(true, numBars, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, infiniteProgressAdapter);
+    this(true, numBars,
+        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
+        infiniteProgressAdapter);
   }
 
   public SingleComponentInfiniteProgress(boolean i_bUseBackBuffer,
@@ -178,12 +194,20 @@ public class SingleComponentInfiniteProgress extends JComponent
     for(int i = 0; i < bars.length; i++) {
       barsBounds = barsBounds.union(bars[i].getBounds());
     }
+// CHANGE
+// NEW
+   // adapt to L&F color scheme.
+   JLabel template = new JLabel();
+   setBackground(template.getBackground());
+   setForeground(template.getForeground());
+// OLD
     // create colors
-    for(int i = 0; i < bars.length; i++) {
+    /*for(int i = 0; i < bars.length; i++) {
       int channel = 224 - 128 / (i + 1);
       colors[i] = new Color(channel, channel, channel);
       colors[numBars + i] = colors[i];
-    }
+    }*/
+// END CHANGE */
     // set cursor
     setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
@@ -576,7 +600,14 @@ public class SingleComponentInfiniteProgress extends JComponent
                     null);
         g.drawImage(imageBuf, 0, 0, null);
       } else {
-        g.setColor(new Color(255, 255, 255, 180));
+// CHANGE
+// OLD
+        //g.setColor(new Color(255, 255, 255, 180));
+// NEW
+        Color color = getBackground();
+        g.setColor(new Color(
+              color.getRed(), color.getGreen(), color.getBlue(), 200));
+// END CHANGE
         g.fillRect(oClip.x, oClip.y, oClip.width, oClip.height);
       }
     }
@@ -584,6 +615,19 @@ public class SingleComponentInfiniteProgress extends JComponent
     Graphics2D g2 = (Graphics2D)g.create();
     g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     g2.transform(centerAndScaleTransform);
+// CHANGE
+    // create colors
+    if(colors[0] == null){
+      for(int i = 0; i < bars.length; i++) {
+        //int channel = 224 - 128 / (i + 1);
+        int re = Math.abs(getBackground().getRed() - 128 / (i + 1));
+        int gr = Math.abs(getBackground().getGreen() - 128 / (i + 1));
+        int bl = Math.abs(getBackground().getBlue() - 128 / (i + 1));
+        colors[i] = new Color(re, gr, bl);
+        colors[numBars + i] = colors[i];
+      }
+    }
+// END CHANGE
     // draw ticker
     for(int i = 0; i < bars.length; i++) {
       g2.setColor(colors[i + colorOffset]);
