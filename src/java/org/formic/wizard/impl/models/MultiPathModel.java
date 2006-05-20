@@ -147,4 +147,13 @@ public class MultiPathModel
   {
     super.setPreviousAvailable(available);
   }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.AbstractWizardModel#setCancelAvailable(boolean)
+   */
+  public void setCancelAvailable (boolean available)
+  {
+    super.setCancelAvailable(available);
+  }
 }
