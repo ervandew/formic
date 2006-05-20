@@ -23,6 +23,13 @@ import java.util.Properties;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import foxtrot.Job;
+import foxtrot.Worker;
+
+import org.apache.tools.ant.Target;
+
+import org.formic.Installer;
+
 /**
  * Step that runs the background install process and displays the progress for
  * the user.
@@ -78,5 +85,31 @@ public class InstallStep
   public boolean isBusyAnimated ()
   {
     return false;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+    setBusy(true);
+    Worker.post(new Job(){
+      public Object run () {
+        try{
+          Target target = (Target)
+            Installer.getProject().getTargets().get("install");
+          if(target == null){
+            throw new IllegalArgumentException(
+              Installer.getString("install.target.not.found"));
+          }
+          target.execute();
+        }catch(Exception e){
+          e.printStackTrace();
+        }
+        return null;
+      }
+    });
+    setBusy(false);
   }
 }
