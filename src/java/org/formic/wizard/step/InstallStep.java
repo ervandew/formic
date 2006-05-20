@@ -18,17 +18,44 @@
  */
 package org.formic.wizard.step;
 
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+
+import java.awt.event.ActionEvent;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
+import javax.swing.AbstractAction;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
+import javax.swing.SwingConstants;
 
 import foxtrot.Job;
 import foxtrot.Worker;
 
+import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.BuildListener;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
+import org.apache.tools.ant.Task;
+import org.apache.tools.ant.UnknownElement;
+
+import org.apache.tools.ant.taskdefs.Ant;
+import org.apache.tools.ant.taskdefs.CallTarget;
 
 import org.formic.Installer;
+
+import org.formic.wizard.gui.dialog.Dialogs;
 
 /**
  * Step that runs the background install process and displays the progress for
@@ -39,8 +66,21 @@ import org.formic.Installer;
  */
 public class InstallStep
   extends AbstractStep
+  implements BuildListener
 {
   private static final String ICON = "/images/install.png";
+
+  private JProgressBar overallProgress;
+  private JProgressBar taskProgress;
+  private JLabel overallLabel;
+  private JLabel taskLabel;
+
+  private List tasks = new ArrayList();
+
+  private String targetName = "install";
+
+  private JButton showErrorButton;
+  private Throwable error;
 
   /**
    * Constructs this step.
@@ -66,7 +106,43 @@ public class InstallStep
    */
   public JComponent initGui ()
   {
-    return new JPanel();
+    overallLabel = new JLabel(Installer.getString("install.initialize"));
+    overallLabel.setAlignmentX(0.0f);
+    overallProgress = new JProgressBar();
+    overallProgress.setAlignmentX(0.0f);
+
+    taskLabel = new JLabel();
+    taskLabel.setAlignmentX(0.0f);
+    taskProgress = new JProgressBar();
+    taskProgress.setAlignmentX(0.0f);
+
+    JPanel panel = new JPanel();
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+    panel.setBorder(BorderFactory.createEmptyBorder(50, 125, 10, 125));
+
+    panel.add(overallProgress);
+    panel.add(Box.createRigidArea(new Dimension(0, 5)));
+    panel.add(overallLabel);
+
+    panel.add(Box.createRigidArea(new Dimension(0, 20)));
+
+    panel.add(taskProgress);
+    panel.add(Box.createRigidArea(new Dimension(0, 5)));
+    panel.add(taskLabel);
+    panel.add(Box.createRigidArea(new Dimension(0, 25)));
+
+    JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+    buttons.setAlignmentX(0.0f);
+    showErrorButton = new JButton(new ShowErrorAction());
+    showErrorButton.setVisible(false);
+    buttons.add(showErrorButton);
+    panel.add(buttons);
+
+    setIndeterminate(overallProgress, true);
+    setIndeterminate(taskProgress, true);
+
+    return panel;
   }
 
   /**
@@ -89,27 +165,216 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#isPreviousEnabled()
+   */
+  public boolean isPreviousEnabled ()
+  {
+    return false;
+  }
+
+  /**
+   * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
   public void displayed ()
   {
-    setBusy(true);
-    Worker.post(new Job(){
-      public Object run () {
-        try{
+    try{
+      setBusy(true);
+      Worker.post(new foxtrot.Task(){
+        public Object run ()
+          throws Exception
+        {
           Target target = (Target)
-            Installer.getProject().getTargets().get("install");
-          if(target == null){
-            throw new IllegalArgumentException(
-              Installer.getString("install.target.not.found"));
-          }
-          target.execute();
-        }catch(Exception e){
-          e.printStackTrace();
+            Installer.getProject().getTargets().get(targetName);
+          registerListener(target);
+          execute(target);
+
+          overallProgress.setValue(overallProgress.getMaximum());
+          overallLabel.setText(Installer.getString("install.done"));
+
+          taskProgress.setValue(taskProgress.getMaximum());
+          taskLabel.setText(Installer.getString("install.done"));
+
+          setCancelEnabled(false);
+          return null;
         }
-        return null;
+      });
+      setBusy(false);
+    }catch(Exception e){
+      error = e;
+      Dialogs.showError(error);
+      overallLabel.setText(
+          targetName + ": " + Installer.getString("error.dialog.text"));
+    }finally{
+      showErrorButton.setVisible(true);
+      setIndeterminate(overallProgress, false);
+      setIndeterminate(taskProgress, false);
+    }
+  }
+
+  /**
+   * Registers the listener to monitor build progress.
+   *
+   * @param target The install target.
+   */
+  private void registerListener (Target target)
+  {
+    registerTasks(target.getTasks());
+
+    overallProgress.setMaximum(this.tasks.size());
+    overallProgress.setValue(0);
+    setIndeterminate(overallProgress, false);
+
+    Installer.getProject().addBuildListener(this);
+  }
+
+  /**
+   * Register the supplied array of tasks.
+   *
+   * @param tasks The tasks to register.
+   */
+  private void registerTasks (Task[] tasks)
+  {
+    for (int ii = 0; ii < tasks.length; ii++){
+      Task task = tasks[ii];
+System.out.println("### adding task " + task.getTaskName());
+      this.tasks.add(task);
+
+      if(task instanceof UnknownElement){
+        UnknownElement ue = (UnknownElement)task;
+        ue.maybeConfigure();
+        task = ((UnknownElement)task).getTask();
       }
-    });
-    setBusy(false);
+
+      if (task instanceof Ant ||
+          task instanceof CallTarget)
+      {
+System.out.println("### register ant or antcall tasks");
+        Project project = null;
+        String[] targets = null;
+
+        if(task instanceof Ant){
+          project = ((Ant)task).getTargetProject();
+          targets = ((Ant)task).getTargetNames();
+        }else{
+          project = ((CallTarget)task).getTargetProject();
+          targets = ((CallTarget)task).getTargetNames();
+        }
+
+        for (int jj = 0; jj < targets.length; jj++){
+System.out.println("  ### register calls for ant(call) target " + targets[jj]);
+          Target target = (Target)project.getTargets().get(targets[jj]);
+          registerTasks(target.getTasks());
+        }
+      }
+      // TODO:  For  AntCallBack, AntFetch, and RunTarget, recursively determine
+      // task list.
+    }
+  }
+
+  /**
+   * Executes the install target.
+   *
+   * @param target The install target.
+   */
+  private void execute (Target target)
+    throws BuildException
+  {
+    if(target == null){
+      throw new IllegalArgumentException(
+        Installer.getString("install.target.not.found"));
+    }
+    target.execute();
+    tasks.clear();
+  }
+
+  /**
+   * Sets whether or not the supplied progress bars progress is determinate.
+   *
+   * @param bar The JProgressBar.
+   * @param value The value.
+   */
+  private void setIndeterminate (JProgressBar bar, boolean value)
+  {
+    bar.setIndeterminate(value);
+    bar.setStringPainted(true);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#buildStarted(BuildEvent)
+   */
+  public void buildStarted (BuildEvent e)
+  {
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#buildFinished(BuildEvent)
+   */
+  public void buildFinished (BuildEvent e)
+  {
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#targetStarted(BuildEvent)
+   */
+  public void targetStarted (BuildEvent e)
+  {
+    targetName = e.getTarget().getName();
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#targetFinished(BuildEvent)
+   */
+  public void targetFinished (BuildEvent e)
+  {
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#taskStarted(BuildEvent)
+   */
+  public void taskStarted (BuildEvent e)
+  {
+    overallLabel.setText(targetName + " - " + e.getTask().getTaskName());
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#taskFinished(BuildEvent)
+   */
+  public void taskFinished (BuildEvent e)
+  {
+    int index = tasks.indexOf(e.getTask());
+    if(index > 0){
+      overallProgress.setValue(index + 1);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see BuildListener#messageLogged(BuildEvent)
+   */
+  public void messageLogged (BuildEvent e)
+  {
+    taskLabel.setText(e.getMessage());
+  }
+
+  private class ShowErrorAction
+    extends AbstractAction
+  {
+    public ShowErrorAction ()
+    {
+      super(
+          Installer.getString("install.error.view"),
+          new ImageIcon(Installer.getImage("/images/error_small.png")));
+    }
+
+    public void actionPerformed (ActionEvent e){
+      Dialogs.showError(error);
+    }
   }
 }
