@@ -21,6 +21,7 @@ package org.formic.wizard.impl.gui;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Font;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -49,8 +50,8 @@ public class GuiWizardStep
   extends PanelWizardStep
   implements PropertyChangeListener
 {
-  private static final SingleComponentInfiniteProgress INIFINITE_PROGRESS =
-    new SingleComponentInfiniteProgress();
+  private static SingleComponentInfiniteProgress INFINITE_PROGRESS;
+  private static final String BUSY_TEXT = Installer.getString("busy");
 
   private WizardStep step;
   private JComponent component;
@@ -81,13 +82,22 @@ public class GuiWizardStep
 
     if(step.isBusyAnimated()){
       if(busy){
+        if(INFINITE_PROGRESS == null){
+          INFINITE_PROGRESS = new SingleComponentInfiniteProgress();
+          //INFINITE_PROGRESS.setBackground(java.awt.Color.BLACK);
+          //INFINITE_PROGRESS.setForeground(java.awt.Color.WHITE);
+          INFINITE_PROGRESS.setFont(new Font(null, Font.BOLD, 15));
+        }
+
         grandparent.remove(parent);
         MGlassPaneContainer container = new MGlassPaneContainer(parent);
         grandparent.add(container, BorderLayout.CENTER);
-        container.setGlassPane(INIFINITE_PROGRESS);
-        INIFINITE_PROGRESS.setVisible(true);
+        container.setGlassPane(INFINITE_PROGRESS);
+        INFINITE_PROGRESS.setVisible(true);
+        String busyText = Installer.getString(step.getName() + ".busy");
+        INFINITE_PROGRESS.setText(busyText != null ? busyText : BUSY_TEXT);
       }else{
-        INIFINITE_PROGRESS.setVisible(false);
+        INFINITE_PROGRESS.setVisible(false);
       }
     }
   }
