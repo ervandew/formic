@@ -41,18 +41,33 @@
       <classpath refid="classpath"/>
     </javac>
 
-    <!-- build jar files -->
+    <!-- build formic jar file -->
     <jar jarfile="build/dist/formic.jar">
       <fileset dir="build/classes">
         <include name="**/*.class"/>
+        <exclude name="org/apache/**/*.class"/>
       </fileset>
       <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
         <include name="**/*"/>
+        <exclude name="org/apache/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
       </fileset>
       <fileset dir="src">
         <include name="images/**/*"/>
+      </fileset>
+    </jar>
+
+    <!-- build patched ant jar file -->
+    <copy todir="build/dist" file="ant/lib/ant.jar"/>
+    <jar jarfile="build/dist/ant.jar" update="true">
+      <fileset dir="build/classes">
+        <include name="org/apache/**/*.class"/>
+      </fileset>
+      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+        <include name="org/apache/**/*"/>
+        <exclude name="**/package.html"/>
+        <exclude name="**/*.java"/>
       </fileset>
     </jar>
 
@@ -63,7 +78,7 @@
     <chmod file="build/ant/bin/ant" perm="755"/>
 
     <!-- copy formic jar(s) to ant -->
-    <copy todir="build/ant/lib">
+    <copy todir="build/ant/lib" overwrite="true">
       <fileset dir="build/dist" includes="*.jar"/>
       <fileset dir="lib" includes="**/*"/>
     </copy>
