@@ -80,6 +80,7 @@ public class WelcomeStep
       editor.setOpaque(false);
       editor.addHyperlinkListener(new HyperlinkListener());
       editor.setBorder(null);
+      editor.setFocusable(false);
       content = editor;
     }else{
       JTextArea area = new JTextArea(text);
