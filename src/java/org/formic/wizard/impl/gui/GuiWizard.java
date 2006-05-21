@@ -73,7 +73,6 @@ public class GuiWizard
   {
     super(_model);
     setDefaultExitMode(org.pietschy.wizard.Wizard.EXIT_ON_FINISH);
-System.out.println("### addPropertyChangeListener");
     getModel().addPropertyChangeListener(this);
 
     try{
@@ -230,19 +229,7 @@ System.out.println("### addPropertyChangeListener");
           if(step != null){
             WizardStep ws = ((GuiWizardStep)step).getStep();
 
-            // set whether previous step is enabled or not.
-            boolean previousAvailable =
-              !model.isFirstStep(step) &&
-              !model.isLastStep(step) &&
-              ws.isPreviousEnabled();
-            getPreviousAction().setEnabled(previousAvailable);
-            model.setPreviousAvailable(previousAvailable);
-
-            // set whether cancel step is enabled or not.
-            boolean cancelAvailable =
-              !model.isLastStep(step) && ws.isCancelEnabled();
-            getCancelAction().setEnabled(cancelAvailable);
-            //model.setCancelAvailable(cancelAvailable);
+            updateButtonStatus(model, ws, step);
 
             // notify step that it is displayed.
             ws.displayed();
@@ -262,19 +249,36 @@ System.out.println("### addPropertyChangeListener");
   }
 
   /**
+   * Update the state (enabled / disabled) of the buttons in the button bar.
+   */
+  private void updateButtonStatus (
+      MultiPathModel model, WizardStep ws, org.pietschy.wizard.WizardStep step)
+  {
+    // set whether previous step is enabled or not.
+    boolean previousAvailable =
+      !model.isFirstStep(step) &&
+      !model.isLastStep(step) &&
+      ws.isPreviousEnabled();
+    getPreviousAction().setEnabled(previousAvailable);
+    model.setPreviousAvailable(previousAvailable);
+
+    // set whether cancel step is enabled or not.
+    boolean cancelAvailable =
+      !model.isLastStep(step) && ws.isCancelEnabled();
+    getCancelAction().setEnabled(cancelAvailable);
+    //model.setCancelAvailable(cancelAvailable);
+  }
+
+  /**
    * Sets the default button according to the current state of the step.
    */
   private void updateDefaultButton ()
   {
-System.out.println("### set default button");
     if(buttonBar.getNextButton().isEnabled()){
-System.out.println("  ### set next as default button");
       getRootPane().setDefaultButton(buttonBar.getNextButton());
     }else if(buttonBar.getFinishButton().isEnabled()){
-System.out.println("  ### set finish as default button");
       getRootPane().setDefaultButton(buttonBar.getFinishButton());
     }else{
-System.out.println("  ### set null as default button");
       getRootPane().setDefaultButton(null);
     }
   }
