@@ -64,6 +64,8 @@ public class LicenseStep
   private static final String ACCEPT = "Accept";
   private static final String DECLINE = "Decline";
 
+  private JScrollPane scrollPane;
+
   /**
    * Constructs this step.
    */
@@ -97,15 +99,14 @@ public class LicenseStep
     try{
       panel.setLayout(new BorderLayout());
 
-      JEditorPane content =
-        new JEditorPane(new URL(getProperty("license.url")));
+      JEditorPane content = new JEditorPane(new URL(getProperty("license.url")));
       content.setEditable(false);
       content.addHyperlinkListener(new HyperlinkListener());
 
-      JScrollPane scroll = new JScrollPane(
+      scrollPane = new JScrollPane(
           JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
           JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      scroll.setViewportView(content);
+      scrollPane.setViewportView(content);
 
       ActionListener listener = new ActionListener(){
         public void actionPerformed (ActionEvent _event){
@@ -132,7 +133,7 @@ public class LicenseStep
       radioPanel.add(accept);
       radioPanel.add(decline);
 
-      panel.add(scroll, BorderLayout.CENTER);
+      panel.add(scrollPane, BorderLayout.CENTER);
       panel.add(radioPanel, BorderLayout.SOUTH);
 
       setValid(false);
@@ -149,5 +150,14 @@ public class LicenseStep
   public charvax.swing.JComponent initConsole ()
   {
     return null;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+    scrollPane.grabFocus();
   }
 }
