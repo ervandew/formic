@@ -20,6 +20,7 @@ package org.formic.wizard.impl.models;
 
 import java.util.Stack;
 
+import org.pietschy.wizard.PanelWizardStep;
 import org.pietschy.wizard.WizardStep;
 
 import org.pietschy.wizard.models.Path;

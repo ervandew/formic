@@ -62,6 +62,10 @@ public class GuiWizard
 
   private org.pietschy.wizard.WizardStep activeStep;
 
+  private ButtonBar buttonBar;
+
+  private PropertyChangeEvent[] events;
+
   /**
    * Constructs a new instance.
    */
@@ -69,6 +73,7 @@ public class GuiWizard
   {
     super(_model);
     setDefaultExitMode(org.pietschy.wizard.Wizard.EXIT_ON_FINISH);
+System.out.println("### addPropertyChangeListener");
     getModel().addPropertyChangeListener(this);
 
     try{
@@ -88,6 +93,16 @@ public class GuiWizard
     }catch(Exception e){
       e.printStackTrace();
     }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.Wizard#createButtonBar()
+   */
+  protected org.pietschy.wizard.ButtonBar createButtonBar ()
+  {
+    buttonBar = new ButtonBar(this);
+    return buttonBar;
   }
 
   /**
@@ -189,6 +204,8 @@ public class GuiWizard
   public void showWizard ()
   {
     showInFrame(Installer.getString("title"), Installer.getImage());
+
+    fireQueuedEvents();
   }
 
   /**
@@ -197,20 +214,20 @@ public class GuiWizard
    */
   public void propertyChange (final PropertyChangeEvent evt)
   {
-    if (evt.getPropertyName().equals("activeStep")){
-      final MultiPathModel model = (MultiPathModel)getModel();
-      final org.pietschy.wizard.WizardStep step = model.getActiveStep();
+    SwingUtilities.invokeLater(new Runnable(){
+      public void run (){
+        if (evt.getPropertyName().equals("activeStep")){
+          MultiPathModel model = (MultiPathModel)getModel();
+          org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
-      // update step listening.
-      if (activeStep != null){
-         activeStep.removePropertyChangeListener(this);
-      }
-      activeStep = step;
-      activeStep.addPropertyChangeListener(this);
+          // update step listening.
+          if (activeStep != null){
+             activeStep.removePropertyChangeListener(GuiWizard.this);
+          }
+          activeStep = step;
+          activeStep.addPropertyChangeListener(GuiWizard.this);
 
-      if(step != null){
-        SwingUtilities.invokeLater(new Runnable(){
-          public void run (){
+          if(step != null){
             WizardStep ws = ((GuiWizardStep)step).getStep();
 
             // set whether previous step is enabled or not.
@@ -229,16 +246,59 @@ public class GuiWizard
 
             // notify step that it is displayed.
             ws.displayed();
+
+            updateDefaultButton();
           }
-        });
-      }
-    }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
-      SwingUtilities.invokeLater(new Runnable(){
-        public void run (){
+        }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
           boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
           getCancelAction().setEnabled(cancelEnabled);
+        }else if (evt.getPropertyName().equals(WizardStep.VALID)){
+          updateDefaultButton();
+        }else if (evt.getPropertyName().equals(WizardStep.BUSY)){
+          updateDefaultButton();
         }
-      });
+      }
+    });
+  }
+
+  /**
+   * Sets the default button according to the current state of the step.
+   */
+  private void updateDefaultButton ()
+  {
+System.out.println("### set default button");
+    if(buttonBar.getNextButton().isEnabled()){
+System.out.println("  ### set next as default button");
+      getRootPane().setDefaultButton(buttonBar.getNextButton());
+    }else if(buttonBar.getFinishButton().isEnabled()){
+System.out.println("  ### set finish as default button");
+      getRootPane().setDefaultButton(buttonBar.getFinishButton());
+    }else{
+System.out.println("  ### set null as default button");
+      getRootPane().setDefaultButton(null);
+    }
+  }
+
+  /**
+   * Set array of events that where queued up prior to full wizard
+   * initialization.
+   *
+   * @param events The events.
+   */
+  public void setEventQueue (PropertyChangeEvent[] events)
+  {
+    this.events = events;
+  }
+
+  /**
+   * Fire the queued up events.
+   */
+  private void fireQueuedEvents ()
+  {
+    if(events != null){
+      for (int ii = 0; ii < events.length; ii++){
+        propertyChange(events[ii]);
+      }
     }
   }
 }

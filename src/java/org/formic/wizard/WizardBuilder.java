@@ -18,6 +18,8 @@
  */
 package org.formic.wizard;
 
+import java.beans.PropertyChangeEvent;
+
 import java.io.IOException;
 
 import java.lang.reflect.Constructor;
@@ -38,6 +40,8 @@ import org.formic.Log;
 import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
+
+import org.formic.wizard.gui.event.TempPropertyChangeListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
 import org.formic.wizard.impl.console.ConsoleWizardStep;
@@ -110,7 +114,18 @@ public class WizardBuilder
     if(_consoleMode){
       return new ConsoleWizard(new MultiPathModel(mainPath));
     }
-    return new GuiWizard(new MultiPathModel(mainPath));
+
+    // GuiWizard is unable to register itself as a listener before the first
+    // activeStep event is fired, so queue it up here and fire again after
+    // GuiWizard is ready.
+    MultiPathModel model = new MultiPathModel(mainPath);
+    TempPropertyChangeListener listener = new TempPropertyChangeListener();
+    model.addPropertyChangeListener(listener);
+    GuiWizard wizard = new GuiWizard(model);
+    wizard.setEventQueue(listener.getEvents());
+    model.removePropertyChangeListener(listener);
+
+    return wizard;
   }
 
   /**
