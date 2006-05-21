@@ -728,6 +728,7 @@ public class Ant extends Task {
     private void initialize ()
     {
       File savedDir = dir;
+      String savedAntFile = antFile;
       if(!newProjectInitialized){
         Vector locals = new Vector(targets);
         if (newProject == null) {
@@ -832,6 +833,7 @@ public class Ant extends Task {
         targets = locals;
       }
       dir = savedDir;
+      antFile = savedAntFile;
       newProjectInitialized = true;
     }
 // END CHANGE

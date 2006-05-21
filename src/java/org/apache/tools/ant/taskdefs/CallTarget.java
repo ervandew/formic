@@ -87,6 +87,11 @@ public class CallTarget extends Task {
         callee.setTaskName(getTaskName());
         callee.setLocation(getLocation());
         callee.init();
+// CHANGE
+        callee.setAntfile(getProject().getProperty("ant.file"));
+        callee.setInheritAll(inheritAll);
+        callee.setInheritRefs(inheritRefs);
+// END CHANGE
     }
 
     /**
@@ -103,9 +108,11 @@ public class CallTarget extends Task {
                 "Attribute target or at least one nested target is required.",
                  getLocation());
         }
+/* CHANGE
         callee.setAntfile(getProject().getProperty("ant.file"));
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
+// END CHANGE*/
         callee.execute();
     }
 

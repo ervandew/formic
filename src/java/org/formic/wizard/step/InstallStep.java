@@ -110,11 +110,14 @@ public class InstallStep
     overallLabel.setAlignmentX(0.0f);
     overallProgress = new JProgressBar();
     overallProgress.setAlignmentX(0.0f);
+    overallProgress.setStringPainted(true);
 
     taskLabel = new JLabel();
     taskLabel.setAlignmentX(0.0f);
     taskProgress = new JProgressBar();
     taskProgress.setAlignmentX(0.0f);
+    taskProgress.setStringPainted(true);
+    taskProgress.setIndeterminate(true);
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -138,9 +141,6 @@ public class InstallStep
     showErrorButton.setVisible(false);
     buttons.add(showErrorButton);
     panel.add(buttons);
-
-    setIndeterminate(overallProgress, true);
-    setIndeterminate(taskProgress, true);
 
     return panel;
   }
@@ -202,13 +202,13 @@ public class InstallStep
       setBusy(false);
     }catch(Exception e){
       error = e;
+      error.printStackTrace();
       Dialogs.showError(error);
       overallLabel.setText(
           targetName + ": " + Installer.getString("error.dialog.text"));
-    }finally{
       showErrorButton.setVisible(true);
-      setIndeterminate(overallProgress, false);
-      setIndeterminate(taskProgress, false);
+    }finally{
+      taskProgress.setIndeterminate(false);
     }
   }
 
@@ -223,7 +223,6 @@ public class InstallStep
 
     overallProgress.setMaximum(this.tasks.size());
     overallProgress.setValue(0);
-    setIndeterminate(overallProgress, false);
 
     Installer.getProject().addBuildListener(this);
   }
@@ -237,19 +236,17 @@ public class InstallStep
   {
     for (int ii = 0; ii < tasks.length; ii++){
       Task task = tasks[ii];
-System.out.println("### adding task " + task.getTaskName());
-      this.tasks.add(task);
 
       if(task instanceof UnknownElement){
         UnknownElement ue = (UnknownElement)task;
         ue.maybeConfigure();
         task = ((UnknownElement)task).getTask();
       }
+      this.tasks.add(task);
 
       if (task instanceof Ant ||
           task instanceof CallTarget)
       {
-System.out.println("### register ant or antcall tasks");
         Project project = null;
         String[] targets = null;
 
@@ -260,9 +257,9 @@ System.out.println("### register ant or antcall tasks");
           project = ((CallTarget)task).getTargetProject();
           targets = ((CallTarget)task).getTargetNames();
         }
+        project.addBuildListener(this);
 
         for (int jj = 0; jj < targets.length; jj++){
-System.out.println("  ### register calls for ant(call) target " + targets[jj]);
           Target target = (Target)project.getTargets().get(targets[jj]);
           registerTasks(target.getTasks());
         }
@@ -286,18 +283,6 @@ System.out.println("  ### register calls for ant(call) target " + targets[jj]);
     }
     target.execute();
     tasks.clear();
-  }
-
-  /**
-   * Sets whether or not the supplied progress bars progress is determinate.
-   *
-   * @param bar The JProgressBar.
-   * @param value The value.
-   */
-  private void setIndeterminate (JProgressBar bar, boolean value)
-  {
-    bar.setIndeterminate(value);
-    bar.setStringPainted(true);
   }
 
   /**
