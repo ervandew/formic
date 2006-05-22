@@ -43,6 +43,8 @@ import org.formic.Installer;
 
 import org.formic.wizard.Wizard;
 
+import org.formic.wizard.console.dialog.Dialogs;
+
 import org.pietschy.wizard.WizardModel;
 
 /**
@@ -54,9 +56,10 @@ import org.pietschy.wizard.WizardModel;
 public class ConsoleWizard
   implements Wizard
 {
+  private static JFrame frame;
+
   private Semaphore semaphore = new Semaphore(1);
 
-  private JFrame frame;
   private WizardModel model;
   private boolean canceled;
 
@@ -87,20 +90,24 @@ public class ConsoleWizard
   public void showWizard ()
   {
     Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-    Dimension dimension = new Dimension(
-        Installer.getDimension().width / 7,
-        Installer.getDimension().height / 12);
+    int width = Installer.getDimension().width / 7;
+    int height = Installer.getDimension().height / 12;
 
     String error = null;
-    if(screen.width < dimension.width){
+    if(screen.width < width){
       error = Installer.getString("console.width.min",
-          new Integer(screen.width), new Integer(dimension.width));
+          new Integer(screen.width), new Integer(width));
     }
 
-    if(screen.height < dimension.height){
+    if(screen.height < height){
       error = Installer.getString("console.height.min",
-          new Integer(screen.height), new Integer(dimension.height));
+          new Integer(screen.height), new Integer(height));
     }
+
+    Dimension dimension = new Dimension(width, height);
+    // Below will screw up error dialog in some dimensions.
+        /*Math.max(width, screen.width),
+        Math.max(height, screen.height));*/
 
     frame = new JFrame(Installer.getString("title"));
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -123,8 +130,10 @@ public class ConsoleWizard
     frame.add(mainPanel);
     frame.setVisible(true);
 
+    Dialogs.showError(new Exception("test"));
+
     if(error != null){
-      JOptionPane.showMessageDialog(frame, error, "Error", JOptionPane.OK_OPTION);
+      Dialogs.showError(error);
       close(true);
     }
   }
@@ -179,12 +188,7 @@ public class ConsoleWizard
     JPanel panel = new JPanel(new BorderLayout());
 
     previousButton = new JButton("Previous");
-    previousButton.setEnabled(false);
-
     nextButton = new JButton("Next");
-
-    lastButton = new JButton("Last");
-
     finishButton = new JButton("Finish");
 
     cancelButton = new JButton("Cancel");
@@ -194,21 +198,11 @@ public class ConsoleWizard
       }
     });
 
-    closeButton = new JButton("Close");
-    closeButton.setVisible(false);
-    closeButton.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent _event){
-        close(true);
-      }
-    });
-
     JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 3));
     buttonBar.add(previousButton);
     buttonBar.add(nextButton);
-    buttonBar.add(lastButton);
     buttonBar.add(finishButton);
     buttonBar.add(cancelButton);
-    buttonBar.add(closeButton);
 
     panel.add(new JSeparator(), BorderLayout.NORTH);
     panel.add(buttonBar, BorderLayout.CENTER);
@@ -253,5 +247,15 @@ public class ConsoleWizard
     }catch(Exception e){
       e.printStackTrace();
     }
+  }
+
+  /**
+   * Gets the frame for this instance.
+   *
+   * @return The frame.
+   */
+  public static JFrame getFrame ()
+  {
+    return frame;
   }
 }
