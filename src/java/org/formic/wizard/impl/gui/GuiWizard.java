@@ -27,7 +27,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
@@ -215,7 +214,7 @@ public class GuiWizard
   {
     SwingUtilities.invokeLater(new Runnable(){
       public void run (){
-        if (evt.getPropertyName().equals("activeStep")){
+        if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
           MultiPathModel model = (MultiPathModel)getModel();
           org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
@@ -239,9 +238,9 @@ public class GuiWizard
         }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
           boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
           getCancelAction().setEnabled(cancelEnabled);
-        }else if (evt.getPropertyName().equals(WizardStep.VALID)){
-          updateDefaultButton();
-        }else if (evt.getPropertyName().equals(WizardStep.BUSY)){
+        }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
+            evt.getPropertyName().equals(WizardStep.BUSY))
+        {
           updateDefaultButton();
         }
       }

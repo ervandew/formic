@@ -27,6 +27,11 @@ package org.formic.wizard;
 public interface Wizard
 {
   /**
+   * Property name used for property change events.
+   */
+  public static final String ACTIVE_STEP = "activeStep";
+
+  /**
    * Displays the wizard to the user.
    */
   public void showWizard ();
