@@ -23,7 +23,7 @@ import java.beans.PropertyChangeSupport;
 
 import javax.swing.Icon;
 
-import charvax.swing.JComponent;
+import charva.awt.Component;
 
 import org.formic.wizard.WizardStep;
 
@@ -40,7 +40,7 @@ public class ConsoleWizardStep
   implements org.pietschy.wizard.WizardStep
 {
   private WizardStep step;
-  private JComponent component;
+  private Component component;
   private boolean complete;
   private boolean busy;
 
@@ -68,12 +68,15 @@ public class ConsoleWizardStep
   }
 
   /**
-   * Initialize the step.
+   * Gets the console view of the step.
+   *
+   * @return The console component.
    */
-  public JComponent init ()
+  public Component getConsoleView ()
   {
-    component = step.initConsole();
-
+    if(component == null){
+      component = step.initConsole();
+    }
     return component;
   }
 
