@@ -147,7 +147,7 @@ public class LicenseStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#initConsole()
    */
-  public charvax.swing.JComponent initConsole ()
+  public charva.awt.Component initConsole ()
   {
     return null;
   }

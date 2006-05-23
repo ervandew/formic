@@ -85,7 +85,7 @@ public interface WizardStep
    * <p/>
    * Used to layout the components for the console version of the step.
    */
-  public charvax.swing.JComponent initConsole ();
+  public charva.awt.Component initConsole ();
 
   /**
    * Invoked before this step is displayed.
