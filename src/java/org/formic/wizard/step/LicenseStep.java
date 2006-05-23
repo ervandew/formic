@@ -36,6 +36,8 @@ import org.formic.Installer;
 
 import org.formic.wizard.gui.event.HyperlinkListener;
 
+import org.formic.wizard.impl.console.ConsoleWizard;
+
 /**
  * Step that displays a license agreement and requires the user to accept it to
  * proceed.
@@ -64,7 +66,8 @@ public class LicenseStep
   private static final String ACCEPT = "Accept";
   private static final String DECLINE = "Decline";
 
-  private JScrollPane scrollPane;
+  private JScrollPane guiScrollPane;
+  private charvax.swing.JScrollPane consoleScrollPane;
 
   /**
    * Constructs this step.
@@ -103,10 +106,10 @@ public class LicenseStep
       content.setEditable(false);
       content.addHyperlinkListener(new HyperlinkListener());
 
-      scrollPane = new JScrollPane(
+      guiScrollPane = new JScrollPane(
           JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
           JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-      scrollPane.setViewportView(content);
+      guiScrollPane.setViewportView(content);
 
       ActionListener listener = new ActionListener(){
         public void actionPerformed (ActionEvent _event){
@@ -133,7 +136,7 @@ public class LicenseStep
       radioPanel.add(accept);
       radioPanel.add(decline);
 
-      panel.add(scrollPane, BorderLayout.CENTER);
+      panel.add(guiScrollPane, BorderLayout.CENTER);
       panel.add(radioPanel, BorderLayout.SOUTH);
 
       setValid(false);
@@ -149,7 +152,54 @@ public class LicenseStep
    */
   public charva.awt.Component initConsole ()
   {
-    return null;
+    charvax.swing.JPanel panel =
+      new charvax.swing.JPanel(new charva.awt.BorderLayout());
+
+    charvax.swing.JTextArea area = new charvax.swing.JTextArea("license text");
+    //JEditorPane content = new JEditorPane(new URL(getProperty("license.url")));
+    area.setEditable(false);
+    area.setColumns(ConsoleWizard.getFrame().getSize().width - 5);
+    area.setRows(ConsoleWizard.getFrame().getSize().height - 12);
+
+    consoleScrollPane = new charvax.swing.JScrollPane();
+    consoleScrollPane.setViewportView(area);
+    consoleScrollPane.setViewportBorder(
+        new charvax.swing.border.TitledBorder(
+          Installer.getString("license.title")));
+
+    charva.awt.event.ActionListener listener = new charva.awt.event.ActionListener(){
+      public void actionPerformed (charva.awt.event.ActionEvent _event){
+        setValid(ACCEPT.equals(_event.getActionCommand()));
+      }
+    };
+
+    charvax.swing.JRadioButton accept = new charvax.swing.JRadioButton(
+        Installer.getString("license.accept"));
+    accept.setActionCommand(ACCEPT);
+    accept.addActionListener(listener);
+
+    charvax.swing.JRadioButton decline = new charvax.swing.JRadioButton(
+        Installer.getString("license.decline"));
+    decline.setActionCommand(DECLINE);
+    decline.addActionListener(listener);
+
+    charvax.swing.ButtonGroup group = new charvax.swing.ButtonGroup();
+    group.add(accept);
+    group.add(decline);
+
+    charvax.swing.JPanel radioPanel = new charvax.swing.JPanel();
+    radioPanel.setLayout(
+        new charvax.swing.BoxLayout(radioPanel, charvax.swing.BoxLayout.Y_AXIS));
+    radioPanel.add(accept);
+    radioPanel.add(decline);
+    decline.setSelected(true);
+
+    panel.add(consoleScrollPane, BorderLayout.CENTER);
+    panel.add(radioPanel, BorderLayout.SOUTH);
+
+    setValid(false);
+
+    return panel;
   }
 
   /**
@@ -158,6 +208,10 @@ public class LicenseStep
    */
   public void displayed ()
   {
-    scrollPane.grabFocus();
+    if(Installer.isConsoleMode()){
+      consoleScrollPane.requestFocus();
+    }else{
+      guiScrollPane.grabFocus();
+    }
   }
 }
