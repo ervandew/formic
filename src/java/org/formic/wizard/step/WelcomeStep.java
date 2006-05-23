@@ -28,6 +28,8 @@ import org.formic.Installer;
 
 import org.formic.wizard.gui.event.HyperlinkListener;
 
+import org.formic.wizard.impl.console.ConsoleWizard;
+
 /**
  * Wizard step that displays a welcome message at the beginning of the
  * installation process.
@@ -96,8 +98,18 @@ public class WelcomeStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#initConsole()
    */
-  public charvax.swing.JComponent initConsole ()
+  public charva.awt.Component initConsole ()
   {
-    return null;
+    String text = Installer.getString(name + ".text");
+
+    charvax.swing.JPanel panel = new charvax.swing.JPanel();
+    panel.setLayout(new charva.awt.BorderLayout());
+
+    charvax.swing.JTextArea area = new charvax.swing.JTextArea(text);
+    area.setColumns(ConsoleWizard.getFrame().getSize().width - 20);
+    area.setEditable(false);
+    panel.add(area, charva.awt.BorderLayout.CENTER);
+
+    return panel;
   }
 }
