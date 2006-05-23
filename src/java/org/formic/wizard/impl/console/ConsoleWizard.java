@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import charva.awt.BorderLayout;
+import charva.awt.Component;
 import charva.awt.Dimension;
 import charva.awt.FlowLayout;
 import charva.awt.Toolkit;
@@ -34,7 +35,6 @@ import charvax.swing.JButton;
 import charvax.swing.JFrame;
 import charvax.swing.JLabel;
 import charvax.swing.JPanel;
-import charvax.swing.JScrollPane;
 import charvax.swing.JSeparator;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
@@ -67,6 +67,8 @@ public class ConsoleWizard
   private org.pietschy.wizard.WizardStep activeStep;
 
   private boolean canceled;
+
+  private JPanel viewPanel;
 
   private JButton previousButton;
   private JButton nextButton;
@@ -123,11 +125,13 @@ public class ConsoleWizard
       }
     });
 
+    viewPanel = new JPanel(new BorderLayout());
+
     JPanel mainPanel = new JPanel(new BorderLayout());
     mainPanel.add(createInfoPanel(), BorderLayout.NORTH);
     mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
     if(error == null){
-      mainPanel.add(createStepPanel(), BorderLayout.CENTER);
+      mainPanel.add(viewPanel, BorderLayout.CENTER);
       frame.setSize(dimension);
     }else{
       frame.setSize(screen);
@@ -166,21 +170,6 @@ public class ConsoleWizard
     panel.add(titlePanel, BorderLayout.NORTH);
     panel.add(summaryPanel, BorderLayout.CENTER);
 
-    return panel;
-  }
-
-  /**
-   * Creates the step panel on the installation wizard.
-   *
-   * @return The step panel.
-   */
-  private JPanel createStepPanel()
-  {
-    JScrollPane pane = new JScrollPane();
-    //pane.setViewportView(new JLabel("Step"));
-
-    JPanel panel = new JPanel(new BorderLayout());
-    //panel.add(pane, BorderLayout.CENTER);
     return panel;
   }
 
@@ -295,6 +284,8 @@ public class ConsoleWizard
         activeStep.addPropertyChangeListener(this);
 
         if(step != null){
+          updateView();
+
           WizardStep ws = ((ConsoleWizardStep)step).getStep();
 
           updateButtonStatus(model, ws, step);
@@ -312,6 +303,20 @@ public class ConsoleWizard
         nextButton.setEnabled(nextEnabled);
       }
     }
+  }
+
+  /**
+   * Update the view for the current step.
+   */
+  private void updateView ()
+  {
+    Component[] components = viewPanel.getComponents();
+    for (int ii = 0; ii < components.length; ii++){
+      viewPanel.remove(components[ii]);
+    }
+    viewPanel.add(((ConsoleWizardStep)activeStep).getConsoleView());
+    viewPanel.validate();
+    viewPanel.repaint();
   }
 
   /**
