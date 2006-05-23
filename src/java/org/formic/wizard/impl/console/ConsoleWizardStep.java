@@ -58,6 +58,16 @@ public class ConsoleWizardStep
   }
 
   /**
+   * Gets the step for this instance.
+   *
+   * @return The step.
+   */
+  public WizardStep getStep ()
+  {
+    return this.step;
+  }
+
+  /**
    * Initialize the step.
    */
   public JComponent init ()

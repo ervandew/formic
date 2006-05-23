@@ -18,13 +18,14 @@
  */
 package org.formic.wizard.impl.console;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import charva.awt.BorderLayout;
 import charva.awt.Dimension;
 import charva.awt.FlowLayout;
 import charva.awt.Toolkit;
 
-import charva.awt.event.ActionEvent;
-import charva.awt.event.ActionListener;
 import charva.awt.event.WindowAdapter;
 import charva.awt.event.WindowEvent;
 
@@ -32,7 +33,6 @@ import charvax.swing.BorderFactory;
 import charvax.swing.JButton;
 import charvax.swing.JFrame;
 import charvax.swing.JLabel;
-import charvax.swing.JOptionPane;
 import charvax.swing.JPanel;
 import charvax.swing.JScrollPane;
 import charvax.swing.JSeparator;
@@ -42,8 +42,11 @@ import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
 import org.formic.Installer;
 
 import org.formic.wizard.Wizard;
+import org.formic.wizard.WizardStep;
 
 import org.formic.wizard.console.dialog.Dialogs;
+
+import org.formic.wizard.impl.models.MultiPathModel;
 
 import org.pietschy.wizard.WizardModel;
 
@@ -54,21 +57,23 @@ import org.pietschy.wizard.WizardModel;
  * @version $Revision$
  */
 public class ConsoleWizard
-  implements Wizard
+  implements Wizard, PropertyChangeListener
 {
   private static JFrame frame;
 
   private Semaphore semaphore = new Semaphore(1);
 
   private WizardModel model;
+  private org.pietschy.wizard.WizardStep activeStep;
+
   private boolean canceled;
 
   private JButton previousButton;
   private JButton nextButton;
-  private JButton lastButton;
+  //private JButton lastButton;
   private JButton finishButton;
   private JButton cancelButton;
-  private JButton closeButton;
+  //private JButton closeButton;
 
   /**
    * Constructs a new instance.
@@ -76,6 +81,7 @@ public class ConsoleWizard
   public ConsoleWizard (WizardModel _model)
   {
     model = _model;
+    model.addPropertyChangeListener(this);
     try{
       semaphore.acquire();
     }catch(Exception e){
@@ -112,7 +118,7 @@ public class ConsoleWizard
     frame = new JFrame(Installer.getString("title"));
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter(){
-      public void WindowClosing (WindowEvent _event){
+      public void windowClosing (WindowEvent _event){
         canceled = true;
       }
     });
@@ -130,12 +136,12 @@ public class ConsoleWizard
     frame.add(mainPanel);
     frame.setVisible(true);
 
-    Dialogs.showError(new Exception("test"));
-
     if(error != null){
       Dialogs.showError(error);
       close(true);
     }
+
+    model.reset();
   }
 
   /**
@@ -187,16 +193,17 @@ public class ConsoleWizard
   {
     JPanel panel = new JPanel(new BorderLayout());
 
-    previousButton = new JButton("Previous");
-    nextButton = new JButton("Next");
-    finishButton = new JButton("Finish");
+    previousButton = new JButton(Installer.getString("previous.text"));
+    previousButton.addActionListener(new PreviousAction(this));
 
-    cancelButton = new JButton("Cancel");
-    cancelButton.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent _event){
-        close(true);
-      }
-    });
+    nextButton = new JButton(Installer.getString("next.text"));
+    nextButton.addActionListener(new NextAction(this));
+
+    finishButton = new JButton(Installer.getString("finish.text"));
+    finishButton.addActionListener(new FinishAction(this));
+
+    cancelButton = new JButton(Installer.getString("cancel.text"));
+    cancelButton.addActionListener(new CancelAction(this));
 
     JPanel buttonBar = new JPanel(new FlowLayout(FlowLayout.RIGHT, 3, 3));
     buttonBar.add(previousButton);
@@ -250,6 +257,16 @@ public class ConsoleWizard
   }
 
   /**
+   * Gets the model for this instance.
+   *
+   * @return The model.
+   */
+  public WizardModel getModel ()
+  {
+    return this.model;
+  }
+
+  /**
    * Gets the frame for this instance.
    *
    * @return The frame.
@@ -257,5 +274,65 @@ public class ConsoleWizard
   public static JFrame getFrame ()
   {
     return frame;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+   */
+  public void propertyChange (PropertyChangeEvent evt)
+  {
+    if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
+      if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
+        MultiPathModel model = (MultiPathModel)getModel();
+        org.pietschy.wizard.WizardStep step = model.getActiveStep();
+
+        // update step listening.
+        if (activeStep != null){
+           activeStep.removePropertyChangeListener(this);
+        }
+        activeStep = step;
+        activeStep.addPropertyChangeListener(this);
+
+        if(step != null){
+          WizardStep ws = ((ConsoleWizardStep)step).getStep();
+
+          updateButtonStatus(model, ws, step);
+
+          // notify step that it is displayed.
+          ws.displayed();
+        }
+      }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
+        boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+        cancelButton.setEnabled(cancelEnabled);
+      }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
+          evt.getPropertyName().equals(WizardStep.BUSY))
+      {
+        boolean nextEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+        nextButton.setEnabled(nextEnabled);
+      }
+    }
+  }
+
+  /**
+   * Update the state (enabled / disabled) of the buttons in the button bar.
+   */
+  private void updateButtonStatus (
+      MultiPathModel model, WizardStep ws, org.pietschy.wizard.WizardStep step)
+  {
+    // set whether previous step is enabled or not.
+    boolean previousAvailable =
+      !model.isFirstStep(step) &&
+      !model.isLastStep(step) &&
+      ws.isPreviousEnabled();
+    previousButton.setEnabled(previousAvailable);
+
+    // set whether cancel step is enabled or not.
+    boolean cancelAvailable =
+      !model.isLastStep(step) && ws.isCancelEnabled();
+    cancelButton.setEnabled(cancelAvailable);
+
+    // set whether finish step is enabled or not.
+    finishButton.setEnabled(model.isLastStep(step));
   }
 }
