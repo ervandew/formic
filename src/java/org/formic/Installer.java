@@ -58,6 +58,7 @@ public class Installer
   private static Project project;
   private static Dimension dimension;
   private static Image image;
+  private static boolean consoleMode;
 
   /**
    * Runs the installer.
@@ -72,6 +73,7 @@ public class Installer
   public static boolean run (
       Properties _properties, List _paths, boolean _consoleMode)
   {
+    consoleMode = _consoleMode;
     if(!_consoleMode){
       I18n.setBundle(getResourceBundle());
 
@@ -276,5 +278,15 @@ public class Installer
   public static Image getImage ()
   {
     return image;
+  }
+
+  /**
+   * Determines if the installer is running in console mode or not.
+   *
+   * @return true if in console mode, false otherwise.
+   */
+  public static boolean isConsoleMode ()
+  {
+    return consoleMode;
   }
 }
