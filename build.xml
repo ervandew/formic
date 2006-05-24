@@ -62,10 +62,22 @@
     <copy todir="build/dist" file="ant/lib/ant.jar"/>
     <jar jarfile="build/dist/ant.jar" update="true">
       <fileset dir="build/classes">
-        <include name="org/apache/**/*.class"/>
+        <include name="org/apache/tools/**/*.class"/>
       </fileset>
       <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
-        <include name="org/apache/**/*"/>
+        <include name="org/apache/tools/**/*"/>
+        <exclude name="**/package.html"/>
+        <exclude name="**/*.java"/>
+      </fileset>
+    </jar>
+
+    <!-- apache commons minimal jar -->
+    <jar jarfile="build/dist/apache-commons-minimal.jar">
+      <fileset dir="build/classes">
+        <include name="org/apache/commons/**/*.class"/>
+      </fileset>
+      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+        <include name="org/apache/commons/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
       </fileset>
