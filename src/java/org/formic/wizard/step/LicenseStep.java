@@ -21,6 +21,9 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import java.io.InputStream;
+import java.io.StringWriter;
+
 import java.net.URL;
 
 import java.util.Properties;
@@ -31,6 +34,8 @@ import javax.swing.JEditorPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+
+import org.apache.commons.io.IOUtils;
 
 import org.formic.Installer;
 
@@ -155,8 +160,18 @@ public class LicenseStep
     charvax.swing.JPanel panel =
       new charvax.swing.JPanel(new charva.awt.BorderLayout());
 
-    charvax.swing.JTextArea area = new charvax.swing.JTextArea("license text");
-    //JEditorPane content = new JEditorPane(new URL(getProperty("license.url")));
+    InputStream in = null;
+    StringWriter writer = new StringWriter();
+    try{
+      in = new URL(getProperty("license.url")).openStream();
+      IOUtils.copy(in, writer);
+    }catch(Exception e){
+      throw new RuntimeException(e);
+    }finally{
+      IOUtils.closeQuietly(in);
+    }
+
+    charvax.swing.JTextArea area = new charvax.swing.JTextArea(writer.toString());
     area.setEditable(false);
     area.setColumns(ConsoleWizard.getFrame().getSize().width - 5);
     area.setRows(ConsoleWizard.getFrame().getSize().height - 12);
