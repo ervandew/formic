@@ -18,6 +18,7 @@
  */
 package org.formic.wizard.impl.console;
 
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -37,7 +38,7 @@ import org.pietschy.wizard.WizardModel;
  * @version $Revision$
  */
 public class ConsoleWizardStep
-  implements org.pietschy.wizard.WizardStep
+  implements org.pietschy.wizard.WizardStep, PropertyChangeListener
 {
   private WizardStep step;
   private Component component;
@@ -55,6 +56,8 @@ public class ConsoleWizardStep
   {
     this.step = step;
     changeSupport = new PropertyChangeSupport(this);
+
+    step.addPropertyChangeListener(this);
   }
 
   /**
@@ -212,5 +215,15 @@ public class ConsoleWizardStep
       String property, PropertyChangeListener listener)
   {
     changeSupport.removePropertyChangeListener(property, listener);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+   */
+  public void propertyChange (PropertyChangeEvent evt)
+  {
+    changeSupport.firePropertyChange(
+        evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());
   }
 }
