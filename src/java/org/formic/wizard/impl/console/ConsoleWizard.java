@@ -50,6 +50,9 @@ import org.formic.wizard.impl.models.MultiPathModel;
 
 import org.pietschy.wizard.WizardModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Wizard for console installers.
  *
@@ -59,6 +62,9 @@ import org.pietschy.wizard.WizardModel;
 public class ConsoleWizard
   implements Wizard, PropertyChangeListener
 {
+  private static final Logger logger =
+    LoggerFactory.getLogger(ConsoleWizard.class);
+
   private static JFrame frame;
 
   private Semaphore semaphore = new Semaphore(1);
@@ -141,6 +147,7 @@ public class ConsoleWizard
     frame.setVisible(true);
 
     if(error != null){
+      logger.error(error);
       Dialogs.showError(error);
       close(true);
     }
