@@ -46,6 +46,9 @@ import org.formic.wizard.WizardBuilder;
 
 import org.pietschy.wizard.I18n;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Installer class that holds installer resources, etc.
  *
@@ -54,6 +57,8 @@ import org.pietschy.wizard.I18n;
  */
 public class Installer
 {
+  private static final Logger logger = LoggerFactory.getLogger(Installer.class);
+
   private static ResourceBundleAggregate resourceBundle;
   private static Project project;
   private static Dimension dimension;
@@ -73,6 +78,7 @@ public class Installer
   public static boolean run (
       Properties _properties, List _paths, boolean _consoleMode)
   {
+    logger.info("Running Installer.");
     consoleMode = _consoleMode;
     if(!_consoleMode){
       I18n.setBundle(getResourceBundle());
@@ -92,6 +98,8 @@ public class Installer
     Wizard wizard = WizardBuilder.build(_paths, _consoleMode);
     wizard.showWizard();
     wizard.waitFor();
+
+    logger.info("Installer Finished.");
 
     return !wizard.wasCanceled();
   }
