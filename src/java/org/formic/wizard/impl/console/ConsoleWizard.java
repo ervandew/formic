@@ -272,36 +272,34 @@ public class ConsoleWizard
   public void propertyChange (PropertyChangeEvent evt)
   {
     if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
-      if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
-        MultiPathModel model = (MultiPathModel)getModel();
-        org.pietschy.wizard.WizardStep step = model.getActiveStep();
+      MultiPathModel model = (MultiPathModel)getModel();
+      org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
-        // update step listening.
-        if (activeStep != null){
-           activeStep.removePropertyChangeListener(this);
-        }
-        activeStep = step;
-        activeStep.addPropertyChangeListener(this);
-
-        if(step != null){
-          updateView();
-
-          WizardStep ws = ((ConsoleWizardStep)step).getStep();
-
-          updateButtonStatus(model, ws, step);
-
-          // notify step that it is displayed.
-          ws.displayed();
-        }
-      }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
-        boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
-        cancelButton.setEnabled(cancelEnabled);
-      }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
-          evt.getPropertyName().equals(WizardStep.BUSY))
-      {
-        boolean nextEnabled = ((Boolean)evt.getNewValue()).booleanValue();
-        nextButton.setEnabled(nextEnabled);
+      // update step listening.
+      if (activeStep != null){
+         activeStep.removePropertyChangeListener(this);
       }
+      activeStep = step;
+      activeStep.addPropertyChangeListener(this);
+
+      if(step != null){
+        updateView();
+
+        WizardStep ws = ((ConsoleWizardStep)step).getStep();
+
+        updateButtonStatus(model, ws, step);
+
+        // notify step that it is displayed.
+        ws.displayed();
+      }
+    }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
+      boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+      cancelButton.setEnabled(cancelEnabled);
+    }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
+        evt.getPropertyName().equals(WizardStep.BUSY))
+    {
+      boolean nextEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+      nextButton.setEnabled(nextEnabled);
     }
   }
 
