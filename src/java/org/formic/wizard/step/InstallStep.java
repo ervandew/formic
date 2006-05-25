@@ -57,6 +57,9 @@ import org.formic.Installer;
 
 import org.formic.wizard.gui.dialog.Dialogs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Step that runs the background install process and displays the progress for
  * the user.
@@ -68,18 +71,27 @@ public class InstallStep
   extends AbstractStep
   implements BuildListener
 {
+  private static final Logger logger =
+    LoggerFactory.getLogger(InstallStep.class);
+
   private static final String ICON = "/images/install.png";
 
-  private JProgressBar overallProgress;
-  private JProgressBar taskProgress;
-  private JLabel overallLabel;
-  private JLabel taskLabel;
+  private JProgressBar guiOverallProgress;
+  private JProgressBar guiTaskProgress;
+  private JLabel guiOverallLabel;
+  private JLabel guiTaskLabel;
+  private JButton guiShowErrorButton;
+
+  private charvax.swing.JProgressBar consoleOverallProgress;
+  private charvax.swing.JProgressBar consoleTaskProgress;
+  private charvax.swing.JLabel consoleOverallLabel;
+  private charvax.swing.JLabel consoleTaskLabel;
+  private charvax.swing.JButton consoleShowErrorButton;
 
   private List tasks = new ArrayList();
 
   private String targetName = "install";
 
-  private JButton showErrorButton;
   private Throwable error;
 
   /**
@@ -106,40 +118,40 @@ public class InstallStep
    */
   public JComponent initGui ()
   {
-    overallLabel = new JLabel(Installer.getString("install.initialize"));
-    overallLabel.setAlignmentX(0.0f);
-    overallProgress = new JProgressBar();
-    overallProgress.setAlignmentX(0.0f);
-    overallProgress.setStringPainted(true);
+    guiOverallLabel = new JLabel(Installer.getString("install.initialize"));
+    guiOverallLabel.setAlignmentX(0.0f);
+    guiOverallProgress = new JProgressBar();
+    guiOverallProgress.setAlignmentX(0.0f);
+    guiOverallProgress.setStringPainted(true);
 
-    taskLabel = new JLabel();
-    taskLabel.setAlignmentX(0.0f);
-    taskProgress = new JProgressBar();
-    taskProgress.setAlignmentX(0.0f);
-    taskProgress.setStringPainted(true);
-    taskProgress.setIndeterminate(true);
+    guiTaskLabel = new JLabel();
+    guiTaskLabel.setAlignmentX(0.0f);
+    guiTaskProgress = new JProgressBar();
+    guiTaskProgress.setAlignmentX(0.0f);
+    guiTaskProgress.setStringPainted(true);
+    guiTaskProgress.setIndeterminate(true);
 
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
     panel.setBorder(BorderFactory.createEmptyBorder(50, 125, 10, 125));
 
-    panel.add(overallProgress);
+    panel.add(guiOverallProgress);
     panel.add(Box.createRigidArea(new Dimension(0, 5)));
-    panel.add(overallLabel);
+    panel.add(guiOverallLabel);
 
     panel.add(Box.createRigidArea(new Dimension(0, 20)));
 
-    panel.add(taskProgress);
+    panel.add(guiTaskProgress);
     panel.add(Box.createRigidArea(new Dimension(0, 5)));
-    panel.add(taskLabel);
+    panel.add(guiTaskLabel);
     panel.add(Box.createRigidArea(new Dimension(0, 25)));
 
     JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
     buttons.setAlignmentX(0.0f);
-    showErrorButton = new JButton(new ShowErrorAction());
-    showErrorButton.setVisible(false);
-    buttons.add(showErrorButton);
+    guiShowErrorButton = new JButton(new ShowErrorAction());
+    guiShowErrorButton.setVisible(false);
+    buttons.add(guiShowErrorButton);
     panel.add(buttons);
 
     return panel;
@@ -151,7 +163,57 @@ public class InstallStep
    */
   public charva.awt.Component initConsole ()
   {
-    return null;
+    consoleOverallLabel = new charvax.swing.JLabel(
+        Installer.getString("install.initialize"));
+    consoleOverallProgress = new charvax.swing.JProgressBar();
+    consoleOverallProgress.setStringPainted(true);
+
+    charvax.swing.JPanel overallProgressPanel =
+      new charvax.swing.JPanel(new charva.awt.BorderLayout());
+    overallProgressPanel.setBorder(
+        new charvax.swing.border.TitledBorder("Overall Progress"));
+    overallProgressPanel.add(consoleOverallProgress,
+        charva.awt.BorderLayout.CENTER);
+
+    consoleTaskLabel = new charvax.swing.JLabel();
+    consoleTaskProgress = new charvax.swing.JProgressBar();
+    consoleTaskProgress.setStringPainted(true);
+    consoleTaskProgress.setIndeterminate(true);
+
+    charvax.swing.JPanel taskProgressPanel =
+      new charvax.swing.JPanel(new charva.awt.BorderLayout());
+    taskProgressPanel.setBorder(
+        new charvax.swing.border.TitledBorder("Task Progress"));
+    taskProgressPanel.add(consoleTaskProgress,
+        charva.awt.BorderLayout.CENTER);
+
+    charvax.swing.JPanel panel = new charvax.swing.JPanel();
+    panel.setLayout(
+        new charvax.swing.BoxLayout(panel, charvax.swing.BoxLayout.Y_AXIS));
+
+    //panel.setBorder(BorderFactory.createEmptyBorder(50, 125, 10, 125));
+
+    panel.add(new charvax.swing.JLabel());
+    panel.add(consoleOverallLabel);
+    panel.add(new charvax.swing.JLabel());
+    panel.add(overallProgressPanel);
+
+    panel.add(new charvax.swing.JLabel());
+
+    panel.add(consoleTaskLabel);
+    panel.add(new charvax.swing.JLabel());
+    panel.add(taskProgressPanel);
+    panel.add(new charvax.swing.JLabel());
+
+    charvax.swing.JPanel buttons = new charvax.swing.JPanel(
+        new charva.awt.FlowLayout(FlowLayout.RIGHT, 0, 0));
+    consoleShowErrorButton = new charvax.swing.JButton();
+    //consoleShowErrorButton.addActionListener(...);
+    consoleShowErrorButton.setVisible(false);
+    buttons.add(consoleShowErrorButton);
+    panel.add(buttons);
+
+    return panel;
   }
 
   /**
@@ -178,6 +240,18 @@ public class InstallStep
    */
   public void displayed ()
   {
+    if(Installer.isConsoleMode()){
+      displayedConsole();
+    }else{
+      displayedGui();
+    }
+  }
+
+  /**
+   * Invoked when this step is displayed in the gui.
+   */
+  protected void displayedGui ()
+  {
     try{
       setBusy(true);
       Worker.post(new foxtrot.Task(){
@@ -189,11 +263,11 @@ public class InstallStep
           registerListener(target);
           execute(target);
 
-          overallProgress.setValue(overallProgress.getMaximum());
-          overallLabel.setText(Installer.getString("install.done"));
+          guiOverallProgress.setValue(guiOverallProgress.getMaximum());
+          guiOverallLabel.setText(Installer.getString("install.done"));
 
-          taskProgress.setValue(taskProgress.getMaximum());
-          taskLabel.setText(Installer.getString("install.done"));
+          guiTaskProgress.setValue(guiTaskProgress.getMaximum());
+          guiTaskLabel.setText(Installer.getString("install.done"));
 
           setCancelEnabled(false);
           return null;
@@ -204,12 +278,50 @@ public class InstallStep
       error = e;
       error.printStackTrace();
       Dialogs.showError(error);
-      overallLabel.setText(
+      guiOverallLabel.setText(
           targetName + ": " + Installer.getString("error.dialog.text"));
-      showErrorButton.setVisible(true);
+      guiShowErrorButton.setVisible(true);
     }finally{
-      taskProgress.setIndeterminate(false);
+      guiTaskProgress.setIndeterminate(false);
     }
+  }
+
+  /**
+   * Invoked when this step is displayed in the console.
+   */
+  protected void displayedConsole ()
+  {
+    setBusy(true);
+
+    new Thread(){
+      public void run ()
+      {
+        try{
+          Target target = (Target)
+            Installer.getProject().getTargets().get(targetName);
+          registerListener(target);
+          execute(target);
+
+          consoleOverallProgress.setValue(consoleOverallProgress.getMaximum());
+          consoleOverallLabel.setText(Installer.getString("install.done"));
+
+          consoleTaskProgress.setValue(consoleTaskProgress.getMaximum());
+          consoleTaskLabel.setText(Installer.getString("install.done"));
+
+          setCancelEnabled(false);
+        }catch(Exception e){
+          error = e;
+          error.printStackTrace();
+          org.formic.wizard.console.dialog.Dialogs.showError(error);
+          consoleOverallLabel.setText(
+              targetName + ": " + Installer.getString("error.dialog.text"));
+          consoleShowErrorButton.setVisible(true);
+        }finally{
+          consoleTaskProgress.setIndeterminate(false);
+          setBusy(false);
+        }
+      }
+    }.start();
   }
 
   /**
@@ -221,8 +333,13 @@ public class InstallStep
   {
     registerTasks(target.getTasks());
 
-    overallProgress.setMaximum(this.tasks.size());
-    overallProgress.setValue(0);
+    if(Installer.isConsoleMode()){
+      consoleOverallProgress.setMaximum(this.tasks.size());
+      consoleOverallProgress.setValue(0);
+    }else{
+      guiOverallProgress.setMaximum(this.tasks.size());
+      guiOverallProgress.setValue(0);
+    }
 
     Installer.getProject().addBuildListener(this);
   }
@@ -324,7 +441,12 @@ public class InstallStep
    */
   public void taskStarted (BuildEvent e)
   {
-    overallLabel.setText(targetName + " - " + e.getTask().getTaskName());
+    if(Installer.isConsoleMode()){
+      consoleOverallLabel.setText(
+          targetName + " - " + e.getTask().getTaskName());
+    }else{
+      guiOverallLabel.setText(targetName + " - " + e.getTask().getTaskName());
+    }
   }
 
   /**
@@ -335,7 +457,11 @@ public class InstallStep
   {
     int index = tasks.indexOf(e.getTask());
     if(index > 0){
-      overallProgress.setValue(index + 1);
+      if(Installer.isConsoleMode()){
+        consoleOverallProgress.setValue(index + 1);
+      }else{
+        guiOverallProgress.setValue(index + 1);
+      }
     }
   }
 
@@ -345,7 +471,11 @@ public class InstallStep
    */
   public void messageLogged (BuildEvent e)
   {
-    taskLabel.setText(e.getMessage());
+    if(Installer.isConsoleMode()){
+      consoleTaskLabel.setText(e.getMessage());
+    }else{
+      guiTaskLabel.setText(e.getMessage());
+    }
   }
 
   private class ShowErrorAction
