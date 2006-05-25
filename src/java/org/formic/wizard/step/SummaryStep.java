@@ -68,6 +68,8 @@ public class SummaryStep
    */
   public charva.awt.Component initConsole ()
   {
-    return null;
+    charvax.swing.JPanel panel = new charvax.swing.JPanel();
+    panel.add(new charvax.swing.JTextArea());
+    return panel;
   }
 }
