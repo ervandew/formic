@@ -150,9 +150,9 @@ public class ConsoleWizard
       logger.error(error);
       Dialogs.showError(error);
       close(true);
+    }else{
+      model.reset();
     }
-
-    model.reset();
   }
 
   /**
@@ -315,11 +315,14 @@ public class ConsoleWizard
    */
   private void updateView ()
   {
+    Component view = ((ConsoleWizardStep)activeStep).getConsoleView();
+    viewPanel.add(view);
     Component[] components = viewPanel.getComponents();
     for (int ii = 0; ii < components.length; ii++){
-      viewPanel.remove(components[ii]);
+      if(components[ii] != view){
+        viewPanel.remove(components[ii]);
+      }
     }
-    viewPanel.add(((ConsoleWizardStep)activeStep).getConsoleView());
     viewPanel.validate();
     viewPanel.repaint();
   }
