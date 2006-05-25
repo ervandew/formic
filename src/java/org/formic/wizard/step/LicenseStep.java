@@ -39,6 +39,8 @@ import org.apache.commons.io.IOUtils;
 
 import org.formic.Installer;
 
+import org.formic.wizard.console.event.RadioButtonKeyListener;
+
 import org.formic.wizard.gui.event.HyperlinkListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
@@ -192,11 +194,13 @@ public class LicenseStep
         Installer.getString("license.accept"));
     accept.setActionCommand(ACCEPT);
     accept.addActionListener(listener);
+    //accept.addKeyListener(RadioButtonKeyListener.getInstance());
 
     charvax.swing.JRadioButton decline = new charvax.swing.JRadioButton(
         Installer.getString("license.decline"));
     decline.setActionCommand(DECLINE);
     decline.addActionListener(listener);
+    //decline.addKeyListener(RadioButtonKeyListener.getInstance());
 
     charvax.swing.ButtonGroup group = new charvax.swing.ButtonGroup();
     group.add(accept);
