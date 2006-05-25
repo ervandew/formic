@@ -93,7 +93,7 @@ public class ConsoleWizard
     try{
       semaphore.acquire();
     }catch(Exception e){
-      e.printStackTrace();
+      logger.error("Error acquiring console wizard lock.", e);
     }
   }
 
@@ -222,7 +222,7 @@ public class ConsoleWizard
     try{
       semaphore.acquire();
     }catch(Exception e){
-      e.printStackTrace();
+      logger.error("Error acquiring console wizard lock in waitFor.", e);
     }
   }
 
@@ -248,7 +248,7 @@ public class ConsoleWizard
     try{
       semaphore.release();
     }catch(Exception e){
-      e.printStackTrace();
+      logger.error("Error releasing console wizard lock", e);
     }
   }
 
@@ -305,7 +305,11 @@ public class ConsoleWizard
     }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
         evt.getPropertyName().equals(WizardStep.BUSY))
     {
-      boolean nextEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+      MultiPathModel model = (MultiPathModel)getModel();
+      org.pietschy.wizard.WizardStep step = model.getActiveStep();
+      WizardStep ws = ((ConsoleWizardStep)step).getStep();
+
+      boolean nextEnabled = ws.isValid() && !ws.isBusy();
       nextButton.setEnabled(nextEnabled);
     }
   }
