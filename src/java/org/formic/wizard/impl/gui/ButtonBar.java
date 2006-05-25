@@ -20,6 +20,8 @@ package org.formic.wizard.impl.gui;
 
 import javax.swing.JButton;
 
+import org.formic.wizard.gui.event.ButtonKeyListener;
+
 import org.pietschy.wizard.Wizard;
 
 /**
@@ -56,9 +58,16 @@ public class ButtonBar
   {
     super.layoutButtons(help, previous, next, last, finish, cancel, close);
     this.previousButton = previous;
+    previousButton.addKeyListener(ButtonKeyListener.getInstance());
+
     this.nextButton = next;
+    nextButton.addKeyListener(ButtonKeyListener.getInstance());
+
     this.finishButton = finish;
+    finishButton.addKeyListener(ButtonKeyListener.getInstance());
+
     this.cancelButton = cancel;
+    cancelButton.addKeyListener(ButtonKeyListener.getInstance());
   }
 
   /**

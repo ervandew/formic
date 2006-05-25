@@ -230,6 +230,10 @@ public class GuiWizard
 
             updateButtonStatus(model, ws, step);
 
+            if(buttonBar.getNextButton().isEnabled()){
+              buttonBar.getNextButton().grabFocus();
+            }
+
             // notify step that it is displayed.
             ws.displayed();
 
