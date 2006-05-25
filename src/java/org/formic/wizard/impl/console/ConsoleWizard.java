@@ -309,7 +309,8 @@ public class ConsoleWizard
       org.pietschy.wizard.WizardStep step = model.getActiveStep();
       WizardStep ws = ((ConsoleWizardStep)step).getStep();
 
-      boolean nextEnabled = ws.isValid() && !ws.isBusy();
+      boolean nextEnabled =
+        ws.isValid() && !ws.isBusy() && !model.isLastStep(step);
       nextButton.setEnabled(nextEnabled);
     }
   }
@@ -343,6 +344,11 @@ public class ConsoleWizard
       !model.isLastStep(step) &&
       ws.isPreviousEnabled();
     previousButton.setEnabled(previousAvailable);
+
+    // set whether next step is enabled or not.
+    boolean nextEnabled =
+      ws.isValid() && !ws.isBusy() && !model.isLastStep(step);
+    nextButton.setEnabled(nextEnabled);
 
     // set whether cancel step is enabled or not.
     boolean cancelAvailable =
