@@ -35,9 +35,15 @@ import charvax.swing.JButton;
 import charvax.swing.JFrame;
 import charvax.swing.JLabel;
 import charvax.swing.JPanel;
+import charvax.swing.JProgressBar;
+import charvax.swing.JScrollPane;
 import charvax.swing.JSeparator;
+import charvax.swing.JTextArea;
+import charvax.swing.SwingUtilities;
 
 import edu.emory.mathcs.backport.java.util.concurrent.Semaphore;
+
+import org.apache.commons.lang.WordUtils;
 
 import org.formic.Installer;
 
@@ -65,6 +71,8 @@ public class ConsoleWizard
   private static final Logger logger =
     LoggerFactory.getLogger(ConsoleWizard.class);
 
+  private static final String BUSY_TEXT = Installer.getString("busy.text");
+
   private static JFrame frame;
 
   private Semaphore semaphore = new Semaphore(1);
@@ -75,6 +83,7 @@ public class ConsoleWizard
   private boolean canceled;
 
   private JPanel viewPanel;
+  private JPanel hiddenPanel;
 
   private JButton previousButton;
   private JButton nextButton;
@@ -290,7 +299,7 @@ public class ConsoleWizard
       activeStep.addPropertyChangeListener(this);
 
       if(step != null){
-        updateView();
+        updateView(((ConsoleWizardStep)activeStep).getConsoleView());
 
         WizardStep ws = ((ConsoleWizardStep)step).getStep();
 
@@ -307,20 +316,36 @@ public class ConsoleWizard
     {
       MultiPathModel model = (MultiPathModel)getModel();
       org.pietschy.wizard.WizardStep step = model.getActiveStep();
-      WizardStep ws = ((ConsoleWizardStep)step).getStep();
+      final WizardStep ws = ((ConsoleWizardStep)step).getStep();
 
       boolean nextEnabled =
         ws.isValid() && !ws.isBusy() && !model.isLastStep(step);
       nextButton.setEnabled(nextEnabled);
+
+      // show inifinite wait for busy state.
+      if(evt.getPropertyName().equals(WizardStep.BUSY) && ws.isBusyAnimated()){
+        final boolean busy = ((Boolean)evt.getNewValue()).booleanValue();
+
+        SwingUtilities.invokeLater(new Runnable(){
+          public void run () {
+            if(busy){
+              hiddenPanel = (JPanel)viewPanel.getComponents()[0];
+              updateView(new BusyPanel(ws));
+            }else{
+              updateView(hiddenPanel);
+              hiddenPanel = null;
+            }
+          }
+        });
+      }
     }
   }
 
   /**
    * Update the view for the current step.
    */
-  private void updateView ()
+  private void updateView (Component view)
   {
-    Component view = ((ConsoleWizardStep)activeStep).getConsoleView();
     viewPanel.add(view);
     Component[] components = viewPanel.getComponents();
     for (int ii = 0; ii < components.length; ii++){
@@ -357,5 +382,47 @@ public class ConsoleWizard
 
     // set whether finish step is enabled or not.
     finishButton.setEnabled(model.isLastStep(step));
+  }
+
+  /**
+   * Panel to be displayed when a busy step supports animation.
+   */
+  private class BusyPanel
+    extends JPanel
+  {
+    private JButton cancelButton;
+
+    /**
+     * Constructs a new BusyPanel.
+     *
+     * @param ws The WizardStep.
+     */
+    public BusyPanel (WizardStep ws)
+    {
+      setLayout(new BorderLayout());
+
+      String message = Installer.getString(ws.getName() + ".busy", BUSY_TEXT);
+      JTextArea messageArea = new JTextArea(WordUtils.wrap(message, 50), 3, 50);
+      messageArea.setEditable(false);
+
+      JScrollPane messagePane = new JScrollPane(messageArea);
+      JPanel centerMessage = new JPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
+      centerMessage.add(messagePane);
+      add(centerMessage, BorderLayout.NORTH);
+
+      JProgressBar progress = new JProgressBar();
+      progress.setStringPainted(true);
+      progress.setIndeterminate(true);
+
+      JPanel progressPanel = new JPanel(new BorderLayout());
+      progressPanel.setBorder(BorderFactory.createLineBorder(null, 1));
+      progressPanel.add(progress, BorderLayout.CENTER);
+      progressPanel.setSize(25, 2);
+
+      JPanel centerProgress = new JPanel(new FlowLayout(FlowLayout.CENTER, 1, 1));
+      centerProgress.add(progressPanel);
+
+      add(centerProgress, BorderLayout.CENTER);
+    }
   }
 }
