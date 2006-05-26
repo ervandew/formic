@@ -51,7 +51,7 @@ public class GuiWizardStep
   implements PropertyChangeListener
 {
   private static SingleComponentInfiniteProgress INFINITE_PROGRESS;
-  private static final String BUSY_TEXT = Installer.getString("busy");
+  private static final String BUSY_TEXT = Installer.getString("busy.text");
 
   private WizardStep step;
   private JComponent component;
