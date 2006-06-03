@@ -71,13 +71,13 @@
     </section>
     <section id="news">
       <title>News</title>
-      <section id="news_2006-03-09">
+      <!--section id="news_2006-03-09">
         <title>2006-03-09</title>
         <p>
           Sourceforge project is now all setup.  I'm hoping to have an initial
-          release within then next few months, so stay tuned.
+          release within the next few months, so stay tuned.
         </p>
-      </section>
+      </section-->
     </section>
   </body>
 </document>
