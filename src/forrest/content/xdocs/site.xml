@@ -42,6 +42,10 @@ See http://forrest.apache.org/docs/linking.html for more info
    -->
   <about label="About" tab="home">
     <index label="Index / News" href="index.html" description="Welcome to formic"/>
+    <!--screenshots label="Screenshots" href="ext:screenshots" description="Formic Screenshots"/-->
+    <forums label="Forums" href="ext:forums" description="Discussion Forums"/>
+    <tracker label="Bugs / Feature Requests" href="ext:tracker"
+        description="Bugs / Feature Requests"/>
     <changes label="Change History" href="changes.html"
       description="Change History"/>
     <todo label="Todo" href="todo.html" description="Todo"/>
@@ -58,6 +62,9 @@ See http://forrest.apache.org/docs/linking.html for more info
 
   <external-refs>
     <downloads href="http://sourceforge.net/project/showfiles.php?group_id=161801"/>
+    <screenshots href="http://sourceforge.net/project/screenshots.php?group_id=161801"/>
+    <forums href="http://sourceforge.net/forum/?group_id=161801"/>
+    <tracker href="http://sourceforge.net/tracker/?group_id=161801"/>
     <license href="http://www.gnu.org/copyleft/lesser.html"/>
 
     <vim href="http://www.vim.org"/>
