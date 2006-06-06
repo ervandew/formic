@@ -21,6 +21,9 @@
 
 CUR_PATH=`dirname $0`
 
-export LD_LIBRARY_PATH="$CUR_PATH/../lib/native/linux/"
+export ANT_OPTS="-Djava.library.path=$CUR_PATH/ant/lib/native/linux"
 
-$CUR_PATH/ant -f $CUR_PATH/../../../src/samples/install.xml -lib $CUR_PATH/../../../src/samples $*
+$CUR_PATH/ant/bin/ant \
+  -logger org.formic.ant.Log4jLogger \
+  -lib $CUR_PATH \
+  -f $CUR_PATH/install.xml
