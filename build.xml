@@ -7,8 +7,6 @@
   <property environment="env"/>
   <property file="src/ant/build.properties"/>
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
   <import file="src/ant/docs.xml"/>
   <import file="src/ant/test.xml"/>
 
