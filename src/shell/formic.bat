@@ -20,3 +20,5 @@ rem Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 rem Author: Eric Van Dewoestine
 
 set CUR_PATH=%~p0
+
+%CUR_PATH%/ant/bin/ant %* -logger org.formic.ant.Log4jLogger -lib %CUR_PATH% -f %CUR_PATH%/install.xml

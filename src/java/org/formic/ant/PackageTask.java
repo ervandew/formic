@@ -82,6 +82,7 @@ public class PackageTask
         files.setDir(new File(formicHome));
         files.setIncludes("ant/**/*");
         files.setExcludes("ant/bin/**/*");
+        files.setExcludes("ant/resources/**/*");
 
         Tar.TarFileSet binFiles = tar.createTarFileSet();
         binFiles.setDir(new File(formicHome));
@@ -89,7 +90,7 @@ public class PackageTask
         binFiles.setIncludes("ant/bin/ant");
 
         Tar.TarFileSet formicFiles = tar.createTarFileSet();
-        formicFiles.setDir(new File(formicHome + "/shell"));
+        formicFiles.setDir(new File(formicHome + "/ant/resources"));
         formicFiles.setMode("755");
         formicFiles.setIncludes("formic");
 
@@ -106,11 +107,13 @@ public class PackageTask
         FileSet files = new FileSet();
         files.setDir(new File(formicHome));
         files.setIncludes("ant/**/*");
+        files.setExcludes("ant/resources/**/*");
+        files.setExcludes("ant/lib/native/**/*");
         zip.addFileset(files);
 
         FileSet formicFiles = new FileSet();
-        formicFiles.setDir(new File(formicHome + "/shell"));
-        formicFiles.setIncludes("shell/formic.bat");
+        formicFiles.setDir(new File(formicHome + "/ant/resources"));
+        formicFiles.setIncludes("formic.bat");
         zip.addFileset(formicFiles);
 
         zip.setDestFile(zipFile);
@@ -264,7 +267,7 @@ public class PackageTask
     concat.setBinary(true);
 
     PathElement script = concat.createPath().createPathElement();
-    script.setLocation(new File(formicHome + "/shell/selfextract"));
+    script.setLocation(new File(formicHome + "/ant/resources/selfextract"));
 
     PathElement tarFile = concat.createPath().createPathElement();
     tarFile.setLocation(archive);

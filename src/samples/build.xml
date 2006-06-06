@@ -7,17 +7,23 @@
   - Sample build file that creates both a windows and linux installer.
   -->
 <project xmlns:formic="antlib:org.formic.ant"
-    name="installer" default="installer" basedir="../..">
+    name="installer" default="installer" basedir="..">
 
-  <target name="installer">
+  <target name="installer" depends="clean">
+    <mkdir dir="build"/>
+
     <formic:package os="linux"
         destfile="build/test.sh" compression="gzip">
-      <tarfileset dir="src/samples">
+      <tarfileset dir="samples">
         <include name="install.*"/>
         <include name="log4j.xml"/>
         <include name="steps.properties"/>
       </tarfileset>
     </formic:package>
+  </target>
+
+  <target name="clean">
+    <delete dir="build"/>
   </target>
 
 </project>

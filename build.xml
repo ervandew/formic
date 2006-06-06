@@ -10,6 +10,9 @@
   <import file="src/ant/docs.xml"/>
   <import file="src/ant/test.xml"/>
 
+  <!-- exclude vim swap files -->
+  <defaultexcludes add="**/*.swp"/>
+
   <!-- classpath -->
   <path id="classpath">
     <fileset dir="lib" includes="*.jar"/>
@@ -45,7 +48,7 @@
         <include name="**/*.class"/>
         <exclude name="org/apache/**/*.class"/>
       </fileset>
-      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+      <fileset dir="src/java">
         <include name="**/*"/>
         <exclude name="org/apache/**/*"/>
         <exclude name="**/package.html"/>
@@ -62,7 +65,7 @@
       <fileset dir="build/classes">
         <include name="org/apache/tools/**/*.class"/>
       </fileset>
-      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+      <fileset dir="src/java">
         <include name="org/apache/tools/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
@@ -74,7 +77,7 @@
       <fileset dir="build/classes">
         <include name="org/apache/commons/**/*.class"/>
       </fileset>
-      <fileset dir="src/java" excludesfile="src/ant/exclude.properties">
+      <fileset dir="src/java">
         <include name="org/apache/commons/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
@@ -82,22 +85,31 @@
     </jar>
 
     <!-- copy ant and formic scripts over to build dir -->
-    <copy todir="build">
+    <copy todir="build/formic">
+      <fileset dir="." includes="LICENSE,NOTICE"/>
       <fileset dir="." includes="ant/**/*"/>
-      <fileset dir="src" includes="shell/**/*"/>
+      <fileset dir="src" includes="samples/**/*"/>
+      <fileset dir="lib" includes="license/*.license"/>
+      <fileset dir="build/dist" includes="formic*.jar"/>
     </copy>
-    <chmod file="build/ant/bin/ant" perm="755"/>
+    <chmod file="build/formic/ant/bin/ant" perm="755"/>
 
     <!-- copy formic jar(s) to ant -->
-    <copy todir="build/ant/lib" overwrite="true">
+    <copy todir="build/formic/ant/lib" overwrite="true">
       <fileset dir="build/dist" includes="*.jar"/>
       <fileset dir="lib" includes="**/*.jar"/>
       <fileset dir="lib" includes="native/**/*"/>
     </copy>
 
+    <!-- copy over resource files -->
+    <copy todir="build/formic/ant/resources">
+      <fileset dir="src/shell" includes="**/*"/>
+    </copy>
+
     <!-- set permissions on scripts -->
     <chmod perm="755">
-      <fileset dir="build/ant/bin" includes="**/*"/>
+      <fileset dir="build/formic/ant/bin" includes="**/*"/>
+      <fileset dir="build/formic" includes="formic"/>
     </chmod>
   </target>
 
@@ -120,15 +132,13 @@
     </move>
 
     <zip destfile="dist/formic-${formic.version}.zip">
-      <zipfileset prefix="formic-${formic.version}/"
-          dir="." excludesfile="src/ant/exclude.properties">
+      <zipfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
         <include name="src/samples/**/*"/>
         <include name="LICENSE"/>
         <include name="NOTICE"/>
       </zipfileset>
-      <zipfileset prefix="formic-${formic.version}/"
-          dir="build" excludesfile="src/ant/exclude.properties">
+      <zipfileset prefix="formic-${formic.version}/" dir="build">
         <include name="ant/**/*"/>
         <include name="doc/api/**/*"/>
         <include name="doc/site/**/*"/>
@@ -136,23 +146,19 @@
     </zip>
 
     <tar destfile="dist/formic-${formic.version}.tar.gz" compression="gzip">
-      <tarfileset prefix="formic-${formic.version}/"
-          dir="." excludesfile="src/ant/exclude.properties">
+      <tarfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
         <include name="src/samples/**/*"/>
         <include name="LICENSE"/>
         <include name="NOTICE"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/"
-          dir="build" excludesfile="src/ant/exclude.properties">
+      <tarfileset prefix="formic-${formic.version}/" dir="build">
         <include name="ant/**/*"/>
         <exclude name="ant/bin/ant"/>
         <include name="doc/api/**/*"/>
         <include name="doc/site/**/*"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/"
-          dir="build" mode="755"
-          excludesfile="src/ant/exclude.properties">
+      <tarfileset prefix="formic-${formic.version}/" dir="build" mode="755">
         <include name="ant/bin/ant"/>
       </tarfileset>
     </tar>
