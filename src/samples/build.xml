@@ -20,6 +20,15 @@
         <include name="steps.properties"/>
       </tarfileset>
     </formic:package>
+
+    <formic:package os="windows"
+        destfile="build/test.exe">
+      <fileset dir="samples">
+        <include name="install.*"/>
+        <include name="log4j.xml"/>
+        <include name="steps.properties"/>
+      </fileset>
+    </formic:package>
   </target>
 
   <target name="clean">

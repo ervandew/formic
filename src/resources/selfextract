@@ -1,0 +1,26 @@
+#!/bin/sh
+echo ""
+echo "Initializing installation..."
+echo ""
+
+# create a temp directory to extract to.
+WRKDIR=`mktemp -d /tmp/installer.XXXXXX`
+
+# determine start of archive
+START=`awk '/^__BEGIN_ARCHIVE__/ { print NR + 1; exit 0; }' $0`
+
+# Take the archive portion of this file and extract it.
+tail -n +$START $0 | gzip -dc | tar x -C $WRKDIR
+
+# execute the install script
+PREV=`pwd`
+cd $WRKDIR
+./formic $@
+
+# delete the temp files
+cd $PREV
+#rm -rf $WRKDIR
+
+exit 0
+
+__BEGIN_ARCHIVE__
