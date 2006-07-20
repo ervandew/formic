@@ -1,0 +1,15 @@
+#!/bin/sh
+
+BACKUP_DIR="/home/ervandew/files/development/formic/backup"
+
+if [ ! -d $BACKUP_DIR ]; then
+  mkdir -p $BACKUP_DIR
+fi
+cd $BACKUP_DIR
+
+rsync -av rsync://formic.cvs.sourceforge.net/cvsroot/formic/* .
+
+tar zcvf backup-cvs-`date +%Y%m%d`.tar.gz CVSROOT formic
+rm -Rf CVSROOT formic
+
+cd -
