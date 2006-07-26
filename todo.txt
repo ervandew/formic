@@ -1,0 +1,13 @@
+Panels
+  - Proxy setup
+  - Feature List
+  - Feature Tree
+  - Required software discovery / progress
+    - List of requirements starting with no icons. As requirements are
+      examined, add X or checkmark indicating whether requirement satisfied or
+      not.
+    - When looking for required software, add link/button for user to specify
+      location in a popup?
+  - Database connection info
+  - File diff
+  - Install location
