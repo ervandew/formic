@@ -64,7 +64,7 @@
     <jar jarfile="build/dist/formic-bootstrap.jar">
       <manifest>
         <attribute name="Main-Class"
-            value="org.formic.bootstrap.windows.Launcher"/>
+            value="org.formic.bootstrap.Launcher"/>
       </manifest>
       <fileset dir="build/classes">
         <include name="org/formic/bootstrap/**/*.class"/>
