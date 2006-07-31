@@ -15,7 +15,12 @@ tail -n +$START $0 | gzip -dc | tar x -C $WRKDIR
 # execute the install script
 PREV=`pwd`
 cd $WRKDIR
-./formic $@
+
+if [ "$DISPLAY" == "" ] ; then
+  ./formic -Dformic.console=true $@
+else
+  ./formic $@
+fi
 
 # delete the temp files
 cd $PREV
