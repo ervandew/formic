@@ -1,5 +1,14 @@
 This software is distributed under the terms of the FSF Lesser Gnu Public
-License (see LICENSE).
+License (see LICENSE.lgpl.txt) with the exception of org.formic.ant.PackageTask
+which is distributed under the terms of the FSF Gnu Public License (see
+LICENSE.gpl.txt).
 
 This product includes software developed by
   - The Apache Software Foundation (http://www.apache.org/).
+
+This software includes a distribution of Launch4j
+(http://sourceforge.net/projects/launch4j).  Launch4j is licensed under the
+terms of the FSF Gnu Public License (with the exception of the code attached to
+the executables it generates which are licensed under the LGPL) and as such,
+Launch4j is delivered with the formic distribution under the terms provided in
+the FSF Gnu Public License (see LICENSE.gpl.txt).

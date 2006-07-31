@@ -121,9 +121,13 @@
 
     <!-- copy over resource files -->
     <copy todir="build/formic/ant/resources">
-      <fileset dir="src/resources" includes="**/*"/>
+      <fileset dir="src/resources" includes="**/*" excludes="launch4j.tar.gz"/>
       <fileset dir="build/dist" includes="formic-bootstrap.jar"/>
     </copy>
+
+    <!-- extract launch4j archive -->
+    <untar src="src/resources/launch4j.tar.gz" compression="gzip"
+        dest="build/formic/ant/resources"/>
 
     <!-- set permissions on scripts -->
     <chmod perm="755">
