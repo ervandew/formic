@@ -37,6 +37,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
+import org.formic.bootstrap.util.CommandExecutor;
 import org.formic.bootstrap.util.Extractor;
 
 /**
@@ -129,13 +130,12 @@ public class Launcher
       // FIXME: show error dialog.
       e.printStackTrace();
     }finally{
-      /*try{
+      try{
         cleanup();
       }catch(Exception e){
-      }*/
+      }
+      System.exit(0);
     }
-
-    System.exit(0);
   }
 
   /**
@@ -183,19 +183,19 @@ public class Launcher
   private void runInstaller (String[] args)
     throws Exception
   {
-    int offset = 3;
-    String[] cmd = new String[args.length + 3];
-    System.arraycopy(args, 0, cmd, 3, args.length);
-    cmd[0] = tempDir.substring(0, 2);
-    cmd[1] = "&&";
-    cmd[2] = tempDir + "/formic.bat";
+    String drive = tempDir.substring(0, 2);
+    StringBuffer command = new StringBuffer()
+      .append('"').append(tempDir).append("/formic.bat\"");
+    for (int ii = 0; ii < args.length; ii++){
+      command.append(' ').append(args[ii]);
+    }
 
-System.out.println("#### cmd = " + cmd[0]);
-System.out.println("#### cmd = " + cmd[1]);
-System.out.println("#### cmd = " + cmd[2]);
+    String[] cmd = {
+      "cmd", "/c", "\"" + drive + " && " + command + "\""
+    };
 
-    Process process = Runtime.getRuntime().exec(cmd);
-    process.waitFor();
+    System.out.println("Initializing installer ...");
+    CommandExecutor.execute(cmd);
   }
 
   /**
