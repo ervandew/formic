@@ -124,6 +124,12 @@ public class Launcher
   {
     try{
       extractArchive();
+
+      // artificial sleep to keep extraction dialog open long enough that the
+      // user can see what it is rather than have some mysterious window flash
+      // by leaving the user perplexed as to what it was.
+      Thread.sleep(1500);
+
       frame.setVisible(false);
       runInstaller(args);
     }catch(Exception e){
