@@ -103,7 +103,7 @@
 
     <!-- copy ant and formic scripts over to build dir -->
     <copy todir="build/formic">
-      <fileset dir="." includes="LICENSE,NOTICE"/>
+      <fileset dir="." includes="LICENSE*.txt,NOTICE"/>
       <fileset dir="." includes="ant/**/*"/>
       <fileset dir="src" includes="samples/**/*"/>
       <fileset dir="lib" includes="license/*.license"/>
