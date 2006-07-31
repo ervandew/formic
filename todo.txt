@@ -11,3 +11,10 @@ Panels
   - Database connection info
   - File diff
   - Install location
+
+Linux
+  - jre / jdk discovery in shell script.
+
+Windows
+  - error dialog for windows boostrapping.
+  - Splash screen viewable until installer has started?
