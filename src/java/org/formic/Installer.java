@@ -44,6 +44,8 @@ import org.formic.util.ResourceBundleAggregate;
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardBuilder;
 
+import org.formic.wizard.gui.dialog.Dialogs;
+
 import org.pietschy.wizard.I18n;
 
 import org.slf4j.Logger;
@@ -68,34 +70,35 @@ public class Installer
   /**
    * Runs the installer.
    *
-   * @param _properties Installer properties (height, width, etc.)
-   * @param _paths List of wizard paths.
-   * @param _consoleMode true if running in console mode, false otherwise.
+   * @param properties Installer properties (height, width, etc.)
+   * @param paths List of wizard paths.
+   * @param console true if running in console mode, false otherwise.
    *
    * @return true if the installation completed successfully, false if the user
    * canceled or the installation was aborted.
    */
   public static boolean run (
-      Properties _properties, List _paths, boolean _consoleMode)
+      Properties properties, List paths, boolean console)
   {
     logger.info("Running Installer.");
-    consoleMode = _consoleMode;
-    if(!_consoleMode){
+    consoleMode = console;
+    if(!consoleMode){
       I18n.setBundle(getResourceBundle());
+      Dialogs.setBundle(getResourceBundle());
 
-      setLookAndFeel(_properties);
+      setLookAndFeel(properties);
 
-      String imagePath = _properties.getProperty("wizard.icon");
+      String imagePath = properties.getProperty("wizard.icon");
       if(imagePath != null){
         image = getImage(imagePath);
       }
     }
 
     dimension = new Dimension(
-      Integer.parseInt(_properties.getProperty("wizard.width")),
-      Integer.parseInt(_properties.getProperty("wizard.height")));
+      Integer.parseInt(properties.getProperty("wizard.width")),
+      Integer.parseInt(properties.getProperty("wizard.height")));
 
-    Wizard wizard = WizardBuilder.build(_paths, _consoleMode);
+    Wizard wizard = WizardBuilder.build(paths, consoleMode);
     wizard.showWizard();
     wizard.waitFor();
 
@@ -117,29 +120,29 @@ public class Installer
   /**
    * Sets the ResourceBundle to use during the installation.
    *
-   * @param _resourceBundle The resourceBundle.
+   * @param bundle The resourceBundle.
    */
-  public static void setResourceBundle (ResourceBundle _resourceBundle)
+  public static void setResourceBundle (ResourceBundle bundle)
   {
     if(resourceBundle != null){
       throw new IllegalStateException(getString("resource.already.loaded"));
     }
 
     resourceBundle = new ResourceBundleAggregate();
-    resourceBundle.addBundle(_resourceBundle);
+    resourceBundle.addBundle(bundle);
     resourceBundle.addBundle(ResourceBundle.getBundle("org/formic/messages"));
   }
 
   /**
    * Gets the value for the supplied resource key.
    *
-   * @param _key The key.
+   * @param key The key.
    * @return The value or null if not found.
    */
-  public static String getString (String _key)
+  public static String getString (String key)
   {
     try{
-      return _key != null ? getResourceBundle().getString(_key) : null;
+      return key != null ? getResourceBundle().getString(key) : null;
     }catch(MissingResourceException mre){
       return null;
     }
@@ -148,17 +151,17 @@ public class Installer
   /**
    * Gets the value for the supplied resource key.
    *
-   * @param _key The key.
-   * @param _default The value to return if no value found for the specified
+   * @param key The key.
+   * @param dflt The value to return if no value found for the specified
    * key.
    * @return The value or the supplied default.
    */
-  public static String getString (String _key, String _default)
+  public static String getString (String key, String dflt)
   {
     try{
-      return _key != null ? getResourceBundle().getString(_key) : _default;
+      return key != null ? getResourceBundle().getString(key) : dflt;
     }catch(MissingResourceException mre){
-      return _default;
+      return dflt;
     }
   }
 
@@ -166,41 +169,41 @@ public class Installer
    * Gets the value for the supplied resource key and formats the result using
    * the supplied argument.
    *
-   * @param _key The key.
-   * @param _arg The value to format the result with.
+   * @param key The key.
+   * @param arg The value to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String _key, Object _arg)
+  public static String getString (String key, Object arg)
   {
-    return getString(_key, new Object[]{_arg});
+    return getString(key, new Object[]{arg});
   }
 
   /**
    * Gets the value for the supplied resource key and formats the result using
    * the supplied arguments.
    *
-   * @param _key The key.
-   * @param _arg1 The first value to format the result with.
-   * @param _arg2 The second value to format the result with.
+   * @param key The key.
+   * @param arg1 The first value to format the result with.
+   * @param arg2 The second value to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String _key, Object _arg1, Object _arg2)
+  public static String getString (String key, Object arg1, Object arg2)
   {
-    return getString(_key, new Object[]{_arg1, _arg2});
+    return getString(key, new Object[]{arg1, arg2});
   }
 
   /**
    * Gets the value for the supplied resource key and formats the result using
    * the supplied arguments.
    *
-   * @param _key The key.
-   * @param _args The values to format the result with.
+   * @param key The key.
+   * @param args The values to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String _key, Object[] _args)
+  public static String getString (String key, Object[] args)
   {
-    String message = getString(_key);
-    return MessageFormat.format(message, _args);
+    String message = getString(key);
+    return MessageFormat.format(message, args);
   }
 
   /**
@@ -224,15 +227,15 @@ public class Installer
   /**
    * Sets the look and feel.
    */
-  private static void setLookAndFeel (Properties _properties)
+  private static void setLookAndFeel (Properties properties)
   {
     try {
-      String laf = _properties.getProperty("wizard.laf");
+      String laf = properties.getProperty("wizard.laf");
 
       if(laf != null){
         // plastic settings
         if(laf.startsWith("com.jgoodies.looks.plastic")){
-          String theme = _properties.getProperty("wizard.theme");
+          String theme = properties.getProperty("wizard.theme");
 
           if(theme != null){
             PlasticLookAndFeel.setPlasticTheme(
@@ -260,11 +263,11 @@ public class Installer
   /**
    * Sets the ant project this installer is running under.
    *
-   * @param _project The ant project.
+   * @param prjct The ant project.
    */
-  public static void setProject (Project _project)
+  public static void setProject (Project prjct)
   {
-    project = _project;
+    project = prjct;
     Log.setProject(project);
   }
 
