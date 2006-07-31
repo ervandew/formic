@@ -55,6 +55,7 @@ public class Launcher
   private JFrame frame;
   private JProgressBar progressBar;
   private String tempDir;
+  private String[] args;
 
   /**
    * Main method.
@@ -63,15 +64,19 @@ public class Launcher
    */
   public static void main (String[] args)
   {
-    Launcher launcher = new Launcher();
+    Launcher launcher = new Launcher(args);
     launcher.start();
   }
 
   /**
    * Constructs a new instance.
+   *
+   * @param args The command line arguments.
    */
-  public Launcher ()
+  public Launcher (String[] args)
   {
+    this.args = args;
+
     frame = new JFrame(TITLE);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -108,8 +113,6 @@ public class Launcher
     frame.setResizable(false);
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
-
-    start();
   }
 
   /**
@@ -121,16 +124,15 @@ public class Launcher
     try{
       extractArchive();
       frame.setVisible(false);
-      runInstaller();
-      cleanup();
+      runInstaller(args);
     }catch(Exception e){
       // FIXME: show error dialog.
       e.printStackTrace();
     }finally{
-      try{
+      /*try{
         cleanup();
       }catch(Exception e){
-      }
+      }*/
     }
 
     System.exit(0);
@@ -175,18 +177,23 @@ public class Launcher
 
   /**
    * Run the installer.
+   *
+   * @param args Supplied arguments for installer.
    */
-  private void runInstaller ()
+  private void runInstaller (String[] args)
     throws Exception
   {
-    String[] cmd = {
-      tempDir + "/ant/bin/ant",
-      "-logger", "org.formic.ant.Log4jLogger",
-      "-lib", tempDir,
-      "-f", tempDir + "/install.xml"
-    };
+    int offset = 3;
+    String[] cmd = new String[args.length + 3];
+    System.arraycopy(args, 0, cmd, 3, args.length);
+    cmd[0] = tempDir.substring(0, 2);
+    cmd[1] = "&&";
+    cmd[2] = tempDir + "/formic.bat";
 
-System.out.println("#### cmd = " + tempDir + "/ant/bin/ant");
+System.out.println("#### cmd = " + cmd[0]);
+System.out.println("#### cmd = " + cmd[1]);
+System.out.println("#### cmd = " + cmd[2]);
+
     Process process = Runtime.getRuntime().exec(cmd);
     process.waitFor();
   }
