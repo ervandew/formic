@@ -97,10 +97,11 @@ public class PackageTask
     checkOs();
     check("destfile", destFile, "");
 
+    String basedir = getProject().getProperty("basedir");
     try{
       if(os.equals(LINUX) || os.equals(UNIX)){
         log("Building *nix installer...");
-        File tarFile = new File("formic.tar.gz");
+        File tarFile = new File(basedir + "/" + buildDir + "/formic.tar.gz");
 
         Tar tar = getTar();
 
@@ -129,7 +130,7 @@ public class PackageTask
         log("");
       }else{
         log("Building Windows installer...");
-        File zipFile = new File("formic.zip");
+        File zipFile = new File(basedir + "/" + buildDir + "/formic.zip");
         Zip zip = getZip();
 
         FileSet files = new FileSet();
