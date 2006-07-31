@@ -39,8 +39,6 @@ import org.apache.commons.io.IOUtils;
 
 import org.formic.Installer;
 
-import org.formic.wizard.console.event.RadioButtonKeyListener;
-
 import org.formic.wizard.gui.event.HyperlinkListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
@@ -68,6 +66,7 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 public class LicenseStep
   extends AbstractStep
 {
+  private static final String LICENSE = "license.url";
   private static final String ICON = "/images/license.png";
 
   private static final String ACCEPT = "Accept";
@@ -83,7 +82,7 @@ public class LicenseStep
   {
     super(_name, _properties);
 
-    if(getProperty("license.url") == null){
+    if(getProperty(LICENSE) == null){
       throw new IllegalArgumentException(
           Installer.getString("license.url.required"));
     }
@@ -109,7 +108,7 @@ public class LicenseStep
     try{
       panel.setLayout(new BorderLayout());
 
-      JEditorPane content = new JEditorPane(new URL(getProperty("license.url")));
+      JEditorPane content = new JEditorPane(getLicenseUrl());
       content.setEditable(false);
       content.addHyperlinkListener(new HyperlinkListener());
 
@@ -165,7 +164,7 @@ public class LicenseStep
     InputStream in = null;
     StringWriter writer = new StringWriter();
     try{
-      in = new URL(getProperty("license.url")).openStream();
+      in = getLicenseUrl().openStream();
       IOUtils.copy(in, writer);
     }catch(Exception e){
       throw new RuntimeException(e);
@@ -232,5 +231,20 @@ public class LicenseStep
     }else{
       guiScrollPane.grabFocus();
     }
+  }
+
+  /**
+   * Gets the URL of the configured license.
+   *
+   * @return The URL of the license.
+   */
+  private URL getLicenseUrl ()
+    throws Exception
+  {
+    String license = getProperty(LICENSE);
+    if(license.indexOf("://") != -1){
+      return new URL(license);
+    }
+    return getClass().getResource(license);
   }
 }
