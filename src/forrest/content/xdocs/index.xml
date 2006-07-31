@@ -41,8 +41,8 @@
         that the entire ant user base is familiar and comfortable with.
       </p>
       <p>
-        Formic is simply a set of ant tasks for packaging and running graphical
-        (and at some point console based) installers.  The entire process of
+        Formic consists of a set of ant tasks for packaging and running
+        graphical and console based installers.  The entire process of
         creating an installer with formic can be summed up in the following
         three steps.
       </p>
@@ -59,14 +59,17 @@
         </li>
         <li>
           Package your application files, installation build file, and a
-          stripped down version of ant into a platform dependent executable.
+          stripped down version of ant into platform specific executables.
         </li>
       </ol>
     </section>
     <section id="license">
       <title>License</title>
       <p>
-        Formic is released under the <a href="ext:license">LGPL</a> license.
+        Formic is released under the <a href="ext:license.lgpl">LGPL</a> license
+        with the exception of the <em>package</em> ant task which is
+        released under the <a href="ext:license.gpl">GPL</a> licence to
+        comply with third party (<a href="ext:launch4j">launch4j</a>) license.
       </p>
     </section>
     <section id="news">

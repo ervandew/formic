@@ -4,7 +4,7 @@ Panels
   - Feature Tree
   - Required software discovery / progress
     - List of requirements starting with no icons. As requirements are
-      examined, add X or checkmark indicating whether requirement satisfied or
+      examined, add X or check mark indicating whether requirement satisfied or
       not.
     - When looking for required software, add link/button for user to specify
       location in a popup?
@@ -16,5 +16,5 @@ Linux
   - jre / jdk discovery in shell script.
 
 Windows
-  - error dialog for windows boostrapping.
+  - error dialog for windows bootstrapping.
   - Splash screen viewable until installer has started?
