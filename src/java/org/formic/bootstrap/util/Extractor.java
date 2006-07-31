@@ -53,7 +53,7 @@ public class Extractor
    * @param resource The resource representing the archive.
    * @param dest The destination to write the archive to.
    */
-  private static void readArchive (String resource, String dest)
+  public static void readArchive (String resource, String dest)
     throws Exception
   {
     FileOutputStream out = null;
@@ -78,7 +78,8 @@ public class Extractor
    * @param archive The archive to extract.
    * @param dest The directory to extract it to.
    */
-  private static void extractArchive (String archive, String dest)
+  public static void extractArchive (
+      String archive, String dest, ArchiveExtractionListener listener)
     throws Exception
   {
     if(!dest.endsWith("/")){
@@ -88,8 +89,13 @@ public class Extractor
     ZipFile file = null;
     try{
       file = new ZipFile(archive);
+
+      if(listener != null){
+        listener.startExtraction(file.size());
+      }
+
       Enumeration entries = file.entries();
-      while(entries.hasMoreElements()){
+      for(int ii = 0; entries.hasMoreElements(); ii++){
         ZipEntry entry = (ZipEntry)entries.nextElement();
         if(!entry.isDirectory()){
           // create parent directories if necessary.
@@ -101,6 +107,10 @@ public class Extractor
             }
           }
 
+          if(listener != null){
+            listener.startExtractingFile(ii, entry.getName());
+          }
+
           FileOutputStream out = new FileOutputStream(name);
           InputStream in = file.getInputStream(entry);
 
@@ -108,10 +118,18 @@ public class Extractor
 
           in.close();
           out.close();
+
+          if(listener != null){
+            listener.finishExtractingFile(ii, entry.getName());
+          }
         }
       }
     }finally{
       closeQuietly(file);
+    }
+
+    if(listener != null){
+      listener.finishExtraction();
     }
   }
 
@@ -159,5 +177,40 @@ public class Extractor
         // ignore;
       }
     }
+  }
+
+  /**
+   * Listener that can be notified of significant events when extracting an
+   * archive.
+   */
+  public static interface ArchiveExtractionListener
+  {
+    /**
+     * Invoked just before beginning to extract files.
+     *
+     * @param count The number of files to be extracted.
+     */
+    public void startExtraction (int count);
+
+    /**
+     * Invoked after all files have been extracted.
+     */
+    public void finishExtraction ();
+
+    /**
+     * Invoked when the supplied file is to be extracted.
+     *
+     * @param index The index of the file within the archive.
+     * @param file The file name.
+     */
+    public void startExtractingFile (int index, String file);
+
+    /**
+     * Invoked when the supplied file has been completely extracted.
+     *
+     * @param index The index of the file within the archive.
+     * @param file The file name.
+     */
+    public void finishExtractingFile (int index, String file);
   }
 }

@@ -1,0 +1,5 @@
+Notes for myself.
+
+  Running sample script to build sample installers.
+    FORMIC_HOME="/home/ervandew/files/development/formic/build/formic/" \
+      ant/bin/ant -lib samples -buildfile samples/build.xml

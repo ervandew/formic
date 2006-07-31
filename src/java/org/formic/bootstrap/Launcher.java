@@ -16,7 +16,7 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.bootstrap.windows;
+package org.formic.bootstrap;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
@@ -37,6 +37,8 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
+import org.formic.bootstrap.util.Extractor;
+
 /**
  * Class responsible for extracting embedded archive and kicking off the ant
  * process.
@@ -46,9 +48,12 @@ import javax.swing.WindowConstants;
  */
 public class Launcher
   extends Thread
+  implements Extractor.ArchiveExtractionListener
 {
   private static final String TITLE = "Initializing Installer";
+
   private JFrame frame;
+  private JProgressBar progressBar;
   private String tempDir;
 
   /**
@@ -58,10 +63,17 @@ public class Launcher
    */
   public static void main (String[] args)
   {
-    JFrame frame = new JFrame(TITLE);
-    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    Launcher launcher = new Launcher();
+    launcher.start();
+  }
 
-    final Launcher launcher = new Launcher(frame);
+  /**
+   * Constructs a new instance.
+   */
+  public Launcher ()
+  {
+    frame = new JFrame(TITLE);
+    frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
     JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
@@ -73,7 +85,7 @@ public class Launcher
     panel.add(labelPanel);
 
     // add ProgressBar
-    JProgressBar progressBar = new JProgressBar();
+    progressBar = new JProgressBar();
     progressBar.setIndeterminate(true);
     progressBar.setPreferredSize(new Dimension(250, 15));
     panel.add(progressBar);
@@ -83,14 +95,8 @@ public class Launcher
     cancelButton.setPreferredSize(new Dimension(75, 25));
     cancelButton.addActionListener(new ActionListener(){
       public void actionPerformed (ActionEvent event) {
-        launcher.interrupt();
-        try{
-          launcher.join(2000);
-        }catch(Exception e){
-          e.printStackTrace();
-        }
-        launcher.cleanup();
-        System.exit(0);
+        cancel();
+        frame.setVisible(false);
       }
     });
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -103,16 +109,7 @@ public class Launcher
     frame.setLocationRelativeTo(null);
     frame.setVisible(true);
 
-    launcher.start();
-  }
-
-  /**
-   * Constructs a new instance.
-   * @param frame The JFrame showing the progress of the bootstrap process.
-   */
-  public Launcher (JFrame frame)
-  {
-    this.frame = frame;
+    start();
   }
 
   /**
@@ -121,32 +118,66 @@ public class Launcher
    */
   public void run ()
   {
-    extractArchive();
     try{
-      while(true){
-        Thread.sleep(3000);
+      extractArchive();
+      frame.setVisible(false);
+      runInstaller();
+      cleanup();
+    }catch(Exception e){
+      // FIXME: show error dialog.
+      e.printStackTrace();
+    }finally{
+      try{
+        cleanup();
+      }catch(Exception e){
       }
-    }catch(InterruptedException ie){
     }
-    frame.setVisible(false);
-    //runInstaller();
 
     System.exit(0);
+  }
+
+  /**
+   * Cancel execution of this thread.
+   */
+  private void cancel ()
+  {
+    interrupt();
+    try{
+      join(2000);
+      cleanup();
+    }catch(Exception e){
+      // FIXME: show error dialog.
+      e.printStackTrace();
+    }
   }
 
   /**
    * Extract the embedded archive to a temp directory.
    */
   private void extractArchive ()
+    throws Exception
   {
-    tempDir = System.getProperty("java.io.tmpdir") +
+    tempDir = System.getProperty("java.io.tmpdir").replace('\\', '/') +
       "/formic_" + Math.abs(new Random().nextInt());
+
+    File dir = new File(tempDir);
+    if(!dir.exists()){
+      dir.mkdirs();
+    }
+
+    String archive = tempDir + "/formic.zip";
+    Extractor.readArchive("/formic.zip", archive);
+    Extractor.extractArchive(archive, tempDir, this);
+
+    // delete temp archive.
+    new File(archive).delete();
   }
 
   /**
    * Run the installer.
    */
   private void runInstaller ()
+    throws Exception
   {
     String[] cmd = {
       tempDir + "/ant/bin/ant",
@@ -155,25 +186,19 @@ public class Launcher
       "-f", tempDir + "/install.xml"
     };
 
-    try{
-      Process process = Runtime.getRuntime().exec(cmd);
-      process.waitFor();
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+System.out.println("#### cmd = " + tempDir + "/ant/bin/ant");
+    Process process = Runtime.getRuntime().exec(cmd);
+    process.waitFor();
   }
 
   /**
    * Performs any necessary cleanup.
    */
   private void cleanup ()
+    throws Exception
   {
-    try{
-      File tempDir = new File(this.tempDir);
-      deleteDir(tempDir);
-    }catch(Exception e){
-      e.printStackTrace();
-    }
+    File tempDir = new File(this.tempDir);
+    deleteDir(tempDir);
   }
 
   /**
@@ -187,11 +212,48 @@ public class Launcher
     File[] files = dir.listFiles();
     for (int ii = 0; ii < files.length; ii++){
       if(files[ii].isDirectory()){
-        deleteDir(dir);
+        deleteDir(files[ii]);
       }else{
         files[ii].delete();
       }
     }
     dir.delete();
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Extractor.ArchiveExtractionListener#startExtraction(int)
+   */
+  public void startExtraction (int count)
+  {
+    progressBar.setIndeterminate(false);
+    progressBar.setMaximum(count);
+    progressBar.setStringPainted(true);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Extractor.ArchiveExtractionListener#finishExtraction()
+   */
+  public void finishExtraction ()
+  {
+    progressBar.setValue(progressBar.getMaximum());
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Extractor.ArchiveExtractionListener#startExtractingFile(int,String)
+   */
+  public void startExtractingFile (int index, String file)
+  {
+    progressBar.setValue(index);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Extractor.ArchiveExtractionListener#finishExtractingFile(int,String)
+   */
+  public void finishExtractingFile (int index, String file)
+  {
   }
 }
