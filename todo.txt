@@ -16,5 +16,4 @@ Linux
   - jre / jdk discovery in shell script.
 
 Windows
-  - error dialog for windows bootstrapping.
   - Splash screen viewable until installer has started?

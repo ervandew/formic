@@ -68,11 +68,16 @@
       </manifest>
       <fileset dir="build/classes">
         <include name="org/formic/bootstrap/**/*.class"/>
+        <include name="org/formic/wizard/gui/dialog/*.class"/>
       </fileset>
       <fileset dir="src/java">
+        <include name="org/formic/messages.properties*"/>
         <include name="org/formic/bootstrap/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
+      </fileset>
+      <fileset dir="src">
+        <include name="images/dialog/**/*"/>
       </fileset>
     </jar>
 

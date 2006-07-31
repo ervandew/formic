@@ -27,6 +27,7 @@ import java.awt.event.ActionListener;
 import java.io.File;
 
 import java.util.Random;
+import java.util.ResourceBundle;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -39,6 +40,8 @@ import javax.swing.WindowConstants;
 
 import org.formic.bootstrap.util.CommandExecutor;
 import org.formic.bootstrap.util.Extractor;
+
+import org.formic.wizard.gui.dialog.Dialogs;
 
 /**
  * Class responsible for extracting embedded archive and kicking off the ant
@@ -77,6 +80,9 @@ public class Launcher
   public Launcher (String[] args)
   {
     this.args = args;
+
+    // initialize Dialogs
+    Dialogs.setBundle(ResourceBundle.getBundle("org/formic/messages"));
 
     frame = new JFrame(TITLE);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -133,8 +139,7 @@ public class Launcher
       frame.setVisible(false);
       runInstaller(args);
     }catch(Exception e){
-      // FIXME: show error dialog.
-      e.printStackTrace();
+      Dialogs.showError(e);
     }finally{
       try{
         cleanup();
@@ -154,8 +159,7 @@ public class Launcher
       join(2000);
       cleanup();
     }catch(Exception e){
-      // FIXME: show error dialog.
-      e.printStackTrace();
+      Dialogs.showError(e);
     }
   }
 
