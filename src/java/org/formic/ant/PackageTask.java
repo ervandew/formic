@@ -101,7 +101,8 @@ public class PackageTask
 
     try{
       if(os.equals(LINUX) || os.equals(UNIX)){
-        File tarFile = new File(archive + ".tar.gz");
+        log("Building *nix installer...");
+        File tarFile = new File("formic.tar.gz");
 
         Tar tar = getTar();
 
@@ -127,8 +128,10 @@ public class PackageTask
         tar.execute();
 
         buildSelfExtractingShellScript(tarFile);
+        log("");
       }else{
-        File zipFile = new File(archive + ".zip");
+        log("Building Windows installer...");
+        File zipFile = new File("formic.zip");
         Zip zip = getZip();
 
         FileSet files = new FileSet();
@@ -149,6 +152,7 @@ public class PackageTask
         zip.execute();
 
         buildWindowsExecutable(zipFile);
+        log("");
       }
     }catch(BuildException be){
       throw be;
