@@ -128,7 +128,8 @@
     <!-- set permissions on scripts -->
     <chmod perm="755">
       <fileset dir="build/formic/ant/bin" includes="**/*"/>
-      <fileset dir="build/formic" includes="formic"/>
+      <fileset dir="build/formic/ant/resources/launch4j/bin"
+          includes="ld,windres"/>
     </chmod>
   </target>
 
