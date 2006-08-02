@@ -115,6 +115,8 @@ goto end
 goto end
 
 :end
+rem CHANGE: set EXIT_CODE to last ERRORLEVEL
+set EXIT_CODE=%ERRORLEVEL%
 set _JAVACMD=
 set ANT_CMD_LINE_ARGS=
 
@@ -123,4 +125,7 @@ if "%OS%"=="WINNT" @endlocal
 
 :mainEnd
 if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
+
+rem CHANGE: Exit with exit code.
+exit %ERRORLEVEL%
 
