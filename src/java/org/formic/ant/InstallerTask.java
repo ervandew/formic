@@ -59,15 +59,17 @@ public class InstallerTask
     Installer.setProject(getProject());
     Installer.setResourceBundle(ResourceBundle.getBundle(resources));
 
-    boolean consoleMode = Boolean.parseBoolean(
-        getProject().getProperty("formic.console"));
-
     WizardBuilder.loadSteps("/org/formic/wizard/steps.properties");
     if(steps != null){
       WizardBuilder.loadSteps(steps);
     }
 
-    boolean completed = Installer.run(getProperties(), paths, consoleMode);
+    String console = getProject().getProperty("formic.console");
+    getProperties().setProperty("formic.action", getOwningTarget().getName());
+    getProperties().setProperty("formic.console",
+        console != null ? console : "false");
+
+    boolean completed = Installer.run(getProperties(), paths);
     if(property != null && completed){
       getProject().setProperty(property, String.valueOf(completed));
     }

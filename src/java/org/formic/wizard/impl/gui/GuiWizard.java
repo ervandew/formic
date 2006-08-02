@@ -197,11 +197,11 @@ public class GuiWizard
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.Wizard#showWizard()
+   * @see org.formic.wizard.Wizard#showWizard(String)
    */
-  public void showWizard ()
+  public void showWizard (String action)
   {
-    showInFrame(Installer.getString("title"), Installer.getImage());
+    showInFrame(Installer.getString(action + ".title"), Installer.getImage());
 
     fireQueuedEvents();
   }

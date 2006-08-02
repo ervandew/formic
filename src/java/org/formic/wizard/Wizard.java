@@ -33,8 +33,10 @@ public interface Wizard
 
   /**
    * Displays the wizard to the user.
+   *
+   * @param action The action (install or uninstall).
    */
-  public void showWizard ();
+  public void showWizard (String action);
 
   /**
    * Forces the current thread to block until the user completes the wizard.

@@ -108,9 +108,9 @@ public class ConsoleWizard
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.Wizard#showWizard()
+   * @see org.formic.wizard.Wizard#showWizard(String)
    */
-  public void showWizard ()
+  public void showWizard (String action)
   {
     Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
     int width = Installer.getDimension().width / 7;
@@ -132,7 +132,7 @@ public class ConsoleWizard
         /*Math.max(width, screen.width),
         Math.max(height, screen.height));*/
 
-    frame = new JFrame(Installer.getString("title"));
+    frame = new JFrame(Installer.getString(action + ".title"));
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter(){
       public void windowClosing (WindowEvent _event){
@@ -390,8 +390,6 @@ public class ConsoleWizard
   private class BusyPanel
     extends JPanel
   {
-    private JButton cancelButton;
-
     /**
      * Constructs a new BusyPanel.
      *

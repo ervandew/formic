@@ -72,16 +72,15 @@ public class Installer
    *
    * @param properties Installer properties (height, width, etc.)
    * @param paths List of wizard paths.
-   * @param console true if running in console mode, false otherwise.
    *
    * @return true if the installation completed successfully, false if the user
    * canceled or the installation was aborted.
    */
   public static boolean run (
-      Properties properties, List paths, boolean console)
+      Properties properties, List paths)
   {
     logger.info("Running Installer.");
-    consoleMode = console;
+    consoleMode = Boolean.parseBoolean(properties.getProperty("formic.console"));
     if(!consoleMode){
       I18n.setBundle(getResourceBundle());
       Dialogs.setBundle(getResourceBundle());
@@ -99,7 +98,7 @@ public class Installer
       Integer.parseInt(getString("wizard.height", "400")));
 
     Wizard wizard = WizardBuilder.build(paths, consoleMode);
-    wizard.showWizard();
+    wizard.showWizard(properties.getProperty("formic.action"));
     wizard.waitFor();
 
     logger.info("Installer Finished.");
