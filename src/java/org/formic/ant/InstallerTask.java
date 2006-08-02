@@ -29,6 +29,8 @@ import org.apache.tools.ant.Task;
 
 import org.apache.tools.ant.taskdefs.Property;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 import org.formic.Installer;
 
 import org.formic.ant.type.Path;
@@ -64,10 +66,14 @@ public class InstallerTask
       WizardBuilder.loadSteps(steps);
     }
 
-    String console = getProject().getProperty("formic.console");
     getProperties().setProperty("formic.action", getOwningTarget().getName());
-    getProperties().setProperty("formic.console",
-        console != null ? console : "false");
+
+    // for unix machines, check if running in console mode.
+    if(Os.isFamily("unix")){
+      String console = getProject().getProperty("formic.console");
+      getProperties().setProperty("formic.console",
+          console != null ? console : "false");
+    }
 
     boolean completed = Installer.run(getProperties(), paths);
     if(property != null && completed){
