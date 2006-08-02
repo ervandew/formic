@@ -88,15 +88,15 @@ public class Installer
 
       setLookAndFeel(properties);
 
-      String imagePath = properties.getProperty("wizard.icon");
+      String imagePath = getString("wizard.icon", "/images/wizard.png");
       if(imagePath != null){
         image = getImage(imagePath);
       }
     }
 
     dimension = new Dimension(
-      Integer.parseInt(properties.getProperty("wizard.width")),
-      Integer.parseInt(properties.getProperty("wizard.height")));
+      Integer.parseInt(getString("wizard.width", "600")),
+      Integer.parseInt(getString("wizard.height", "400")));
 
     Wizard wizard = WizardBuilder.build(paths, consoleMode);
     wizard.showWizard();
@@ -230,7 +230,8 @@ public class Installer
   private static void setLookAndFeel (Properties properties)
   {
     try {
-      String laf = properties.getProperty("wizard.laf");
+      String laf = getString("wizard.laf",
+          "com.jgoodies.looks.plastic.Plastic3DLookAndFeel");
 
       if(laf != null){
         // plastic settings
