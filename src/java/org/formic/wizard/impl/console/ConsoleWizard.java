@@ -112,19 +112,24 @@ public class ConsoleWizard
    */
   public void showWizard (String action)
   {
+    String error = null;
+
     Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
     int width = Installer.getDimension().width / 7;
     int height = Installer.getDimension().height / 12;
 
-    String error = null;
-    if(screen.width < width){
-      error = Installer.getString("console.width.min",
-          new Integer(screen.width), new Integer(width));
-    }
+    if(!Boolean.parseBoolean(Installer.getString("console.support", "true"))){
+      error = Installer.getString("console.not.supported");
+    }else{
+      if(screen.width < width){
+        error = Installer.getString("console.width.min",
+            new Integer(screen.width), new Integer(width));
+      }
 
-    if(screen.height < height){
-      error = Installer.getString("console.height.min",
-          new Integer(screen.height), new Integer(height));
+      if(screen.height < height){
+        error = Installer.getString("console.height.min",
+            new Integer(screen.height), new Integer(height));
+      }
     }
 
     Dimension dimension = new Dimension(width, height);
