@@ -54,7 +54,7 @@ public class Launcher
   extends Thread
   implements Extractor.ArchiveExtractionListener
 {
-  private static final String TITLE = "Initializing Installer";
+  private static final String TITLE = "Initializing";
 
   private JFrame frame;
   private JProgressBar progressBar;
@@ -137,7 +137,7 @@ public class Launcher
       Thread.sleep(1500);
 
       frame.setVisible(false);
-      runInstaller(args);
+      execute(args);
     }catch(Exception e){
       Dialogs.showError(e);
     }finally{
@@ -186,16 +186,16 @@ public class Launcher
   }
 
   /**
-   * Run the installer.
+   * Execute formic.
    *
-   * @param args Supplied arguments for installer.
+   * @param args Supplied arguments.
    */
-  private void runInstaller (String[] args)
+  private void execute (String[] args)
     throws Exception
   {
     String drive = tempDir.substring(0, 2);
     StringBuffer command = new StringBuffer()
-      .append('"').append(tempDir).append("/formic.bat\"");
+      .append('"').append(tempDir).append("/formic.bat\" ");
     for (int ii = 0; ii < args.length; ii++){
       command.append(' ').append(args[ii]);
     }
@@ -204,8 +204,11 @@ public class Launcher
       "cmd", "/c", "\"" + drive + " && " + command + "\""
     };
 
-    System.out.println("Initializing installer ...");
-    CommandExecutor.execute(cmd);
+    System.out.println("Initializing " + args[0] + "er ...");
+    CommandExecutor result = CommandExecutor.execute(cmd);
+    if(result.getReturnCode() != 0){
+      Dialogs.showError(result.getErrorMessage(), result.getResult());
+    }
   }
 
   /**
