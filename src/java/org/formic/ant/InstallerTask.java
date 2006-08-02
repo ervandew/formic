@@ -24,6 +24,7 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
 
 import org.apache.tools.ant.taskdefs.Property;
@@ -69,6 +70,14 @@ public class InstallerTask
     boolean completed = Installer.run(getProperties(), paths, consoleMode);
     if(property != null && completed){
       getProject().setProperty(property, String.valueOf(completed));
+    }
+
+    // run canceled target if install canceled and target exists.
+    if(!completed){
+      Target target = (Target)getProject().getTargets().get("_canceled_");
+      if(target != null){
+        target.execute();
+      }
     }
   }
 
