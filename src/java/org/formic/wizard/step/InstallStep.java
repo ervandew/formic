@@ -90,7 +90,7 @@ public class InstallStep
 
   private List tasks = new ArrayList();
 
-  private String targetName = "install";
+  private String targetName = "_install_";
 
   private Throwable error;
 
