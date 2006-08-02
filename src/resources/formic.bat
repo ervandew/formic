@@ -18,10 +18,17 @@ rem Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 rem Author: Eric Van Dewoestine
 
+set BUILD_FILE=%1.xml
+
 set CUR_PATH=%~d0%~p0
 
 pushd "%CUR_PATH%"
 
-ant\bin\ant -logger org.formic.ant.Log4jLogger -lib . -f install.xml %*
+set ANT_OPTS="-Djava.library.path=ant/lib/native/windows"
+
+ant\bin\ant -logger org.formic.ant.logger.Log4jLogger -lib . -f %BUILD_FILE% %*
+set EXIT_CODE=%ERRORLEVEL%
 
 popd
+
+exit %EXIT_CODE%

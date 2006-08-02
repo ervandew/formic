@@ -28,9 +28,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.ComponentHelper;
 import org.apache.tools.ant.Task;
 
-import org.apache.tools.ant.taskdefs.Chmod;
 import org.apache.tools.ant.taskdefs.Concat;
-import org.apache.tools.ant.taskdefs.Copy;
 import org.apache.tools.ant.taskdefs.Jar;
 import org.apache.tools.ant.taskdefs.Mkdir;
 import org.apache.tools.ant.taskdefs.Property;
@@ -45,6 +43,8 @@ import org.apache.tools.ant.types.Path.PathElement;
 
 import org.apache.tools.ant.types.Path;
 import org.apache.tools.ant.types.ZipFileSet;
+
+import org.formic.ant.util.AntUtils;
 
 /**
  * Task for packaging the installer for distribution.
@@ -81,11 +81,7 @@ public class PackageTask
     formicHome = determineFormicHome();
     buildDir = determineBuildDir();
 
-    Mkdir mkdir = new Mkdir();
-    mkdir.setProject(getProject());
-    mkdir.setTaskName(getTaskName());
-    mkdir.setDir(new File(buildDir));
-    mkdir.execute();
+    AntUtils.mkdir(getProject(), getTaskName(), new File(buildDir));
   }
 
   /**
@@ -221,11 +217,7 @@ public class PackageTask
 
     // attempt to locate environment variable.
     if(home == null){
-      Property property = new Property();
-      property.setEnvironment("env");
-      property.setProject(getProject());
-      property.execute();
-
+      AntUtils.property(getProject(), "env");
       home = getProject().getProperty(FORMIC_HOME_ENV);
     }
 
@@ -294,6 +286,13 @@ public class PackageTask
   private void buildSelfExtractingShellScript (File archive)
     throws BuildException
   {
+    File selfextract = new File(buildDir + "/selfextract");
+
+    AntUtils.copy(getProject(), getTaskName(),
+        new File(formicHome + "/ant/resources/selfextract"), selfextract);
+
+    AntUtils.replace(getProject(), selfextract, "${formic.action}", "install");
+
     Concat concat = new Concat();
     concat.setTaskName(getTaskName());
     concat.setProject(getProject());
@@ -301,7 +300,7 @@ public class PackageTask
     concat.setBinary(true);
 
     PathElement script = concat.createPath().createPathElement();
-    script.setLocation(new File(formicHome + "/ant/resources/selfextract"));
+    script.setLocation(selfextract);
 
     PathElement tarFile = concat.createPath().createPathElement();
     tarFile.setLocation(archive);
@@ -309,12 +308,7 @@ public class PackageTask
     concat.execute();
 
     // set the file as executable
-    Chmod chmod = new Chmod();
-    chmod.setProject(getProject());
-    chmod.setFile(destFile);
-    chmod.setPerm("755");
-
-    chmod.execute();
+    AntUtils.chmod(getProject(), destFile, "755");
   }
 
   /**
@@ -327,7 +321,7 @@ public class PackageTask
     File jar = constructBoostrapJar(archive);
 
     // generate config
-    File config = generateLaunch4jConfig();
+    File config = generateLaunch4jConfig("install");
 
     // execute launch4j
     executeLaunch4j(config, jar);
@@ -345,12 +339,8 @@ public class PackageTask
     File bootstrap = new File(
         getProject().getProperty("basedir") + "/" + buildDir + "/formic-boostrap.jar");
 
-    Copy copy = new Copy();
-    copy.setProject(getProject());
-    copy.setTaskName(getTaskName());
-    copy.setTofile(bootstrap);
-    copy.setFile(new File(formicHome + "/ant/resources/formic-bootstrap.jar"));
-    copy.execute();
+    AntUtils.copy(getProject(), getTaskName(),
+        new File(formicHome + "/ant/resources/formic-bootstrap.jar"), bootstrap);
 
     ZipFileSet fileset = new ZipFileSet();
     fileset.setDir(new File(FilenameUtils.getFullPath(archive.getAbsolutePath())));
@@ -372,22 +362,16 @@ public class PackageTask
    *
    * @return The generated config file.
    */
-  private File generateLaunch4jConfig ()
+  private File generateLaunch4jConfig (String action)
     throws BuildException
   {
     File launch4jConfig = new File(buildDir + "/launch4j.config.xml");
 
-    Copy copy = new Copy();
-    copy.setTaskName(getTaskName());
-    copy.setProject(getProject());
-    copy.setTofile(launch4jConfig);
-    copy.setFile(new File(formicHome + "/ant/resources/launch4j.config.xml"));
-    copy.execute();
+    AntUtils.copy(getProject(), getTaskName(),
+        new File(formicHome + "/ant/resources/launch4j.config.xml"),
+        launch4jConfig);
 
-    /*Replace replace = new Replace();
-    replace.setProject(getProject());
-    replace.setFile(launch4jConfig);
-    replace.execute();*/
+    AntUtils.replace(getProject(), launch4jConfig, "${formic.action}", action);
 
     return launch4jConfig;
   }
@@ -402,11 +386,8 @@ public class PackageTask
     throws BuildException
   {
     // set location of launch4j distribution
-    Property property = new Property();
-    property.setName("launch4j.dir");
-    property.setLocation(new File(formicHome + "/ant/resources/launch4j"));
-    property.setProject(getProject());
-    property.execute();
+    AntUtils.property(getProject(), "launch4j.dir",
+        new File(formicHome + "/ant/resources/launch4j"));
 
     // define launch4j task
     Path classpath = new Path(getProject());

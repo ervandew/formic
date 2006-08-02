@@ -1,6 +1,6 @@
 #!/bin/sh
 echo ""
-echo "Initializing installer ..."
+echo "Initializing ${formic.action}er ..."
 echo ""
 
 # create a temp directory to extract to.
@@ -17,9 +17,9 @@ PREV=`pwd`
 cd $WRKDIR
 
 if [ "$DISPLAY" == "" ] ; then
-  ./formic -Dformic.console=true $@
+  ./formic ${formic.action} -Dformic.console=true $@
 else
-  ./formic $@
+  ./formic ${formic.action} $@
 fi
 
 # delete the temp files
