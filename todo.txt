@@ -1,6 +1,8 @@
 Panels
-  - Proxy setup
+  - Install location
   - Feature List
+  - Summary
+  - Proxy setup
   - Feature Tree
   - Required software discovery / progress
     - List of requirements starting with no icons. As requirements are
@@ -10,10 +12,25 @@ Panels
       location in a popup?
   - Database connection info
   - File diff
-  - Install location
+
+Enhancements
+  - Add ability to view the log (apps/kate.png,package_editors.png from nuvola icons)
+    - Button on bottom left hand side to open window.
+  - Add support for automated installs.
 
 Linux
   - jre / jdk discovery in shell script.
 
 Windows
-  - Splash screen viewable until installer has started?
+  - Splash screen viewable until installer has started (between intialization
+    progress window + installer window)?
+
+Uninstaller
+  - uninstall wizard panels
+    Abstract InstallStep to provided shared functionality.
+  - create exe/sh at installer build time and have install procedure populate
+    an ini or property file that the uninstaller can use for info it needs
+    (install location, product name, service info, etc).
+  - result should be a directory 'uninstall' with an exe/sh and
+    ini/property file.
+    Windows: register uninstaller in registry.
