@@ -74,7 +74,7 @@ public class InstallStep
   private static final Logger logger =
     LoggerFactory.getLogger(InstallStep.class);
 
-  private static final String ICON = "/images/install.png";
+  private static final String ICON = "/images/32x32/install.png";
 
   private JProgressBar guiOverallProgress;
   private JProgressBar guiTaskProgress;
@@ -97,9 +97,9 @@ public class InstallStep
   /**
    * Constructs this step.
    */
-  public InstallStep (String _name, Properties _properties)
+  public InstallStep (String name, Properties properties)
   {
-    super(_name, _properties);
+    super(name, properties);
   }
 
   /**
@@ -485,7 +485,7 @@ public class InstallStep
     {
       super(
           Installer.getString("install.error.view"),
-          new ImageIcon(Installer.getImage("/images/error_small.png")));
+          new ImageIcon(Installer.getImage("/images/16x16/error.png")));
     }
 
     public void actionPerformed (ActionEvent e){

@@ -33,14 +33,14 @@ import javax.swing.JPanel;
 public class SummaryStep
   extends AbstractStep
 {
-  private static final String ICON = "/images/summary.png";
+  private static final String ICON = "/images/32x32/summary.png";
 
   /**
    * Constructs this step.
    */
-  public SummaryStep (String _name, Properties _properties)
+  public SummaryStep (String name, Properties properties)
   {
-    super(_name, _properties);
+    super(name, properties);
   }
 
   /**

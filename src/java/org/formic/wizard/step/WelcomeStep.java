@@ -43,17 +43,14 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 public class WelcomeStep
   extends AbstractStep
 {
-  protected static final String ICON = "/images/home.png";
-
-  private String name;
+  protected static final String ICON = "/images/32x32/home.png";
 
   /**
    * Constructs the welcome step.
    */
-  public WelcomeStep (String _name, Properties _properties)
+  public WelcomeStep (String name, Properties properties)
   {
-    super(_name, _properties);
-    name = _name;
+    super(name, properties);
   }
 
   /**
@@ -72,8 +69,8 @@ public class WelcomeStep
    */
   public JComponent initGui ()
   {
-    String text = Installer.getString(name + ".text");
-    String html = Installer.getString(name + ".html");
+    String text = Installer.getString(getName() + ".text");
+    String html = Installer.getString(getName() + ".html");
 
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
@@ -103,7 +100,7 @@ public class WelcomeStep
    */
   public charva.awt.Component initConsole ()
   {
-    String text = Installer.getString(name + ".text");
+    String text = Installer.getString(getName() + ".text");
 
     charvax.swing.JPanel panel = new charvax.swing.JPanel();
     panel.setLayout(new charva.awt.BorderLayout());

@@ -70,7 +70,7 @@ public class LicenseStep
   extends AbstractStep
 {
   private static final String LICENSE = "license.url";
-  private static final String ICON = "/images/license.png";
+  private static final String ICON = "/images/32x32/license.png";
 
   private static final String ACCEPT = "Accept";
   private static final String DECLINE = "Decline";
@@ -81,9 +81,9 @@ public class LicenseStep
   /**
    * Constructs this step.
    */
-  public LicenseStep (String _name, Properties _properties)
+  public LicenseStep (String name, Properties properties)
   {
-    super(_name, _properties);
+    super(name, properties);
 
     if(getProperty(LICENSE) == null){
       throw new IllegalArgumentException(

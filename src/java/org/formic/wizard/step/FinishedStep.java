@@ -20,9 +20,6 @@ package org.formic.wizard.step;
 
 import java.util.Properties;
 
-import javax.swing.JComponent;
-import javax.swing.JPanel;
-
 /**
  * Step to be displayed at the very end of the wizard sequence, after the
  * application has been successfully installed.
@@ -33,14 +30,14 @@ import javax.swing.JPanel;
 public class FinishedStep
   extends WelcomeStep
 {
-  private static final String ICON = "/images/finished.png";
+  private static final String ICON = "/images/32x32/finished.png";
 
   /**
    * Constructs this step.
    */
-  public FinishedStep (String _name, Properties _properties)
+  public FinishedStep (String name, Properties properties)
   {
-    super(_name, _properties);
+    super(name, properties);
   }
 
   /**

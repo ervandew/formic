@@ -87,7 +87,7 @@ public class Installer
 
       setLookAndFeel(properties);
 
-      String imagePath = getString("wizard.icon", "/images/wizard.png");
+      String imagePath = getString("wizard.icon", "/images/32x32/wizard.png");
       if(imagePath != null){
         image = getImage(imagePath);
       }

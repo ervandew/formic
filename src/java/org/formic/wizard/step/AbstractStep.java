@@ -18,12 +18,8 @@
  */
 package org.formic.wizard.step;
 
-import java.awt.Toolkit;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-
-import java.net.URL;
 
 import java.util.Properties;
 
@@ -45,7 +41,7 @@ import org.pietschy.wizard.WizardModel;
 public abstract class AbstractStep
   implements WizardStep
 {
-  private static final String DEFAULT_ICON = "/images/wizard.png";
+  private static final String DEFAULT_ICON = "/images/32x32/wizard.png";
 
   protected WizardModel wizardModel;
 
@@ -66,13 +62,13 @@ public abstract class AbstractStep
    *
    * @param _properties The properties for this step.
    */
-  public AbstractStep (String _name, Properties _properties)
+  public AbstractStep (String name, Properties properties)
   {
-    name = _name;
-    title = Installer.getString(_name + ".title");
-    description = Installer.getString(_name + ".description");
-    iconPath = Installer.getString(_name + ".icon");
-    properties = _properties;
+    this.name = name;
+    this.properties = properties;
+    title = Installer.getString(name + ".title");
+    description = Installer.getString(name + ".description");
+    iconPath = Installer.getString(name + ".icon");
 
     changeSupport = new PropertyChangeSupport(this);
   }
