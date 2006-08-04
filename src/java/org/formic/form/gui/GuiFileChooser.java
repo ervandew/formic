@@ -16,58 +16,54 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.step;
+package org.formic.form.gui;
 
-import java.util.Properties;
-
-import org.formic.form.console.ConsoleForm;
-
-import org.formic.form.gui.GuiForm;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
- * Wizard step that allows the user to choose a file or folder.
+ * Component consisting of a text field and a button which launches a
+ * JFileChooser which populates the text field with the chosen entry.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class FileChooserStep
-  extends AbstractFormStep
+public class GuiFileChooser
+  extends JPanel
 {
-  protected static final String ICON = "/images/32x32/folder.png";
+  private JTextField textField;
+  private JButton button;
+  private JFileChooser chooser;
 
   /**
-   * Constructs the welcome step.
+   * Gets the text field to hold the entry chosen from the JFileChooser.
+   *
+   * @return The text field.
    */
-  public FileChooserStep (String name, Properties properties)
+  public JTextField getTextField ()
   {
-    super(name, properties);
+    return textField;
   }
 
   /**
-   * {@inheritDoc}
-   * @see AbstractStep#getIconPath()
+   * Gets the button which launches the JFileChooser.
+   *
+   * @return The button.
    */
-  protected String getIconPath ()
+  public JButton getButton ()
   {
-    String path = super.getIconPath();
-    return path != null ? path : ICON;
+    return button;
   }
 
   /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initGuiForm()
+   * Gets the JFileChooser.
+   *
+   * @return The JFileChooser.
    */
-  public GuiForm initGuiForm ()
+  public JFileChooser getFileChooser ()
   {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initConsoleForm()
-   */
-  public ConsoleForm initConsoleForm ()
-  {
-    return null;
+    return chooser;
   }
 }

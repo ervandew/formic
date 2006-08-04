@@ -16,58 +16,70 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.step;
+package org.formic.form.impl;
 
-import java.util.Properties;
+import com.jgoodies.binding.value.AbstractValueModel;
 
-import org.formic.form.console.ConsoleForm;
-
-import org.formic.form.gui.GuiForm;
+import org.formic.form.FormFieldModel;
+import org.formic.form.Validator;
 
 /**
- * Wizard step that allows the user to choose a file or folder.
+ * Implementation of {@link FormFieldModel}.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class FileChooserStep
-  extends AbstractFormStep
+public class FormFieldModelImpl
+  extends AbstractValueModel
+  implements FormFieldModel
 {
-  protected static final String ICON = "/images/32x32/folder.png";
+  private String name;
+  private Object value;
+  private Validator validator;
 
   /**
-   * Constructs the welcome step.
+   * Constructs a new instance.
+   *
+   * @param name The field name.
    */
-  public FileChooserStep (String name, Properties properties)
+  public FormFieldModelImpl (String name)
   {
-    super(name, properties);
+    this.name = name;
   }
 
   /**
    * {@inheritDoc}
-   * @see AbstractStep#getIconPath()
+   * @see com.jgoodies.binding.value.ValueModel#getValue()
    */
-  protected String getIconPath ()
+  public Object getValue ()
   {
-    String path = super.getIconPath();
-    return path != null ? path : ICON;
+    return this.value;
   }
 
   /**
    * {@inheritDoc}
-   * @see AbstractFormStep#initGuiForm()
+   * @see com.jgoodies.binding.value.ValueModel#setValue(Object)
    */
-  public GuiForm initGuiForm ()
+  public void setValue (Object value)
   {
-    return null;
+    this.value = value;
   }
 
   /**
    * {@inheritDoc}
-   * @see AbstractFormStep#initConsoleForm()
+   * @see FormFieldModel#getValidator()
    */
-  public ConsoleForm initConsoleForm ()
+  public Validator getValidator ()
   {
-    return null;
+    return validator;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormFieldModel#setValidator(Validator)
+   */
+  public void setValidator (Validator validator)
+  {
+    this.validator = validator;
   }
 }

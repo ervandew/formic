@@ -16,58 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.step;
+package org.formic.form.impl;
 
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.formic.form.console.ConsoleForm;
-
-import org.formic.form.gui.GuiForm;
+import org.formic.form.FormFieldModel;
+import org.formic.form.FormModel;
 
 /**
- * Wizard step that allows the user to choose a file or folder.
+ * Implementation of {@link FormModel}.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class FileChooserStep
-  extends AbstractFormStep
+public class FormModelImpl
+  implements FormModel
 {
-  protected static final String ICON = "/images/32x32/folder.png";
-
-  /**
-   * Constructs the welcome step.
-   */
-  public FileChooserStep (String name, Properties properties)
-  {
-    super(name, properties);
-  }
+  private Map fields = new HashMap();
 
   /**
    * {@inheritDoc}
-   * @see AbstractStep#getIconPath()
+   * @see FormModel#getFieldModel(String)
    */
-  protected String getIconPath ()
+  public FormFieldModel getFieldModel (String name)
   {
-    String path = super.getIconPath();
-    return path != null ? path : ICON;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initGuiForm()
-   */
-  public GuiForm initGuiForm ()
-  {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initConsoleForm()
-   */
-  public ConsoleForm initConsoleForm ()
-  {
-    return null;
+    FormFieldModel field = (FormFieldModel)fields.get(name);
+    if(field == null){
+      field = new FormFieldModelImpl(name);
+      fields.put(name, field);
+    }
+    return field;
   }
 }

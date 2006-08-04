@@ -16,58 +16,30 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.step;
+package org.formic.form;
 
-import java.util.Properties;
-
-import org.formic.form.console.ConsoleForm;
-
-import org.formic.form.gui.GuiForm;
+import com.jgoodies.binding.value.ValueModel;
 
 /**
- * Wizard step that allows the user to choose a file or folder.
+ * Represents the data model of a form field.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class FileChooserStep
-  extends AbstractFormStep
+public interface FormFieldModel
+  extends ValueModel
 {
-  protected static final String ICON = "/images/32x32/folder.png";
+  /**
+   * Gets the validator for this field.
+   *
+   * @return The Validator.
+   */
+  public Validator getValidator ();
 
   /**
-   * Constructs the welcome step.
+   * Sets the validator for this field.
+   *
+   * @param validator The Validator.
    */
-  public FileChooserStep (String name, Properties properties)
-  {
-    super(name, properties);
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractStep#getIconPath()
-   */
-  protected String getIconPath ()
-  {
-    String path = super.getIconPath();
-    return path != null ? path : ICON;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initGuiForm()
-   */
-  public GuiForm initGuiForm ()
-  {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initConsoleForm()
-   */
-  public ConsoleForm initConsoleForm ()
-  {
-    return null;
-  }
+  public void setValidator (Validator validator);
 }

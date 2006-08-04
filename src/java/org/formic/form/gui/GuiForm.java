@@ -16,58 +16,49 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.step;
+package org.formic.form.gui;
 
-import java.util.Properties;
+import javax.swing.JPanel;
 
-import org.formic.form.console.ConsoleForm;
-
-import org.formic.form.gui.GuiForm;
+import org.formic.form.Form;
+import org.formic.form.FormModel;
 
 /**
- * Wizard step that allows the user to choose a file or folder.
+ * Implementation of {@link Form} for graphical interfaces.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class FileChooserStep
-  extends AbstractFormStep
+public class GuiForm
+  extends JPanel
+  implements Form
 {
-  protected static final String ICON = "/images/32x32/folder.png";
+  private FormModel model;
 
   /**
-   * Constructs the welcome step.
+   * {@inheritDoc}
+   * @see Form#getModel()
    */
-  public FileChooserStep (String name, Properties properties)
+  public FormModel getModel ()
   {
-    super(name, properties);
+    return model;
   }
 
   /**
    * {@inheritDoc}
-   * @see AbstractStep#getIconPath()
+   * @see Form#setModel(FormModel)
    */
-  protected String getIconPath ()
+  public void setModel (FormModel model)
   {
-    String path = super.getIconPath();
-    return path != null ? path : ICON;
+    this.model = model;
   }
 
   /**
    * {@inheritDoc}
-   * @see AbstractFormStep#initGuiForm()
+   * @see Form#isFormValid()
    */
-  public GuiForm initGuiForm ()
+  public boolean isFormValid ()
   {
-    return null;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see AbstractFormStep#initConsoleForm()
-   */
-  public ConsoleForm initConsoleForm ()
-  {
-    return null;
+    return false;
   }
 }
