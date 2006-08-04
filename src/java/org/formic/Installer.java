@@ -39,12 +39,12 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
+import org.formic.dialog.gui.GuiDialogs;
+
 import org.formic.util.ResourceBundleAggregate;
 
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardBuilder;
-
-import org.formic.wizard.gui.dialog.Dialogs;
 
 import org.pietschy.wizard.I18n;
 
@@ -83,7 +83,7 @@ public class Installer
     consoleMode = Boolean.parseBoolean(properties.getProperty("formic.console"));
     if(!consoleMode){
       I18n.setBundle(getResourceBundle());
-      Dialogs.setBundle(getResourceBundle());
+      GuiDialogs.setBundle(getResourceBundle());
 
       setLookAndFeel(properties);
 

@@ -18,37 +18,30 @@
  */
 package org.formic.wizard.step;
 
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 
 import java.util.Properties;
 
+import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
 import javax.swing.JComponent;
-import javax.swing.JEditorPane;
 import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import org.formic.Installer;
-
-import org.formic.event.gui.HyperlinkListener;
-
-import org.formic.wizard.impl.console.ConsoleWizard;
 
 /**
- * Wizard step that displays a welcome message at the beginning of the
- * installation process.
+ * Wizard step that allows the user to choose a file or folder.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class WelcomeStep
+public class FileChooserStep
   extends AbstractStep
 {
-  protected static final String ICON = "/images/32x32/home.png";
+  protected static final String ICON = "/images/32x32/folder.png";
 
   /**
    * Constructs the welcome step.
    */
-  public WelcomeStep (String name, Properties properties)
+  public FileChooserStep (String name, Properties properties)
   {
     super(name, properties);
   }
@@ -69,28 +62,11 @@ public class WelcomeStep
    */
   public JComponent initGui ()
   {
-    String text = Installer.getString(getName() + ".text");
-    String html = Installer.getString(getName() + ".html");
-
     JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
+    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+    panel.setBorder(BorderFactory.createEmptyBorder(50, 125, 10, 125));
+    //panel.add(builder.getPanel());
 
-    JComponent content = null;
-    if(html != null){
-      JEditorPane editor = new JEditorPane("text/html", html);
-      editor.setEditable(false);
-      editor.setOpaque(false);
-      editor.addHyperlinkListener(new HyperlinkListener());
-      editor.setBorder(null);
-      editor.setFocusable(false);
-      content = editor;
-    }else{
-      JTextArea area = new JTextArea(text);
-      area.setEditable(false);
-      content = area;
-    }
-
-    panel.add(content, BorderLayout.CENTER);
     return panel;
   }
 
@@ -100,16 +76,6 @@ public class WelcomeStep
    */
   public charva.awt.Component initConsole ()
   {
-    String text = Installer.getString(getName() + ".text");
-
-    charvax.swing.JPanel panel = new charvax.swing.JPanel();
-    panel.setLayout(new charva.awt.BorderLayout());
-
-    charvax.swing.JTextArea area = new charvax.swing.JTextArea(text);
-    area.setColumns(ConsoleWizard.getFrame().getSize().width - 20);
-    area.setEditable(false);
-    panel.add(area, charva.awt.BorderLayout.CENTER);
-
-    return panel;
+    return null;
   }
 }

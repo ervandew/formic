@@ -20,7 +20,7 @@ package org.formic.wizard.impl.gui;
 
 import javax.swing.JButton;
 
-import org.formic.wizard.gui.event.ButtonKeyListener;
+import org.formic.event.gui.ButtonKeyListener;
 
 import org.pietschy.wizard.Wizard;
 

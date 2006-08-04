@@ -20,9 +20,7 @@ package org.formic.wizard.impl.gui;
 
 import java.awt.event.ActionEvent;
 
-import org.formic.Installer;
-
-import org.formic.wizard.gui.dialog.Dialogs;
+import org.formic.dialog.gui.GuiDialogs;
 
 import org.pietschy.wizard.Wizard;
 import org.pietschy.wizard.WizardAction;
@@ -49,7 +47,7 @@ public class CancelAction
   public void doAction (ActionEvent e)
   {
     if(isEnabled()){
-      if(Dialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){
+      if(GuiDialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){
         getWizard().cancel();
       }
     }else{

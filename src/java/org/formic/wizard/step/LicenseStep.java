@@ -42,7 +42,7 @@ import org.apache.commons.io.IOUtils;
 
 import org.formic.Installer;
 
-import org.formic.wizard.gui.event.HyperlinkListener;
+import org.formic.event.gui.HyperlinkListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
 

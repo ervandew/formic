@@ -18,8 +18,6 @@
  */
 package org.formic.wizard;
 
-import java.beans.PropertyChangeEvent;
-
 import java.io.IOException;
 
 import java.lang.reflect.Constructor;
@@ -41,7 +39,7 @@ import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
 
-import org.formic.wizard.gui.event.TempPropertyChangeListener;
+import org.formic.event.gui.TempPropertyChangeListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
 import org.formic.wizard.impl.console.ConsoleWizardStep;

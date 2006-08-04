@@ -55,7 +55,9 @@ import org.apache.tools.ant.taskdefs.CallTarget;
 
 import org.formic.Installer;
 
-import org.formic.wizard.gui.dialog.Dialogs;
+import org.formic.dialog.console.ConsoleDialogs;
+
+import org.formic.dialog.gui.GuiDialogs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,7 +279,7 @@ public class InstallStep
     }catch(Exception e){
       error = e;
       error.printStackTrace();
-      Dialogs.showError(error);
+      GuiDialogs.showError(error);
       guiOverallLabel.setText(
           targetName + ": " + Installer.getString("error.dialog.text"));
       guiShowErrorButton.setVisible(true);
@@ -312,7 +314,7 @@ public class InstallStep
         }catch(Exception e){
           error = e;
           error.printStackTrace();
-          org.formic.wizard.console.dialog.Dialogs.showError(error);
+          ConsoleDialogs.showError(error);
           consoleOverallLabel.setText(
               targetName + ": " + Installer.getString("error.dialog.text"));
           consoleShowErrorButton.setVisible(true);
@@ -489,7 +491,7 @@ public class InstallStep
     }
 
     public void actionPerformed (ActionEvent e){
-      Dialogs.showError(error);
+      GuiDialogs.showError(error);
     }
   }
 }

@@ -16,60 +16,68 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.impl.console;
+package org.formic.event.gui;
 
-import charva.awt.event.ActionEvent;
-import charva.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-import org.formic.dialog.console.ConsoleDialogs;
+import javax.swing.JButton;
 
 /**
- * Abstract super class for wizard actions.
+ * KeyListener for buttons.
+ * <p/>
+ * Used to handle by passing default button if enter is pressed while on a
+ * selected button.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public abstract class WizardAction
-  implements ActionListener
+public class ButtonKeyListener
+  implements KeyListener
 {
-  private ConsoleWizard wizard;
+  private static ButtonKeyListener INSTANCE = new ButtonKeyListener();
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param wizard The ConsoleWizard.
-   */
-  public WizardAction (ConsoleWizard wizard)
+  private ButtonKeyListener ()
   {
-    this.wizard = wizard;
   }
 
   /**
-   * Gets the wizard for this instance.
+   * Gets the ButtonKeyListener instance
    *
-   * @return The wizard.
+   * @return The instance.
    */
-  public ConsoleWizard getWizard ()
+  public static ButtonKeyListener getInstance ()
   {
-    return this.wizard;
+    return INSTANCE;
   }
 
   /**
    * {@inheritDoc}
-   * @see ActionListener#actionPerformed(ActionEvent)
+   * @see KeyListener#keyTyped(KeyEvent)
    */
-  public void actionPerformed (ActionEvent event)
+  public void keyTyped (KeyEvent e)
   {
-    try{
-      doAction();
-    }catch(Exception e){
-      ConsoleDialogs.showError(e);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see KeyListener#keyPressed(KeyEvent)
+   */
+  public void keyPressed (KeyEvent e)
+  {
+    if(e.getKeyCode() == KeyEvent.VK_ENTER){
+      ((JButton)e.getSource()).doClick();
+
+      // prevent default button from being called as well.
+      e.consume();
     }
   }
 
   /**
-   * Perform the action.
+   * {@inheritDoc}
+   * @see KeyListener#keyReleased(KeyEvent)
    */
-  protected abstract void doAction ()
-    throws Exception;
+  public void keyReleased (KeyEvent e)
+  {
+  }
 }

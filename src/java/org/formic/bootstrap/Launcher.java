@@ -41,7 +41,7 @@ import javax.swing.WindowConstants;
 import org.formic.bootstrap.util.CommandExecutor;
 import org.formic.bootstrap.util.Extractor;
 
-import org.formic.wizard.gui.dialog.Dialogs;
+import org.formic.dialog.gui.GuiDialogs;
 
 /**
  * Class responsible for extracting embedded archive and kicking off the ant
@@ -82,7 +82,7 @@ public class Launcher
     this.args = args;
 
     // initialize Dialogs
-    Dialogs.setBundle(ResourceBundle.getBundle("org/formic/messages"));
+    GuiDialogs.setBundle(ResourceBundle.getBundle("org/formic/messages"));
 
     frame = new JFrame(TITLE);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -139,7 +139,7 @@ public class Launcher
       frame.setVisible(false);
       execute(args);
     }catch(Exception e){
-      Dialogs.showError(e);
+      GuiDialogs.showError(e);
     }finally{
       try{
         cleanup();
@@ -159,7 +159,7 @@ public class Launcher
       join(2000);
       cleanup();
     }catch(Exception e){
-      Dialogs.showError(e);
+      GuiDialogs.showError(e);
     }
   }
 
@@ -207,7 +207,7 @@ public class Launcher
     System.out.println("Initializing " + args[0] + "er ...");
     CommandExecutor result = CommandExecutor.execute(cmd);
     if(result.getReturnCode() != 0){
-      Dialogs.showError(result.getErrorMessage(), result.getResult());
+      GuiDialogs.showError(result.getErrorMessage(), result.getResult());
     }
   }
 

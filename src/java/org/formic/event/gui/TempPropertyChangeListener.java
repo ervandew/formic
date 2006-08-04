@@ -16,36 +16,50 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.impl.console;
+package org.formic.event.gui;
 
-import org.formic.dialog.console.ConsoleDialogs;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Action listener for 'Cancel' button.
+ * Temporary listener that queues up events.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class CancelAction
-  extends WizardAction
+public class TempPropertyChangeListener
+  implements PropertyChangeListener
 {
-  /**
-   * @see WizardAction#WizardAction(ConsoleWizard)
-   */
-  public CancelAction (ConsoleWizard wizard)
-  {
-    super(wizard);
-  }
+  private List events = new ArrayList();
 
   /**
    * {@inheritDoc}
-   * @see WizardAction#doAction()
+   * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void doAction ()
-    throws Exception
+  public void propertyChange (PropertyChangeEvent evt)
   {
-    if(ConsoleDialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){
-      getWizard().close(true);
-    }
+    events.add(evt);
+  }
+
+  /**
+   * Get the queued up events.
+   *
+   * @return Array of events.
+   */
+  public PropertyChangeEvent[] getEvents ()
+  {
+    return (PropertyChangeEvent[])
+      events.toArray(new PropertyChangeEvent[events.size()]);
+  }
+
+  /**
+   * Clears the queued events.
+   */
+  public void clear ()
+  {
+    events.clear();
   }
 }

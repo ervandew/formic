@@ -16,36 +16,36 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.wizard.impl.console;
+package org.formic.wizard.step;
 
-import org.formic.dialog.console.ConsoleDialogs;
+import java.util.Properties;
 
 /**
- * Action listener for 'Cancel' button.
+ * Wizard step where the user chooses a directory to install the application in.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class CancelAction
-  extends WizardAction
+public class InstallLocationStep
+  extends FileChooserStep
 {
+  protected static final String ICON = "/images/32x32/install_folder.png";
+
   /**
-   * @see WizardAction#WizardAction(ConsoleWizard)
+   * Constructs the welcome step.
    */
-  public CancelAction (ConsoleWizard wizard)
+  public InstallLocationStep (String name, Properties properties)
   {
-    super(wizard);
+    super(name, properties);
   }
 
   /**
    * {@inheritDoc}
-   * @see WizardAction#doAction()
+   * @see AbstractStep#getIconPath()
    */
-  public void doAction ()
-    throws Exception
+  protected String getIconPath ()
   {
-    if(ConsoleDialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){
-      getWizard().close(true);
-    }
+    String path = super.getIconPath();
+    return path != null ? path : ICON;
   }
 }

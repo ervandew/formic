@@ -47,10 +47,10 @@ import org.apache.commons.lang.WordUtils;
 
 import org.formic.Installer;
 
+import org.formic.dialog.console.ConsoleDialogs;
+
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardStep;
-
-import org.formic.wizard.console.dialog.Dialogs;
 
 import org.formic.wizard.impl.models.MultiPathModel;
 
@@ -162,7 +162,7 @@ public class ConsoleWizard
 
     if(error != null){
       logger.error(error);
-      Dialogs.showError(error);
+      ConsoleDialogs.showError(error);
       close(true);
     }else{
       model.reset();
