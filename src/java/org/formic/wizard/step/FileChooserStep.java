@@ -20,9 +20,13 @@ package org.formic.wizard.step;
 
 import java.util.Properties;
 
+import com.jgoodies.forms.layout.FormLayout;
+
 import org.formic.form.console.ConsoleForm;
 
+import org.formic.form.gui.GuiComponentFactory;
 import org.formic.form.gui.GuiForm;
+import org.formic.form.gui.GuiFormBuilder;
 
 /**
  * Wizard step that allows the user to choose a file or folder.
@@ -59,7 +63,20 @@ public class FileChooserStep
    */
   public GuiForm initGuiForm ()
   {
-    return null;
+    FormLayout layout = new FormLayout("pref, 4dlu, 80dlu");
+    GuiFormBuilder builder = new GuiFormBuilder(getName(), layout);
+    GuiComponentFactory factory = builder.getFactory();
+
+    builder.setDefaultBorder();
+
+    builder.append("file", factory.createTextField("file", null));
+    builder.nextRow();
+    builder.append("folder", factory.createTextField("folder", null),
+        1, 1, "0, 0, 0, 40dlu");
+    builder.nextRow();
+    builder.append("foo", factory.createTextField("foo", null));
+
+    return builder.getForm();
   }
 
   /**

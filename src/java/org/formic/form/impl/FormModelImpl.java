@@ -33,7 +33,27 @@ import org.formic.form.FormModel;
 public class FormModelImpl
   implements FormModel
 {
+  private String name;
   private Map fields = new HashMap();
+
+  /**
+   * Constructs a new instance.
+   *
+   * @param name The name for this instance.
+   */
+  public FormModelImpl (String name)
+  {
+    this.name = name;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#getName()
+   */
+  public String getName ()
+  {
+    return this.name;
+  }
 
   /**
    * {@inheritDoc}
@@ -41,6 +61,7 @@ public class FormModelImpl
    */
   public FormFieldModel getFieldModel (String name)
   {
+    name = this.name + '.' + name;
     FormFieldModel field = (FormFieldModel)fields.get(name);
     if(field == null){
       field = new FormFieldModelImpl(name);

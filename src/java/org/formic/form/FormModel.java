@@ -27,6 +27,15 @@ package org.formic.form;
 public interface FormModel
 {
   /**
+   * Gets the form's name.<br/>
+   * The form name is used as a prefix for field names and resource
+   * keys.
+   *
+   * @return The form's name.
+   */
+  public String getName ();
+
+  /**
    * Gets the FormFieldModel for the given field name.
    *
    * @param name The field name.

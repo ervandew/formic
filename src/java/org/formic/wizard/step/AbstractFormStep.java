@@ -87,7 +87,7 @@ public abstract class AbstractFormStep
    */
   public boolean isValid ()
   {
-    return form.isFormValid();
+    return form != null ? form.isFormValid() : false;
   }
 
   /**

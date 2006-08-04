@@ -18,13 +18,23 @@
  */
 package org.formic.form.gui;
 
+import java.awt.Insets;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
-import com.jgoodies.forms.builder.PanelBuilder;
+import javax.swing.border.Border;
+
+import com.jgoodies.forms.builder.DefaultFormBuilder;
 
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.Sizes;
+
+import org.apache.commons.lang.StringUtils;
 
 import org.formic.Installer;
 
@@ -36,23 +46,36 @@ import org.formic.Installer;
  */
 public class GuiFormBuilder
 {
+  public static final String DLU = "dlu";
+  public static final String PX = "px";
+  public static final String PT = "pt";
+  public static final String IN = "in";
+  public static final String CM = "cm";
+  public static final String MM = "mm";
+
+  private static final Pattern INSET_PATTERN =
+    Pattern.compile("^\\s*([0-9]+)\\s*([a-zA-Z]*)\\s*$");
+
+  private String name;
   private GuiForm form;
   private GuiComponentFactory factory;
-  private PanelBuilder builder;
+  private DefaultFormBuilder builder;
   private CellConstraints cc;
 
   /**
    * Constructs a new instance with the supplied layout.
    *
+   * @param name The form name (used as a prefix for resolving resource keys).
    * @param layout The layout.
    */
-  public GuiFormBuilder (FormLayout layout)
+  public GuiFormBuilder (String name, FormLayout layout)
   {
+    this.name = name;
     form = new GuiForm();
-    factory = new GuiComponentFactory();
+    factory = new GuiComponentFactory(name);
     form.setModel(factory.getFormModel());
 
-    builder = new PanelBuilder(layout, form);
+    builder = new DefaultFormBuilder(layout, form);
     cc = new CellConstraints();
   }
 
@@ -98,120 +121,249 @@ public class GuiFormBuilder
   }
 
   /**
-   * Adds a seprator at the current cursor position.
+   * Sets the border of the form.
+   *
+   * @param border The border to use.
+   */
+  public void setBorder (Border border)
+  {
+    builder.setBorder(border);
+  }
+
+  /**
+   * Sets a default border.
+   */
+  public void setDefaultBorder ()
+  {
+    builder.setDefaultDialogBorder();
+  }
+
+  /**
+   * Appends a seprator at the current cursor position.
    *
    * @param text The text or resource key to the text to be displayed in the
    * separator.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder addSeparator (String text)
+  public GuiFormBuilder appendSeparator (String text)
   {
-    builder.addSeparator(Installer.getString(text, text));
+    builder.appendSeparator(
+        Installer.getString(name + '.' + text, text));
     return this;
   }
 
   /**
-   * Adds the supplied component to this form.
+   * Appends the supplied component to this form.
    *
-   * @param component The component to add.
+   * @param component The component to append.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (JComponent component)
+  public GuiFormBuilder append (JComponent component)
   {
-    builder.add(component);
+    builder.append(component);
     return this;
   }
 
   /**
-   * Adds the supplied component to this form.
+   * Appends the supplied component to this form.
    *
-   * @param component The component to add.
+   * @param component The component to append.
    * @param colspan The column span of the component.
    * @param rowspan The row span of the component.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (JComponent component, int colspan, int rowspan)
+  public GuiFormBuilder append (JComponent component, int colspan, int rowspan)
   {
-    builder.add(component,
-        cc.xywh(builder.getColumn(), builder.getRow(), colspan, rowspan));
+    return append(component, colspan, rowspan, null);
+  }
+
+  /**
+   * Appends the supplied component to this form.
+   *
+   * @param component The component to append.
+   * @param colspan The column span of the component.
+   * @param rowspan The row span of the component.
+   * @param insets The insets to use when adding the component.
+   * Example: "0 5dlu 0 5dlu"
+   *
+   * @return This builder instance for method chaining.
+   */
+  public GuiFormBuilder append (
+      JComponent component, int colspan, int rowspan, String insets)
+  {
+    if(insets != null){
+      builder.add(component,
+          new CellConstraints(
+            builder.getColumn(), builder.getRow(),
+            colspan, rowspan,
+            CellConstraints.DEFAULT, CellConstraints.DEFAULT,
+            parseInsets(insets)));
+    }else{
+      builder.add(component,
+          cc.xywh(builder.getColumn(), builder.getRow(), colspan, rowspan));
+    }
 
     if(builder.getColumnCount() > builder.getColumn() + colspan){
       builder.nextColumn(colspan + 1);
     }
 
-    if(builder.getRowCount() > builder.getRow() + rowspan){
-      builder.nextRow(rowspan + 1);
-    }
-
     return this;
   }
 
   /**
-   * Adds the supplied label and component to this form.
+   * Appends the supplied label and component to this form.
    *
    * @param label The label.
-   * @param component The component to add.
+   * @param component The component to append.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (JLabel label, JComponent component)
+  public GuiFormBuilder append (JLabel label, JComponent component)
   {
-    add(label);
-    add(component);
-    return this;
+    return append(label, component, 1, 1);
   }
 
   /**
-   * Adds the supplied component to this form.
+   * Appends the supplied component to this form.
    *
    * @param label The label.
-   * @param component The component to add.
+   * @param component The component to append.
    * @param colspan The column span of the component.
    * @param rowspan The row span of the component.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (
+  public GuiFormBuilder append (
       JLabel label, JComponent component, int colspan, int rowspan)
   {
-    add(label);
-    add(component, colspan, rowspan);
+    append(label);
+    append(component, colspan, rowspan);
     return this;
   }
 
   /**
-   * Adds the supplied label and component to this form.
+   * Appends the supplied label and component to this form.
    *
    * @param label The text to place in a label.
-   * @param component The component to add.
+   * @param component The component to append.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (String label, JComponent component)
+  public GuiFormBuilder append (String label, JComponent component)
   {
-    add(new JLabel(Installer.getString(label, label)));
-    add(component);
-    return this;
+    return append(label, component, 1, 1, null);
   }
 
   /**
-   * Adds the supplied component to this form.
+   * Appends the supplied component to this form.
    *
    * @param label The text to place in a label.
-   * @param component The component to add.
+   * @param component The component to append.
    * @param colspan The column span of the component.
    * @param rowspan The row span of the component.
    *
    * @return This builder instance for method chaining.
    */
-  public GuiFormBuilder add (
+  public GuiFormBuilder append (
       String label, JComponent component, int colspan, int rowspan)
   {
-    add(new JLabel(Installer.getString(label, label)));
-    add(component, colspan, rowspan);
+    return append(label, component, 1, 1, null);
+  }
+
+  /**
+   * Appends the supplied component to this form.
+   *
+   * @param label The text to place in a label.
+   * @param component The component to append.
+   * @param colspan The column span of the component.
+   * @param rowspan The row span of the component.
+   * @param insets The insets to use when adding the component.
+   * Example: "0 5dlu 0 5dlu"
+   *
+   * @return This builder instance for method chaining.
+   */
+  public GuiFormBuilder append (
+      String label,
+      JComponent component,
+      int colspan,
+      int rowspan,
+      String insets)
+  {
+    append(new JLabel(Installer.getString(name + '.' + label, label)));
+    append(component, colspan, rowspan, insets);
     return this;
+  }
+
+  /**
+   * Parses the supplied insets spec and returns an equivelant Insets instance.
+   *
+   * @param spec The insets spec.
+   * @return The Insets instance.
+   */
+  private Insets parseInsets (String spec)
+  {
+    int top = 0;
+    int left = 0;
+    int bottom = 0;
+    int right = 0;
+
+    if(spec != null && spec.trim().length() > 0){
+      String[] values = StringUtils.split(spec, ',');
+      if(values.length != 4){
+        throw new RuntimeException(
+            Installer.getString("inset.spec.invalid.length",
+              new Object[]{spec, new Integer(values.length)}));
+      }
+      top = parseInset(values[0]);
+      left = parseInset(values[1]);
+      bottom = parseInset(values[2]);
+      right = parseInset(values[3]);
+    }
+
+    return new Insets(top, left, bottom, right);
+  }
+
+  /**
+   * Parses the supplied inset and returns the proper number of pixels that it
+   * represents.
+   *
+   * @param value The value.
+   * @return The number of pixels.
+   */
+  private int parseInset (String value)
+  {
+    Matcher matcher = INSET_PATTERN.matcher(value);
+    matcher.matches();
+
+    String count = matcher.group(1);
+    String measurement = matcher.group(2).toLowerCase();
+
+    if(!StringUtils.isNumeric(count)){
+      throw new RuntimeException(
+          Installer.getString("inset.spec.invalid.unit",
+            new Object[]{value, count}));
+    }
+
+    int units = Integer.parseInt(count);
+    if(DLU.equals(measurement) || measurement.trim().length() == 0){
+      return Sizes.dialogUnitXAsPixel(units, getForm());
+    }else if(PX.equals(measurement)){
+      return units;
+    }else if(PT.equals(measurement)){
+      return Sizes.pointAsPixel(units, getForm());
+    }else if(IN.equals(measurement)){
+      return Sizes.inchAsPixel(units, getForm());
+    }else if(CM.equals(measurement)){
+      return Sizes.centimeterAsPixel(units, getForm());
+    }else if(MM.equals(measurement)){
+      return Sizes.millimeterAsPixel(units, getForm());
+    }
+
+    throw new RuntimeException(
+        Installer.getString("inset.spec.invalid.measurement",
+          new Object[]{value, measurement}));
   }
 }

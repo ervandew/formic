@@ -16,6 +16,14 @@ Panels
 Enhancements
   - Add ability to view the log (apps/kate.png,package_editors.png from nuvola icons)
     - Button on bottom left hand side to open window.
+      1) Read location of "file" appender.
+      2) Load current contents into a JTextArea
+      3) Register an appender for appending content to the JTextArea
+         - appender = new AsyncAppender();
+           appender.addAppender(new WriterAppend(layout, new
+           JTextAreaWriter(textArea)));
+      - downside is possibility of lost or redundent logging info if a lot of
+        messages are being logged when the above steps are executing.
   - Add support for automated installs.
 
 Linux
@@ -34,3 +42,42 @@ Uninstaller
   - result should be a directory 'uninstall' with an exe/sh and
     ini/property file.
     Windows: register uninstaller in registry.
+
+Forms
+  FormLayout layout = new FormLayout("pref, 4dlu, pref, 4dlu, pref");
+  GuiFormBuilder builder = new GuiFormBuilder(layout);
+
+  builder.addFileChooser("location", true);
+  builder.nextRow();
+  builder.add("location");
+
+  installLocation.location.label=Folder
+  installLocation.location.hint=\
+    Choose a folder where you would like the application to be installed.
+
+
+  GuiFormBuilder
+    JComponent add(component);
+    JComponent add(component, colspan, rowspan);
+    JComponent addSeparator(name)
+
+    GuiFormBuilder nextRow();
+    JComponent getForm();
+
+    JComponent add(name, validator)
+    JComponent add(name, colspan, rowspan, validator)
+    JComboBox addComboBox(name, validator)
+    JComboBox addComboBox(name, colspan, rowspan, validator)
+    FileChooser addFileChooser(name, validator)
+    FileChooser addFileChooser(name, colspan, rowspan, validator)
+    JPasswordField addPassword(name, validator)
+    JPasswordField addPassword(name, colspan, rowspan, validator)
+
+  AggregateValidator
+    addValidator(Validator)
+
+  RequiredValidator
+  RegexValidator
+  DoubleValidator
+  IntegerValidator
+  LongValidator

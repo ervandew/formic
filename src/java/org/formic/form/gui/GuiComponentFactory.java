@@ -58,10 +58,13 @@ public class GuiComponentFactory
 
   /**
    * Constructs a new instance using a default FormModel.
+   *
+   * @param name The form name (used as a prefix for field names and resource
+   * keys).
    */
-  public GuiComponentFactory ()
+  public GuiComponentFactory (String name)
   {
-    this.model = new FormModelImpl();
+    this.model = new FormModelImpl(name);
   }
 
   /**
@@ -94,7 +97,8 @@ public class GuiComponentFactory
   public JCheckBox createCheckBox (String name, Validator validator)
   {
     return BasicComponentFactory.createCheckBox(
-        getField(name, validator), Installer.getString(name, name));
+        getField(name, validator),
+        Installer.getString(model.getName() + '.' + name, name));
   }
 
   /**

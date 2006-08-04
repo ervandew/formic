@@ -34,6 +34,8 @@ import net.java.swingfx.waitwithstyle.SingleComponentInfiniteProgress;
 
 import org.formic.Installer;
 
+import org.formic.dialog.gui.GuiDialogs;
+
 import org.formic.wizard.WizardStep;
 
 import org.pietschy.wizard.InvalidStateException;
@@ -108,10 +110,6 @@ public class GuiWizardStep
    */
   public void init (WizardModel _model)
   {
-    component = step.initGui();
-
-    setLayout(new BorderLayout());
-    add(component, BorderLayout.CENTER);
   }
 
   /**
@@ -120,7 +118,16 @@ public class GuiWizardStep
    */
   public void prepare ()
   {
-    step.prepare();
+    try{
+      component = step.initGui();
+
+      setLayout(new BorderLayout());
+      add(component, BorderLayout.CENTER);
+
+      step.prepare();
+    }catch(Exception e){
+      GuiDialogs.showError(e);
+    }
   }
 
   /**
