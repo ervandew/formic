@@ -98,17 +98,20 @@ public class FormModelImpl
   public void propertyChange (final PropertyChangeEvent evt)
   {
     if(FormFieldModel.FIELD_VALID.equals(evt.getPropertyName())){
-      boolean valid = ((Boolean)Worker.post(new Job(){
-        public Object run (){
-          for (Iterator ii = fields.values().iterator(); ii.hasNext();){
-            FormFieldModel field = (FormFieldModel)ii.next();
-            if(!field.equals(evt.getSource()) && !field.isValid()){
-              return Boolean.FALSE;
+      boolean valid = ((Boolean)evt.getNewValue()).booleanValue();
+      if(valid){
+        valid = ((Boolean)Worker.post(new Job(){
+          public Object run (){
+            for (Iterator ii = fields.values().iterator(); ii.hasNext();){
+              FormFieldModel field = (FormFieldModel)ii.next();
+              if(!field.equals(evt.getSource()) && !field.isValid()){
+                return Boolean.FALSE;
+              }
             }
+            return Boolean.TRUE;
           }
-          return Boolean.TRUE;
-        }
-      })).booleanValue();
+        })).booleanValue();
+      }
       firePropertyChange(FORM_VALID, this.valid, this.valid = valid);
     }
   }

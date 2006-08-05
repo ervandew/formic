@@ -44,40 +44,10 @@ Uninstaller
     Windows: register uninstaller in registry.
 
 Forms
-  FormLayout layout = new FormLayout("pref, 4dlu, pref, 4dlu, pref");
-  GuiFormBuilder builder = new GuiFormBuilder(layout);
+  - installLocation.location.hint=\
+      Choose a folder where you would like the application to be installed.
 
-  builder.addFileChooser("location", true);
-  builder.nextRow();
-  builder.add("location");
-
-  installLocation.location.label=Folder
-  installLocation.location.hint=\
-    Choose a folder where you would like the application to be installed.
-
-
-  GuiFormBuilder
-    JComponent add(component);
-    JComponent add(component, colspan, rowspan);
-    JComponent addSeparator(name)
-
-    GuiFormBuilder nextRow();
-    JComponent getForm();
-
-    JComponent add(name, validator)
-    JComponent add(name, colspan, rowspan, validator)
-    JComboBox addComboBox(name, validator)
-    JComboBox addComboBox(name, colspan, rowspan, validator)
-    FileChooser addFileChooser(name, validator)
-    FileChooser addFileChooser(name, colspan, rowspan, validator)
-    JPasswordField addPassword(name, validator)
-    JPasswordField addPassword(name, colspan, rowspan, validator)
-
-  AggregateValidator
-    addValidator(Validator)
-
-  RequiredValidator
-  RegexValidator
-  DoubleValidator
-  IntegerValidator
-  LongValidator
+  - RegexValidator
+  - DoubleValidator
+  - IntegerValidator
+  - LongValidator

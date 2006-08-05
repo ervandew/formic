@@ -22,11 +22,15 @@ import java.util.Properties;
 
 import com.jgoodies.forms.layout.FormLayout;
 
+import org.formic.form.Validator;
+
 import org.formic.form.console.ConsoleForm;
 
 import org.formic.form.gui.GuiComponentFactory;
 import org.formic.form.gui.GuiForm;
 import org.formic.form.gui.GuiFormBuilder;
+
+import org.formic.form.validator.ValidatorBuilder;
 
 /**
  * Wizard step that allows the user to choose a file or folder.
@@ -67,14 +71,16 @@ public class FileChooserStep
     GuiFormBuilder builder = new GuiFormBuilder(getName(), layout);
     GuiComponentFactory factory = builder.getFactory();
 
+    Validator required = new ValidatorBuilder().required().validator();
+
     builder.setDefaultBorder();
 
-    builder.append("file", factory.createTextField("file", null));
+    builder.append(factory.createTextField("file", null));
     builder.nextRow();
-    builder.append("folder", factory.createTextField("folder", null),
+    builder.append(factory.createTextField("folder", required),
         1, 1, "0, 0, 0, 40dlu");
     builder.nextRow();
-    builder.append("foo", factory.createTextField("foo", null));
+    builder.append(factory.createTextField("foo", null));
 
     return builder.getForm();
   }

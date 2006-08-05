@@ -25,6 +25,7 @@ import java.util.List;
 
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -54,6 +55,8 @@ import org.formic.form.impl.FormModelImpl;
  */
 public class GuiComponentFactory
 {
+  public static final String FORM_FIELD = "formic.form.field";
+
   private FormModel model;
 
   /**
@@ -96,9 +99,11 @@ public class GuiComponentFactory
    */
   public JCheckBox createCheckBox (String name, Validator validator)
   {
-    return BasicComponentFactory.createCheckBox(
+    return (JCheckBox)component(
+      BasicComponentFactory.createCheckBox(
         getField(name, validator),
-        Installer.getString(model.getName() + '.' + name, name));
+        Installer.getString(model.getName() + '.' + name, name)),
+      name);
   }
 
   /**
@@ -114,7 +119,8 @@ public class GuiComponentFactory
   {
     SelectionInList selection =
       new SelectionInList(list, getField(name, validator));
-    return BasicComponentFactory.createComboBox(selection);
+    return (JComboBox)component(
+        BasicComponentFactory.createComboBox(selection), name);
   }
 
   /**
@@ -131,7 +137,8 @@ public class GuiComponentFactory
   {
     SelectionInList selection =
       new SelectionInList(list, getField(name, validator));
-    return BasicComponentFactory.createComboBox(selection, renderer);
+    return (JComboBox)component(
+        BasicComponentFactory.createComboBox(selection, renderer), name);
   }
 
   /**
@@ -144,7 +151,8 @@ public class GuiComponentFactory
   public JFormattedTextField createDateField (
       String name, Validator validator)
   {
-    return BasicComponentFactory.createDateField(getField(name, validator));
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createDateField(getField(name, validator)), name);
   }
 
   /**
@@ -158,8 +166,10 @@ public class GuiComponentFactory
   public JFormattedTextField createFormattedTextField (
       String name, Validator validator, Format format)
   {
-    return BasicComponentFactory.createFormattedTextField(
-        getField(name, validator), format);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createFormattedTextField(
+          getField(name, validator), format),
+        name);
   }
 
   /**
@@ -175,8 +185,10 @@ public class GuiComponentFactory
       Validator validator,
       JFormattedTextField.AbstractFormatter formatter)
   {
-    return BasicComponentFactory.createFormattedTextField(
-        getField(name, validator), formatter);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createFormattedTextField(
+          getField(name, validator), formatter),
+        name);
   }
 
   /**
@@ -193,8 +205,10 @@ public class GuiComponentFactory
       Validator validator,
       JFormattedTextField.AbstractFormatterFactory factory)
   {
-    return BasicComponentFactory.createFormattedTextField(
-        getField(name, validator), factory);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createFormattedTextField(
+          getField(name, validator), factory),
+        name);
   }
 
   /**
@@ -209,8 +223,10 @@ public class GuiComponentFactory
   public JFormattedTextField createFormattedTextField (
       String name, Validator validator, String mask)
   {
-    return BasicComponentFactory.createFormattedTextField(
-        getField(name, validator), mask);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createFormattedTextField(
+          getField(name, validator), mask),
+        name);
   }
 
   /**
@@ -223,7 +239,9 @@ public class GuiComponentFactory
   public JFormattedTextField createIntegerField (
       String name, Validator validator)
   {
-    return BasicComponentFactory.createIntegerField(getField(name, validator));
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createIntegerField(getField(name, validator)),
+        name);
   }
 
   /**
@@ -237,8 +255,10 @@ public class GuiComponentFactory
   public JFormattedTextField createIntegerField (
       String name, Validator validator, int emptyNumber)
   {
-    return BasicComponentFactory.createIntegerField(
-        getField(name, validator), emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createIntegerField(
+          getField(name, validator), emptyNumber),
+        name);
   }
 
   /**
@@ -252,8 +272,10 @@ public class GuiComponentFactory
   public JFormattedTextField createIntegerField (
       String name, Validator validator, NumberFormat format)
   {
-    return BasicComponentFactory.createIntegerField(
-        getField(name, validator), format);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createIntegerField(
+          getField(name, validator), format),
+        name);
   }
 
   /**
@@ -268,8 +290,10 @@ public class GuiComponentFactory
   public JFormattedTextField createIntegerField (
       String name, Validator validator, NumberFormat format, int emptyNumber)
   {
-    return BasicComponentFactory.createIntegerField(
-        getField(name, validator), format, emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createIntegerField(
+          getField(name, validator), format, emptyNumber),
+        name);
   }
 
   /**
@@ -282,10 +306,15 @@ public class GuiComponentFactory
    * @return The JFormattedTextField.
    */
   public JFormattedTextField createIntegerField (
-      String name, Validator validator, NumberFormat format, Integer emptyNumber)
+      String name,
+      Validator validator,
+      NumberFormat format,
+      Integer emptyNumber)
   {
-    return BasicComponentFactory.createIntegerField(
-        getField(name, validator), format, emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createIntegerField(
+          getField(name, validator), format, emptyNumber),
+        name);
   }
 
   /**
@@ -298,7 +327,9 @@ public class GuiComponentFactory
   public JFormattedTextField createLongField (
       String name, Validator validator)
   {
-    return BasicComponentFactory.createLongField(getField(name, validator));
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createLongField(getField(name, validator)),
+        name);
   }
 
   /**
@@ -312,8 +343,10 @@ public class GuiComponentFactory
   public JFormattedTextField createLongField (
       String name, Validator validator, long emptyNumber)
   {
-    return BasicComponentFactory.createLongField(
-        getField(name, validator), emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createLongField(
+          getField(name, validator), emptyNumber),
+        name);
   }
 
   /**
@@ -327,8 +360,10 @@ public class GuiComponentFactory
   public JFormattedTextField createLongField (
       String name, Validator validator, NumberFormat format)
   {
-    return BasicComponentFactory.createLongField(
-        getField(name, validator), format);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createLongField(
+          getField(name, validator), format),
+        name);
   }
 
   /**
@@ -343,8 +378,10 @@ public class GuiComponentFactory
   public JFormattedTextField createLongField (
       String name, Validator validator, NumberFormat format, long emptyNumber)
   {
-    return BasicComponentFactory.createLongField(
-        getField(name, validator), format, emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createLongField(
+          getField(name, validator), format, emptyNumber),
+        name);
   }
 
   /**
@@ -359,8 +396,10 @@ public class GuiComponentFactory
   public JFormattedTextField createLongField (
       String name, Validator validator, NumberFormat format, Long emptyNumber)
   {
-    return BasicComponentFactory.createLongField(
-        getField(name, validator), format, emptyNumber);
+    return (JFormattedTextField)component(
+        BasicComponentFactory.createLongField(
+          getField(name, validator), format, emptyNumber),
+        name);
   }
 
   /**
@@ -371,7 +410,8 @@ public class GuiComponentFactory
    */
   public JLabel createLabel (String name)
   {
-    return BasicComponentFactory.createLabel(model.getFieldModel(name));
+    return (JLabel)component(
+        BasicComponentFactory.createLabel(model.getFieldModel(name)), name);
   }
 
   /**
@@ -383,7 +423,9 @@ public class GuiComponentFactory
    */
   public JLabel createLabel (String name, Format format)
   {
-    return BasicComponentFactory.createLabel(model.getFieldModel(name), format);
+    return (JLabel)component(
+        BasicComponentFactory.createLabel(model.getFieldModel(name), format),
+        name);
   }
 
   /**
@@ -398,7 +440,8 @@ public class GuiComponentFactory
   {
     SelectionInList selection =
       new SelectionInList(list, getField(name, validator));
-    return BasicComponentFactory.createList(selection);
+    return (JList)component(
+        BasicComponentFactory.createList(selection), name);
   }
 
   /**
@@ -415,7 +458,8 @@ public class GuiComponentFactory
   {
     SelectionInList selection =
       new SelectionInList(list, getField(name, validator));
-    return BasicComponentFactory.createList(selection, renderer);
+    return (JList)component(
+        BasicComponentFactory.createList(selection, renderer), name);
   }
 
   /**
@@ -428,8 +472,10 @@ public class GuiComponentFactory
   public JPasswordField createPasswordField (
       String name, Validator validator)
   {
-    return BasicComponentFactory.createPasswordField(
-        getField(name, validator), true);
+    return (JPasswordField)component(
+        BasicComponentFactory.createPasswordField(
+          getField(name, validator), true),
+        name);
   }
 
   /**
@@ -444,8 +490,10 @@ public class GuiComponentFactory
   public JRadioButton createRadioButton (
       String name, Validator validator, String value, String text)
   {
-    return BasicComponentFactory.createRadioButton(
-        getField(name, validator), value, text);
+    return (JRadioButton)component(
+        BasicComponentFactory.createRadioButton(
+          getField(name, validator), value, text),
+        name);
   }
 
   /**
@@ -457,8 +505,10 @@ public class GuiComponentFactory
    */
   public JTextArea createTextArea (String name, Validator validator)
   {
-    return BasicComponentFactory.createTextArea(
-        getField(name, validator), true);
+    return (JTextArea)component(
+        BasicComponentFactory.createTextArea(
+          getField(name, validator), true),
+        name);
   }
 
   /**
@@ -470,8 +520,10 @@ public class GuiComponentFactory
    */
   public JTextField createTextField (String name, Validator validator)
   {
-    return BasicComponentFactory.createTextField(
-        getField(name, validator), true);
+    return (JTextField)component(
+        BasicComponentFactory.createTextField(
+          getField(name, validator), true),
+        name);
   }
 
   /**
@@ -486,5 +538,19 @@ public class GuiComponentFactory
     FormFieldModel field = model.getFieldModel(name);
     field.setValidator(validator);
     return field;
+  }
+
+  /**
+   * Sets any client properties on the component.
+   *
+   * @param component The component.
+   * @param name The field name.
+   * @return The component.
+   */
+  private JComponent component (JComponent component, String name)
+  {
+    component.setName(name);
+    component.putClientProperty(FORM_FIELD, Boolean.TRUE);
+    return component;
   }
 }

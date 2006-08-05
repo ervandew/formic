@@ -30,8 +30,11 @@ import javax.swing.border.Border;
 
 import com.jgoodies.forms.builder.DefaultFormBuilder;
 
+import com.jgoodies.forms.factories.FormFactory;
+
 import com.jgoodies.forms.layout.CellConstraints;
 import com.jgoodies.forms.layout.FormLayout;
+import com.jgoodies.forms.layout.RowSpec;
 import com.jgoodies.forms.layout.Sizes;
 
 import org.apache.commons.lang.StringUtils;
@@ -162,8 +165,7 @@ public class GuiFormBuilder
    */
   public GuiFormBuilder append (JComponent component)
   {
-    builder.append(component);
-    return this;
+    return append(component, 1, 1);
   }
 
   /**
@@ -194,6 +196,14 @@ public class GuiFormBuilder
   public GuiFormBuilder append (
       JComponent component, int colspan, int rowspan, String insets)
   {
+    if(component.getClientProperty(GuiComponentFactory.FORM_FIELD) != null){
+      return append(component.getName(), component, colspan, rowspan, insets);
+    }
+
+    ensureCursorColumnInGrid();
+    ensureHasGapRow(builder.getLineGapSpec());
+    ensureHasComponentLine();
+
     if(insets != null){
       builder.add(component,
           new CellConstraints(
@@ -240,6 +250,7 @@ public class GuiFormBuilder
       JLabel label, JComponent component, int colspan, int rowspan)
   {
     append(label);
+    component.putClientProperty(GuiComponentFactory.FORM_FIELD, null);
     append(component, colspan, rowspan);
     return this;
   }
@@ -293,6 +304,7 @@ public class GuiFormBuilder
       String insets)
   {
     append(new JLabel(Installer.getString(name + '.' + label, label)));
+    component.putClientProperty(GuiComponentFactory.FORM_FIELD, null);
     append(component, colspan, rowspan, insets);
     return this;
   }
@@ -365,5 +377,52 @@ public class GuiFormBuilder
     throw new RuntimeException(
         Installer.getString("inset.spec.invalid.measurement",
           new Object[]{value, measurement}));
+  }
+
+  // taken from DefaultFormBuilder
+
+  /**
+   * Ensures that the cursor is in the grid. In case it's beyond the
+   * form's right hand side, the cursor is moved to the leading column
+   * of the next line.
+   */
+  private void ensureCursorColumnInGrid() {
+    if ((builder.isLeftToRight() &&
+          (builder.getColumn() > builder.getColumnCount())) ||
+        (!builder.isLeftToRight() && (builder.getColumn() < 1))) {
+      builder.nextLine();
+     }
+  }
+
+  /**
+   * Ensures that we have a gap row before the next component row.
+   * Checks if the current row is the given <code>RowSpec</code>
+   * and appends this row spec if necessary.
+   *
+   * @param gapRowSpec  the row specification to check for
+   */
+  private void ensureHasGapRow(RowSpec gapRowSpec) {
+    if ((builder.getRow() == 1) || (builder.getRow() <= builder.getRowCount()))
+      return;
+
+    if (builder.getRow() <= builder.getRowCount()) {
+      RowSpec rowSpec = builder.getLayout().getRowSpec(builder.getRow());
+      if ((rowSpec == gapRowSpec))
+        return;
+    }
+    builder.appendRow(gapRowSpec);
+    builder.nextLine();
+  }
+
+  /**
+   * Ensures that the form has a component row. Adds a component row
+   * if the cursor is beyond the form's bottom.
+   */
+  private void ensureHasComponentLine() {
+    if (builder.getRow() <= builder.getRowCount()) return;
+    builder.appendRow(FormFactory.PREF_ROWSPEC);
+    if (builder.isRowGroupingEnabled()) {
+      builder.getLayout().addGroupedRow(builder.getRow());
+    }
   }
 }
