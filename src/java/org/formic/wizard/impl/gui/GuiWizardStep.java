@@ -119,10 +119,12 @@ public class GuiWizardStep
   public void prepare ()
   {
     try{
-      component = step.initGui();
+      if(component == null){
+        component = step.initGui();
 
-      setLayout(new BorderLayout());
-      add(component, BorderLayout.CENTER);
+        setLayout(new BorderLayout());
+        add(component, BorderLayout.CENTER);
+      }
 
       step.prepare();
     }catch(Exception e){
