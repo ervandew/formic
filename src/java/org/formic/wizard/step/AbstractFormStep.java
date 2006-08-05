@@ -28,6 +28,7 @@ import javax.swing.JComponent;
 import charva.awt.Component;
 
 import org.formic.form.Form;
+import org.formic.form.FormModel;
 
 import org.formic.form.console.ConsoleForm;
 
@@ -62,7 +63,7 @@ public abstract class AbstractFormStep
     form = initGuiForm();
     setValid(isValid());
 
-    form.addPropertyChangeListener(this);
+    form.getModel().addPropertyChangeListener(this);
 
     return (JComponent)form;
   }
@@ -76,7 +77,7 @@ public abstract class AbstractFormStep
     form = initConsoleForm();
     setValid(isValid());
 
-    form.addPropertyChangeListener(this);
+    form.getModel().addPropertyChangeListener(this);
 
     return (Component)form;
   }
@@ -87,7 +88,7 @@ public abstract class AbstractFormStep
    */
   public boolean isValid ()
   {
-    return form != null ? form.isFormValid() : false;
+    return form != null ? form.getModel().isValid() : false;
   }
 
   /**
@@ -110,7 +111,7 @@ public abstract class AbstractFormStep
    */
   public void propertyChange (PropertyChangeEvent evt)
   {
-    if(Form.FORM_VALID.equals(evt.getPropertyName())){
+    if(FormModel.FORM_VALID.equals(evt.getPropertyName())){
       Boolean value = (Boolean)evt.getNewValue();
       setValid(value.booleanValue());
     }

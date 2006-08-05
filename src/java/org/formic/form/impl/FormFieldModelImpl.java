@@ -20,6 +20,9 @@ package org.formic.form.impl;
 
 import com.jgoodies.binding.value.AbstractValueModel;
 
+import foxtrot.Job;
+import foxtrot.Worker;
+
 import org.formic.form.FormFieldModel;
 import org.formic.form.Validator;
 
@@ -33,9 +36,10 @@ public class FormFieldModelImpl
   extends AbstractValueModel
   implements FormFieldModel
 {
-  private String name;
-  private Object value;
+  //private String name;
+  private String value;
   private Validator validator;
+  private boolean valid;
 
   /**
    * Constructs a new instance.
@@ -44,7 +48,7 @@ public class FormFieldModelImpl
    */
   public FormFieldModelImpl (String name)
   {
-    this.name = name;
+    //this.name = name;
   }
 
   /**
@@ -60,9 +64,20 @@ public class FormFieldModelImpl
    * {@inheritDoc}
    * @see com.jgoodies.binding.value.ValueModel#setValue(Object)
    */
-  public void setValue (Object value)
+  public void setValue (final Object value)
   {
-    this.value = value;
+    this.value = (String)value;
+
+    if(validator != null){
+      boolean valid = ((Boolean)Worker.post(new Job(){
+        public Object run (){
+          return Boolean.valueOf(getValidator().isValid((String)value));
+        }
+      })).booleanValue();
+      firePropertyChange(FIELD_VALID, this.valid, this.valid = valid);
+    }else{
+      firePropertyChange(FIELD_VALID, this.valid, true);
+    }
   }
 
   /**
@@ -81,5 +96,16 @@ public class FormFieldModelImpl
   public void setValidator (Validator validator)
   {
     this.validator = validator;
+    boolean valid = validator != null ? validator.isValid(value) : true;
+    firePropertyChange(FIELD_VALID, this.valid, this.valid = valid);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormFieldModel#isValid()
+   */
+  public boolean isValid ()
+  {
+    return validator != null ? valid : true;
   }
 }

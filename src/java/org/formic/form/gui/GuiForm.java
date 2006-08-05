@@ -52,13 +52,4 @@ public class GuiForm
   {
     this.model = model;
   }
-
-  /**
-   * {@inheritDoc}
-   * @see Form#isFormValid()
-   */
-  public boolean isFormValid ()
-  {
-    return false;
-  }
 }

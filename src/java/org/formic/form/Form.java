@@ -18,8 +18,6 @@
  */
 package org.formic.form;
 
-import java.beans.PropertyChangeListener;
-
 /**
  * Defines methods for a form.
  *
@@ -28,11 +26,6 @@ import java.beans.PropertyChangeListener;
  */
 public interface Form
 {
-  /**
-   * Property name used for property change events for {@link isFormValid()}.
-   */
-  public static final String FORM_VALID = "formValid";
-
   /**
    * Gets the model for this form.
    *
@@ -46,25 +39,4 @@ public interface Form
    * @param model The FormModel.
    */
   public void setModel (FormModel model);
-
-  /**
-   * Determines if the currently entered data is valid.
-   *
-   * @return true if the data is all valid, false otherwise.
-   */
-  public boolean isFormValid ();
-
-  /**
-   * Adds the supplied PropertyChangeListener.
-   *
-   * @param listener The listener to add.
-   */
-  public void addPropertyChangeListener (PropertyChangeListener listener);
-
-  /**
-   * Removes the supplied PropertyChangeListener.
-   *
-   * @param listener The listener to remove.
-   */
-  public void removePropertyChangeListener (PropertyChangeListener listener);
 }

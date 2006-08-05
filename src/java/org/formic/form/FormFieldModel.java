@@ -18,6 +18,8 @@
  */
 package org.formic.form;
 
+import java.beans.PropertyChangeListener;
+
 import com.jgoodies.binding.value.ValueModel;
 
 /**
@@ -29,6 +31,11 @@ import com.jgoodies.binding.value.ValueModel;
 public interface FormFieldModel
   extends ValueModel
 {
+  /**
+   * Property name used for property change events for {@link #isValid()}.
+   */
+  public static final String FIELD_VALID = "fieldValid";
+
   /**
    * Gets the validator for this field.
    *
@@ -42,4 +49,25 @@ public interface FormFieldModel
    * @param validator The Validator.
    */
   public void setValidator (Validator validator);
+
+  /**
+   * Determines if the data in this field is valid.
+   *
+   * @return true if valid, false otherwise.
+   */
+  public boolean isValid ();
+
+  /**
+   * Adds the supplied listener.
+   *
+   * @param listener The listener.
+   */
+  public void addPropertyChangeListener (PropertyChangeListener listener);
+
+  /**
+   * Removes the supplied listener.
+   *
+   * @param listener The listener.
+   */
+  public void removePropertyChangeListener (PropertyChangeListener listener);
 }

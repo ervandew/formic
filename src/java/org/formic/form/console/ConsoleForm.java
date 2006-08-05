@@ -18,9 +18,6 @@
  */
 package org.formic.form.console;
 
-import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
-
 import charvax.swing.JPanel;
 
 import org.formic.form.Form;
@@ -36,7 +33,6 @@ public class ConsoleForm
   extends JPanel
   implements Form
 {
-  private PropertyChangeSupport support;
   private FormModel model;
 
   /**
@@ -55,30 +51,5 @@ public class ConsoleForm
   public void setModel (FormModel model)
   {
     this.model = model;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see Form#isFormValid()
-   */
-  public boolean isFormValid ()
-  {
-    return false;
-  }
-
-  /**
-   * @see PropertyChangeSupport#addPropertyChangeListener(PropertyChangeListener)
-   */
-  public void addPropertyChangeListener (PropertyChangeListener listener)
-  {
-    support.addPropertyChangeListener(listener);
-  }
-
-  /**
-   * @see PropertyChangeSupport#removePropertyChangeListener(PropertyChangeListener)
-   */
-  public void removePropertyChangeListener (PropertyChangeListener listener)
-  {
-    support.removePropertyChangeListener(listener);
   }
 }

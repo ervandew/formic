@@ -18,8 +18,17 @@
  */
 package org.formic.form.impl;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+
+import com.jgoodies.binding.beans.Model;
+
+import foxtrot.Job;
+import foxtrot.Worker;
 
 import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
@@ -31,9 +40,11 @@ import org.formic.form.FormModel;
  * @version $Revision$
  */
 public class FormModelImpl
-  implements FormModel
+  extends Model
+  implements FormModel, PropertyChangeListener
 {
   private String name;
+  private boolean valid;
   private Map fields = new HashMap();
 
   /**
@@ -65,8 +76,40 @@ public class FormModelImpl
     FormFieldModel field = (FormFieldModel)fields.get(name);
     if(field == null){
       field = new FormFieldModelImpl(name);
+      field.addPropertyChangeListener(this);
       fields.put(name, field);
     }
     return field;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#isValid()
+   */
+  public boolean isValid ()
+  {
+    return fields.size() > 0 ? valid : true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+   */
+  public void propertyChange (final PropertyChangeEvent evt)
+  {
+    if(FormFieldModel.FIELD_VALID.equals(evt.getPropertyName())){
+      boolean valid = ((Boolean)Worker.post(new Job(){
+        public Object run (){
+          for (Iterator ii = fields.values().iterator(); ii.hasNext();){
+            FormFieldModel field = (FormFieldModel)ii.next();
+            if(!field.equals(evt.getSource()) && !field.isValid()){
+              return Boolean.FALSE;
+            }
+          }
+          return Boolean.TRUE;
+        }
+      })).booleanValue();
+      firePropertyChange(FORM_VALID, this.valid, this.valid = valid);
+    }
   }
 }
