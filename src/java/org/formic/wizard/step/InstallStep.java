@@ -39,7 +39,6 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 
-import foxtrot.Job;
 import foxtrot.Worker;
 
 import org.apache.tools.ant.BuildEvent;
@@ -73,9 +72,6 @@ public class InstallStep
   extends AbstractStep
   implements BuildListener
 {
-  private static final Logger logger =
-    LoggerFactory.getLogger(InstallStep.class);
-
   private static final String ICON = "/images/32x32/install.png";
 
   private JProgressBar guiOverallProgress;
