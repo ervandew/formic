@@ -47,7 +47,19 @@ Forms
   - installLocation.location.hint=\
       Choose a folder where you would like the application to be installed.
 
-  - RegexValidator
-  - DoubleValidator
-  - IntegerValidator
-  - LongValidator
+  - Validators
+    - min length
+    - max length
+    - float range
+    - int range
+    - date range
+    - email
+    - date
+    - float
+    - double
+    - short
+    - int
+    - long
+    - byte
+    - integer
+    - regex
