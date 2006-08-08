@@ -1,0 +1,18 @@
+Open Source Code in Formic CVS
+The majority of the third party open source code residing in the formic cvs
+tree is there to help reduce the size of jars attached to the resulting
+installers by only including the classes required by formic and eliminating all
+others..
+  - java.util.concurrent backport: 2.2
+  - apache commons
+    - collections: 3.2
+    - io: 1.2
+    - lang: 2.1
+  - apache ant:
+    - To facilitate proper feedback of the progress of certain ant tasks during
+      an install, several parts of the code have been patched to facilitate the
+      required monitoring.
+  - swingfx waitwithstyle
+    - there is no online repository established for this code, and I made a
+      couple minor modifications to allow it to adapt to the look and feel of
+      the application.
