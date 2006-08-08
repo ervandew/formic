@@ -16,7 +16,7 @@
       <classpath refid="classpath"/>
       <fileset dir="src">
         <include name="**/*.java"/>
-        <exclude name="**/impl/**/*.java"/>
+        <exclude name="org/formic/**/impl/**/*.java"/>
       </fileset>
     </javadoc>
   </target>
