@@ -1,18 +1,25 @@
 Open Source Code in Formic CVS
-The majority of the third party open source code residing in the formic cvs
-tree is there to help reduce the size of jars attached to the resulting
-installers by only including the classes required by formic and eliminating all
-others..
+
+  The majority of the third party open source code residing in the formic cvs
+  tree is there to help reduce the size of the jars attached to the resulting
+  installers by only including the classes required by formic and eliminating
+  all others.
+
   - java.util.concurrent backport: 2.2
   - apache commons
     - collections: 3.2
     - io: 1.2
     - lang: 2.1
-  - apache ant:
+  - apache ant: 1.6.5
     - To facilitate proper feedback of the progress of certain ant tasks during
       an install, several parts of the code have been patched to facilitate the
       required monitoring.
   - swingfx waitwithstyle
-    - there is no online repository established for this code, and I made a
-      couple minor modifications to allow it to adapt to the look and feel of
-      the application.
+    - The included classes make up a modified version (by Andy DePue) of the
+      infinite progress code found in swingfx.  Since there is no online
+      repository established for this code, no signs of Andy's modification
+      making it into the swingfx tree, and the fact I made a couple minor
+      modifications to allow it to adapt to the look and feel of the
+      application, the code has been committed to the formic cvs tree.
+    - http://forums.java.net/jive/thread.jspa?threadID=14761
+    - http://jroller.com/page/codeshare?entry=single_component_infinite_progress
