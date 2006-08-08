@@ -555,9 +555,9 @@ public class GuiComponentFactory
     FormFieldModel field = model.getFieldModel(name);
     if(field.isRequired()){
       ValidationComponentUtils.setMandatory(component, true);
-      ValidationComponentUtils.setMessageKey(
-          component, model.getName() + '.' + name);
     }
+    ValidationComponentUtils.setMessageKey(
+        component, model.getName() + '.' + name);
 
     return component;
   }

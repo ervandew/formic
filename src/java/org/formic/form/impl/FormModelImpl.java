@@ -22,6 +22,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -90,7 +91,16 @@ public class FormModelImpl
    */
   public FormFieldModel getFieldModel (String name)
   {
-    return  (FormFieldModel)fields.get(this.name + '.' + name);
+    return (FormFieldModel)fields.get(this.name + '.' + name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#getFieldModels()
+   */
+  public Collection getFieldModels ()
+  {
+    return fields.values();
   }
 
   /**

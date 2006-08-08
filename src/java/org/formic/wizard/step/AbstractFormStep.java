@@ -21,6 +21,7 @@ package org.formic.wizard.step;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.JComponent;
@@ -80,6 +81,18 @@ public abstract class AbstractFormStep
     form.getModel().addPropertyChangeListener(this);
 
     return (Component)form;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#proceed()
+   */
+  public void proceed ()
+  {
+    // FIXME: put form values into installation context.
+for (Iterator ii = form.getModel().getFieldModels().iterator(); ii.hasNext();){
+  System.out.println("commit field - " + ii.next());
+}
   }
 
   /**

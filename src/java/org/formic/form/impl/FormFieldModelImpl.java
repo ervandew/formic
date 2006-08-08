@@ -46,7 +46,7 @@ public class FormFieldModelImpl
   implements FormFieldModel
 {
   private String name;
-  private String value;
+  private Object value;
   private Validator validator;
   private boolean valid = true;
 
@@ -93,7 +93,7 @@ public class FormFieldModelImpl
    */
   public void setValue (Object value)
   {
-    firePropertyChange(VALUE, this.value, this.value = (String)value);
+    firePropertyChange(VALUE, this.value, this.value = value);
   }
 
   /**
@@ -175,18 +175,17 @@ public class FormFieldModelImpl
     {
       String property = evt.getPropertyName();
       if(VALUE.equals(property)){
-        validate(FormFieldModelImpl.this.getValidator(),
-            (String)evt.getNewValue());
+        validate(FormFieldModelImpl.this.getValidator(), evt.getNewValue());
       }else if(VALIDATOR.equals(property)){
         validate((Validator)evt.getNewValue(),
-            (String)FormFieldModelImpl.this.getValue());
+            FormFieldModelImpl.this.getValue());
       }
     }
 
     /**
      * Validate the current value against the current validator.
      */
-    private void validate (final Validator validator, final String value)
+    private void validate (final Validator validator, final Object value)
     {
       if(validator != null){
         // run validation asynchronously in the background.

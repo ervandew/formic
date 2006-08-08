@@ -78,7 +78,7 @@ public class GuiFormBuilder
     factory = new GuiComponentFactory(name);
     form.setModel(factory.getFormModel());
 
-    builder = new DefaultFormBuilder(layout, form);
+    builder = new DefaultFormBuilder(layout, form.getContentPanel());
     cc = new CellConstraints();
   }
 
@@ -131,14 +131,6 @@ public class GuiFormBuilder
   public void setBorder (Border border)
   {
     builder.setBorder(border);
-  }
-
-  /**
-   * Sets a default border.
-   */
-  public void setDefaultBorder ()
-  {
-    builder.setDefaultDialogBorder();
   }
 
   /**

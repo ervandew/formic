@@ -73,8 +73,6 @@ public class FileChooserStep
 
     Validator required = new ValidatorBuilder().required().validator();
 
-    builder.setDefaultBorder();
-
     builder.append(factory.createTextField("file", null));
     builder.nextRow();
     builder.append(factory.createTextField("folder", required),

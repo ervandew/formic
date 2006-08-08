@@ -18,11 +18,25 @@
  */
 package org.formic.form.gui;
 
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
+
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import java.util.Iterator;
 
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+
+import com.jgoodies.forms.builder.PanelBuilder;
+
+import com.jgoodies.forms.layout.CellConstraints;
+import com.jgoodies.forms.layout.FormLayout;
 
 import com.jgoodies.validation.Severity;
 import com.jgoodies.validation.ValidationMessage;
@@ -49,11 +63,44 @@ public class GuiForm
   implements Form, FormModel.FormFieldListener
 {
   private FormModel model;
+
+  private JPanel contentPanel;
+  private JPanel messagePanel;
+  private JLabel messageLabel;
+  private JLabel messageArea;
+
+  private Icon infoIcon;
+  private Icon errorIcon;
+  private Icon warningIcon;
+
   private boolean manditoryBackground;
-  private boolean manditoryBorder;
   private boolean invalidBackground;
 
   private ValidationResult validationResult = new ValidationResult();
+
+  /**
+   * Constructs a new instance.
+   *
+   */
+  public GuiForm ()
+  {
+    FormLayout layout =
+      new FormLayout("fill:pref:grow", "15dlu, 5dlu, fill:pref:grow");
+    PanelBuilder builder = new PanelBuilder(layout, this);
+
+    this.contentPanel = new JPanel();
+    this.messagePanel = createMessagePanel();
+
+    builder.setDefaultDialogBorder();
+    builder.add(messagePanel);
+    builder.nextLine();
+    builder.nextLine();
+    builder.add(contentPanel);
+
+    // listen for focus events and display tips if any.
+    KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        .addPropertyChangeListener(new FocusChangeHandler());
+  }
 
   /**
    * {@inheritDoc}
@@ -72,6 +119,92 @@ public class GuiForm
   {
     this.model = model;
     model.addFormFieldListener(this);
+  }
+
+  /**
+   * Displays an info message to the user in the message panel if the message
+   * panel is enabled.
+   *
+   * @param text The text to display.
+   */
+  public void showInfoMessage (String text)
+  {
+    if(infoIcon == null){
+      infoIcon = new ImageIcon(Installer.getImage("form.info.icon"));
+    }
+    showMessage(text, infoIcon);
+  }
+
+  /**
+   * Displays a warning message to the user in the message panel if the message
+   * panel is enabled.
+   *
+   * @param text The text to display.
+   */
+  public void showWarningMessage (String text)
+  {
+    if(warningIcon == null){
+      warningIcon = new ImageIcon(Installer.getImage("form.warning.icon"));
+    }
+    showMessage(text, warningIcon);
+  }
+
+  /**
+   * Displays an error message to the user in the message panel if the message
+   * panel is enabled.
+   *
+   * @param text The text to display.
+   */
+  public void showErrorMessage (String text)
+  {
+    if(errorIcon == null){
+      errorIcon = new ImageIcon(Installer.getImage("form.error.icon"));
+    }
+    showMessage(text, errorIcon);
+  }
+
+  /**
+   * Displays a message to the user in the message panel if the message panel is
+   * enabled.
+   *
+   * @param text The text to display.
+   * @param icon The icon to display.
+   */
+  public void showMessage (String text, Icon icon)
+  {
+    messageLabel.setIcon(icon);
+    messageArea.setText(text);
+    messagePanel.setVisible(text != null && text.trim().length() > 0);
+  }
+
+  /**
+   * Gets the contentPanel for this instance.
+   *
+   * @return The contentPanel.
+   */
+  public JPanel getContentPanel ()
+  {
+    return this.contentPanel;
+  }
+
+  /**
+   * Creates the message panel.
+   */
+  private JPanel createMessagePanel ()
+  {
+    messageArea = new JLabel();
+    messageLabel = new JLabel();
+
+    FormLayout layout = new FormLayout("pref, 2dlu, default", "pref");
+    PanelBuilder builder = new PanelBuilder(layout);
+    CellConstraints cc = new CellConstraints();
+    builder.add(messageLabel, cc.xy(1, 1));
+    builder.add(messageArea,  cc.xy(3, 1));
+
+    messagePanel = builder.getPanel();
+    messagePanel.setVisible(false);
+
+    return messagePanel;
   }
 
   /**
@@ -96,7 +229,6 @@ public class GuiForm
    */
   public void setManditoryBorder (boolean manditoryBorder)
   {
-    this.manditoryBorder = manditoryBorder;
     if(manditoryBorder){
       ValidationComponentUtils
         .updateComponentTreeMandatoryBorder(this);
@@ -164,5 +296,40 @@ public class GuiForm
       }
     }
     this.validationResult = result;
+  }
+
+  /**
+   * Displays an input hint for components that get the focus permanently.
+   */
+  private final class FocusChangeHandler
+    implements PropertyChangeListener
+  {
+    public void propertyChange (PropertyChangeEvent _event)
+    {
+      String propertyName = _event.getPropertyName();
+      if (!"permanentFocusOwner".equals(propertyName)){
+        return;
+      }
+
+      Component focusOwner = KeyboardFocusManager
+        .getCurrentKeyboardFocusManager().getFocusOwner();
+      if(focusOwner == null){
+        return;
+      }
+
+      // ignore buttons
+      if (focusOwner instanceof JButton){
+        return;
+      }
+
+      String focusHint = null;
+      if(focusOwner instanceof JComponent){
+        focusHint = (String)
+          ValidationComponentUtils.getMessageKey((JComponent)focusOwner);
+        focusHint = Installer.getString(focusHint + ".hint");
+      }
+
+      showInfoMessage(focusHint);
+    }
   }
 }

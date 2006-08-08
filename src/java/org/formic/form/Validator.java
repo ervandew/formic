@@ -33,7 +33,7 @@ public interface Validator
    *
    * @return true if valid, false otherwise.
    */
-  public boolean isValid (String value);
+  public boolean isValid (Object value);
 
   /**
    * Gets the error message to use if the value is not valid.

@@ -20,6 +20,8 @@ package org.formic.form;
 
 import java.beans.PropertyChangeListener;
 
+import java.util.Collection;
+
 /**
  * Model which represents the available fields in the form.
  *
@@ -59,6 +61,13 @@ public interface FormModel
    * @return The FormFieldModel or null if not found.
    */
   public FormFieldModel getFieldModel (String name);
+
+  /**
+   * Gets collection of all FormFieldModel instances in this model.
+   *
+   * @return The Collection of FormFieldModel.
+   */
+  public Collection getFieldModels ();
 
   /**
    * Determines if the currently entered data is valid.

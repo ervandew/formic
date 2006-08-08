@@ -48,9 +48,9 @@ public class AggregateValidator
 
   /**
    * {@inheritDoc}
-   * @see Validator#isValid(String)
+   * @see Validator#isValid(Object)
    */
-  public boolean isValid (String value)
+  public boolean isValid (Object value)
   {
     for (Iterator ii = validators.iterator(); ii.hasNext();){
       Validator validator = (Validator)ii.next();

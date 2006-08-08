@@ -18,6 +18,11 @@
  */
 package org.formic.form.validator;
 
+import java.lang.reflect.Array;
+
+import java.util.Collection;
+import java.util.Map;
+
 import org.formic.form.Validator;
 
 /**
@@ -34,11 +39,27 @@ public class RequiredValidator
 
   /**
    * {@inheritDoc}
-   * @see Validator#isValid(String)
+   * @see Validator#isValid(Object)
    */
-  public boolean isValid (String value)
+  public boolean isValid (Object value)
   {
-    return value != null && value.trim().length() > 0;
+    if (value instanceof String){
+      return ((String)value).trim().length() > 0;
+    }
+
+    if (value != null && value.getClass().isArray()){
+      return Array.getLength(value) > 0;
+    }
+
+    if (value instanceof Collection){
+      return ((Collection)value).size() > 0;
+    }
+
+    if (value instanceof Map){
+      return ((Map)value).size() > 0;
+    }
+
+    return value != null;
   }
 
   /**
