@@ -85,17 +85,14 @@ public class GuiForm
   public GuiForm ()
   {
     FormLayout layout =
-      new FormLayout("fill:pref:grow", "15dlu, 5dlu, fill:pref:grow");
+      new FormLayout("fill:pref:grow", "12dlu, 3dlu, fill:pref:grow");
     PanelBuilder builder = new PanelBuilder(layout, this);
 
-    this.contentPanel = new JPanel();
-    this.messagePanel = createMessagePanel();
-
     builder.setDefaultDialogBorder();
-    builder.add(messagePanel);
+    builder.add(createMessagePanel());
     builder.nextLine();
     builder.nextLine();
-    builder.add(contentPanel);
+    builder.add(contentPanel = new JPanel());
 
     // listen for focus events and display tips if any.
     KeyboardFocusManager.getCurrentKeyboardFocusManager()
@@ -172,9 +169,13 @@ public class GuiForm
    */
   public void showMessage (String text, Icon icon)
   {
-    messageLabel.setIcon(icon);
-    messageArea.setText(text);
-    messagePanel.setVisible(text != null && text.trim().length() > 0);
+    if(text != null && text.trim().length() > 0){
+      messageLabel.setIcon(icon);
+      messageArea.setText("<html>" + text + "</html>");
+      messagePanel.setVisible(true);
+    }else{
+      messagePanel.setVisible(false);
+    }
   }
 
   /**
@@ -190,7 +191,7 @@ public class GuiForm
   /**
    * Creates the message panel.
    */
-  private JPanel createMessagePanel ()
+  private JComponent createMessagePanel ()
   {
     messageArea = new JLabel();
     messageLabel = new JLabel();
@@ -203,6 +204,7 @@ public class GuiForm
 
     messagePanel = builder.getPanel();
     messagePanel.setVisible(false);
+    messagePanel.setPreferredSize(new java.awt.Dimension(100, 100));
 
     return messagePanel;
   }
@@ -322,14 +324,27 @@ public class GuiForm
         return;
       }
 
-      String focusHint = null;
       if(focusOwner instanceof JComponent){
-        focusHint = (String)
+        String key = (String)
           ValidationComponentUtils.getMessageKey((JComponent)focusOwner);
-        focusHint = Installer.getString(focusHint + ".hint");
-      }
 
-      showInfoMessage(focusHint);
+        // see if the field has an error to be displayed.
+        ValidationResult result = validationResult.subResult(key);
+        if(!result.isEmpty()){
+          StringBuffer buffer = new StringBuffer();
+          for (Iterator ii = result.getMessages().iterator(); ii.hasNext();){
+            if(buffer.length() != 0){
+              buffer.append("  ");
+            }
+            ValidationMessage message = (ValidationMessage)ii.next();
+            buffer.append(message.formattedText());
+          }
+          showErrorMessage(buffer.toString());
+        }else{
+          // standard hint.
+          showInfoMessage(Installer.getString(key + ".hint"));
+        }
+      }
     }
   }
 }
