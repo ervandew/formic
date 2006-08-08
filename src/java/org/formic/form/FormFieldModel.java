@@ -32,9 +32,26 @@ public interface FormFieldModel
   extends ValueModel
 {
   /**
-   * Property name used for property change events for {@link #isValid()}.
+   * Property name used for property change events for property "value".
    */
-  public static final String FIELD_VALID = "fieldValid";
+  public static final String VALUE = "value";
+
+  /**
+   * Property name used for property change events for property "validator".
+   */
+  public static final String VALIDATOR = "validator";
+
+  /**
+   * Property name used for property change events for property "valid".
+   */
+  public static final String VALID = "valid";
+
+  /**
+   * Gets the field name this model is bound to.
+   *
+   * @return The field name.
+   */
+  public String getName ();
 
   /**
    * Gets the validator for this field.

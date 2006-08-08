@@ -18,10 +18,14 @@
  */
 package org.formic.form.impl;
 
+import java.beans.PropertyChangeEvent;
+
+import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
+
 import com.jgoodies.binding.value.AbstractValueModel;
 
-import foxtrot.Job;
-import foxtrot.Worker;
+import foxtrot.AsyncTask;
+import foxtrot.AsyncWorker;
 
 import org.formic.form.FormFieldModel;
 import org.formic.form.Validator;
@@ -36,7 +40,7 @@ public class FormFieldModelImpl
   extends AbstractValueModel
   implements FormFieldModel
 {
-  //private String name;
+  private String name;
   private String value;
   private Validator validator;
   private boolean valid;
@@ -48,7 +52,18 @@ public class FormFieldModelImpl
    */
   public FormFieldModelImpl (String name)
   {
-    //this.name = name;
+    this.name = name;
+    addPropertyChangeListener(new DelayedValidator());
+  }
+
+  /**
+   * Gets the name for this instance.
+   *
+   * @return The name.
+   */
+  public String getName ()
+  {
+    return this.name;
   }
 
   /**
@@ -64,20 +79,9 @@ public class FormFieldModelImpl
    * {@inheritDoc}
    * @see com.jgoodies.binding.value.ValueModel#setValue(Object)
    */
-  public void setValue (final Object value)
+  public void setValue (Object value)
   {
-    this.value = (String)value;
-
-    if(validator != null){
-      boolean valid = ((Boolean)Worker.post(new Job(){
-        public Object run (){
-          return Boolean.valueOf(getValidator().isValid((String)value));
-        }
-      })).booleanValue();
-      firePropertyChange(FIELD_VALID, this.valid, this.valid = valid);
-    }else{
-      firePropertyChange(FIELD_VALID, this.valid, true);
-    }
+    firePropertyChange(VALUE, this.value, this.value = (String)value);
   }
 
   /**
@@ -95,9 +99,7 @@ public class FormFieldModelImpl
    */
   public void setValidator (Validator validator)
   {
-    this.validator = validator;
-    boolean valid = validator != null ? validator.isValid(value) : true;
-    firePropertyChange(FIELD_VALID, this.valid, this.valid = valid);
+    firePropertyChange(VALIDATOR, this.validator, this.validator = validator);
   }
 
   /**
@@ -107,5 +109,65 @@ public class FormFieldModelImpl
   public boolean isValid ()
   {
     return validator != null ? valid : true;
+  }
+
+  /**
+   * Sets whether or not this field is valid.
+   *
+   * @param valid True if valid, false otherwise.
+   */
+  public void setValid (boolean valid)
+  {
+    firePropertyChange(VALID, this.valid, this.valid = valid);
+  }
+
+  /**
+   * Property change handler that receives changes on a delay and then validates
+   * the value in the background.
+   */
+  private class DelayedValidator
+    extends DelayedPropertyChangeHandler
+  {
+    /**
+     * {@inheritDoc}
+     * @see DelayedPropertyChangeHandler#delayedPropertyChange(PropertyChangeEvent)
+     */
+    public void delayedPropertyChange (PropertyChangeEvent evt)
+    {
+      String property = evt.getPropertyName();
+      if(VALUE.equals(property)){
+        validate(FormFieldModelImpl.this.getValidator(),
+            (String)evt.getNewValue());
+      }else if(VALIDATOR.equals(property)){
+        validate((Validator)evt.getNewValue(),
+            (String)FormFieldModelImpl.this.getValue());
+      }
+    }
+
+    /**
+     * Validate the current value against the current validator.
+     */
+    private void validate (final Validator validator, final String value)
+    {
+      if(validator != null){
+        // run validation asynchronously in the background.
+        AsyncWorker.post(new AsyncTask(){
+          private boolean valid;
+
+          // invoked on background thread.
+          public Object run () {
+            valid = validator.isValid(value);
+            return Boolean.valueOf(valid);
+          }
+
+          // invoked on EDT
+          public void finish () {
+            FormFieldModelImpl.this.setValid(valid);
+          }
+        });
+      }else{
+        FormFieldModelImpl.this.setValid(true);
+      }
+    }
   }
 }

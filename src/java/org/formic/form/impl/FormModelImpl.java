@@ -44,8 +44,9 @@ public class FormModelImpl
   implements FormModel, PropertyChangeListener
 {
   private String name;
-  private boolean valid;
   private Map fields = new HashMap();
+  private Map validFields = new HashMap();
+  private boolean valid;
 
   /**
    * Constructs a new instance.
@@ -78,6 +79,7 @@ public class FormModelImpl
       field = new FormFieldModelImpl(name);
       field.addPropertyChangeListener(this);
       fields.put(name, field);
+      validFields.put(name, Boolean.FALSE);
     }
     return field;
   }
@@ -88,7 +90,17 @@ public class FormModelImpl
    */
   public boolean isValid ()
   {
-    return fields.size() > 0 ? valid : true;
+    if (fields.size() == 0){
+      return valid = true;
+    }
+
+    for (Iterator ii = validFields.values().iterator(); ii.hasNext();){
+      if(ii.next() == Boolean.FALSE){
+        return valid = false;
+      }
+    }
+
+    return valid = true;
   }
 
   /**
@@ -97,22 +109,11 @@ public class FormModelImpl
    */
   public void propertyChange (final PropertyChangeEvent evt)
   {
-    if(FormFieldModel.FIELD_VALID.equals(evt.getPropertyName())){
-      boolean valid = ((Boolean)evt.getNewValue()).booleanValue();
-      if(valid){
-        valid = ((Boolean)Worker.post(new Job(){
-          public Object run (){
-            for (Iterator ii = fields.values().iterator(); ii.hasNext();){
-              FormFieldModel field = (FormFieldModel)ii.next();
-              if(!field.equals(evt.getSource()) && !field.isValid()){
-                return Boolean.FALSE;
-              }
-            }
-            return Boolean.TRUE;
-          }
-        })).booleanValue();
-      }
-      firePropertyChange(FORM_VALID, this.valid, this.valid = valid);
+    if(FormFieldModel.VALID.equals(evt.getPropertyName())){
+      Boolean valid = (Boolean)evt.getNewValue();
+      FormFieldModel field = (FormFieldModel)evt.getSource();
+      validFields.put(field.getName(), valid);
+      firePropertyChange(FORM_VALID, this.valid, this.valid = isValid());
     }
   }
 }
