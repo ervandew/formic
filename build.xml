@@ -45,13 +45,13 @@
     <!-- build formic jar file -->
     <jar jarfile="build/dist/formic.jar">
       <fileset dir="build/classes">
-        <include name="**/*.class"/>
-        <exclude name="org/apache/**/*.class"/>
+        <include name="net/java/swingfx/**/*.class"/>
+        <include name="org/formic/**/*.class"/>
+        <exclude name="org/formic/bootstrap/"/>
         <exclude name="org/formic/bootstrap/*.class"/>
       </fileset>
       <fileset dir="src/java">
-        <include name="**/*"/>
-        <exclude name="org/apache/**/*"/>
+        <include name="org/formic/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
       </fileset>
@@ -108,6 +108,13 @@
         <include name="org/apache/commons/**/*"/>
         <exclude name="**/package.html"/>
         <exclude name="**/*.java"/>
+      </fileset>
+    </jar>
+
+    <!-- java.util.concurrent backport jar -->
+    <jar jarfile="build/dist/backport-util-concurrent.jar">
+      <fileset dir="build/classes">
+        <include name="edu/**/*.class"/>
       </fileset>
     </jar>
 
