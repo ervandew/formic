@@ -474,7 +474,7 @@ public class GuiComponentFactory
   {
     return (JPasswordField)component(
         BasicComponentFactory.createPasswordField(
-          getField(name, validator), true),
+          getField(name, validator), false),
         name);
   }
 
@@ -507,7 +507,7 @@ public class GuiComponentFactory
   {
     return (JTextArea)component(
         BasicComponentFactory.createTextArea(
-          getField(name, validator), true),
+          getField(name, validator), false),
         name);
   }
 
@@ -522,7 +522,7 @@ public class GuiComponentFactory
   {
     return (JTextField)component(
         BasicComponentFactory.createTextField(
-          getField(name, validator), true),
+          getField(name, validator), false),
         name);
   }
 
