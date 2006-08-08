@@ -75,7 +75,7 @@ public class FormModelImpl
    */
   public FormFieldModel createFieldModel (String name, Validator validator)
   {
-    name = this.name + '.' + name;
+    name = resolveName(name);
     FormFieldModel field = (FormFieldModel)fields.get(name);
     if(field == null){
       field = new FormFieldModelImpl(name, validator, this);
@@ -91,7 +91,7 @@ public class FormModelImpl
    */
   public FormFieldModel getFieldModel (String name)
   {
-    return (FormFieldModel)fields.get(this.name + '.' + name);
+    return (FormFieldModel)fields.get(resolveName(name));
   }
 
   /**
@@ -156,5 +156,19 @@ public class FormModelImpl
     if(evt.getSource() instanceof FormFieldModel){
       formFieldSupport.firePropertyChange(evt);
     }
+  }
+
+  /**
+   * Resolve the given name into the proper field name for this model.
+   *
+   * @param name The orginal name.
+   * @return The resolved name.
+   */
+  private String resolveName (String name)
+  {
+    if(!name.startsWith(this.name)){
+      return this.name + '.' + name;
+    }
+    return name;
   }
 }
