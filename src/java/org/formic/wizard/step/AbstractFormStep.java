@@ -61,7 +61,7 @@ public abstract class AbstractFormStep
   public final JComponent initGui ()
   {
     form = initGuiForm();
-    setValid(isValid());
+    setValid(form.getModel().isValid());
 
     form.getModel().addPropertyChangeListener(this);
 
@@ -75,7 +75,7 @@ public abstract class AbstractFormStep
   public final Component initConsole ()
   {
     form = initConsoleForm();
-    setValid(isValid());
+    setValid(form.getModel().isValid());
 
     form.getModel().addPropertyChangeListener(this);
 

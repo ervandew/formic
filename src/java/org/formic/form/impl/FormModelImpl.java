@@ -20,6 +20,7 @@ package org.formic.form.impl;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -27,11 +28,9 @@ import java.util.Map;
 
 import com.jgoodies.binding.beans.Model;
 
-import foxtrot.Job;
-import foxtrot.Worker;
-
 import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
+import org.formic.form.Validator;
 
 /**
  * Implementation of {@link FormModel}.
@@ -47,6 +46,8 @@ public class FormModelImpl
   private Map fields = new HashMap();
   private Map validFields = new HashMap();
   private boolean valid;
+  private PropertyChangeSupport formFieldSupport =
+    new PropertyChangeSupport(this);
 
   /**
    * Constructs a new instance.
@@ -69,19 +70,27 @@ public class FormModelImpl
 
   /**
    * {@inheritDoc}
-   * @see FormModel#getFieldModel(String)
+   * @see FormModel#createFieldModel(String,Validator)
    */
-  public FormFieldModel getFieldModel (String name)
+  public FormFieldModel createFieldModel (String name, Validator validator)
   {
     name = this.name + '.' + name;
     FormFieldModel field = (FormFieldModel)fields.get(name);
     if(field == null){
-      field = new FormFieldModelImpl(name);
-      field.addPropertyChangeListener(this);
+      field = new FormFieldModelImpl(name, validator, this);
       fields.put(name, field);
-      validFields.put(name, Boolean.FALSE);
+      validFields.put(name, field.isValid() ? Boolean.TRUE : Boolean.FALSE);
     }
     return field;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#getFieldModel(String)
+   */
+  public FormFieldModel getFieldModel (String name)
+  {
+    return  (FormFieldModel)fields.get(this.name + '.' + name);
   }
 
   /**
@@ -91,16 +100,34 @@ public class FormModelImpl
   public boolean isValid ()
   {
     if (fields.size() == 0){
-      return valid = true;
+      return true;
     }
 
     for (Iterator ii = validFields.values().iterator(); ii.hasNext();){
       if(ii.next() == Boolean.FALSE){
-        return valid = false;
+        return false;
       }
     }
 
-    return valid = true;
+    return true;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#addFormFieldListener(FormFieldListener)
+   */
+  public void addFormFieldListener (FormFieldListener listener)
+  {
+    formFieldSupport.addPropertyChangeListener(listener);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#removeFormFieldListener(FormFieldListener)
+   */
+  public void removeFormFieldListener (FormFieldListener listener)
+  {
+    formFieldSupport.removePropertyChangeListener(listener);
   }
 
   /**
@@ -114,6 +141,10 @@ public class FormModelImpl
       FormFieldModel field = (FormFieldModel)evt.getSource();
       validFields.put(field.getName(), valid);
       firePropertyChange(FORM_VALID, this.valid, this.valid = isValid());
+    }
+
+    if(evt.getSource() instanceof FormFieldModel){
+      formFieldSupport.firePropertyChange(evt);
     }
   }
 }

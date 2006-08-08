@@ -28,7 +28,7 @@ import org.formic.form.Validator;
  */
 public class ValidatorBuilder
 {
-  private static final Validator REQUIRED = new RequiredValidator();
+  public static final Validator REQUIRED = new RequiredValidator();
 
   private AggregateValidator validator;
 

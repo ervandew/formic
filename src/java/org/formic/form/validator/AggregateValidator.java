@@ -70,4 +70,16 @@ public class AggregateValidator
   {
     return message;
   }
+
+  /**
+   * Determines if this aggregate contains the supplied validator.
+   *
+   * @param validator The validator to test for.
+   * @return true if this aggregate contains the supplied validator, false
+   * otherwise.
+   */
+  public boolean containsValidator (Validator validator)
+  {
+    return validators.contains(validator);
+  }
 }

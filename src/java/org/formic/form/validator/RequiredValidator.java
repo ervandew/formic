@@ -49,4 +49,26 @@ public class RequiredValidator
   {
     return MESSAGE;
   }
+
+  /**
+   * {@inheritDoc}
+   * @see Object#hashCode()
+   */
+  public int hashCode ()
+  {
+    return 11;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Object#equals(Object)
+   */
+  public boolean equals (Object obj)
+  {
+    if(obj == this){
+      return true;
+    }
+
+    return obj instanceof RequiredValidator;
+  }
 }

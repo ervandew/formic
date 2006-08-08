@@ -18,9 +18,24 @@
  */
 package org.formic.form.gui;
 
+import java.beans.PropertyChangeEvent;
+
+import java.util.Iterator;
+
 import javax.swing.JPanel;
 
+import com.jgoodies.validation.Severity;
+import com.jgoodies.validation.ValidationMessage;
+import com.jgoodies.validation.ValidationResult;
+
+import com.jgoodies.validation.message.SimpleValidationMessage;
+
+import com.jgoodies.validation.view.ValidationComponentUtils;
+
+import org.formic.Installer;
+
 import org.formic.form.Form;
+import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
 
 /**
@@ -31,9 +46,14 @@ import org.formic.form.FormModel;
  */
 public class GuiForm
   extends JPanel
-  implements Form
+  implements Form, FormModel.FormFieldListener
 {
   private FormModel model;
+  private boolean manditoryBackground;
+  private boolean manditoryBorder;
+  private boolean invalidBackground;
+
+  private ValidationResult validationResult = new ValidationResult();
 
   /**
    * {@inheritDoc}
@@ -51,5 +71,98 @@ public class GuiForm
   public void setModel (FormModel model)
   {
     this.model = model;
+    model.addFormFieldListener(this);
+  }
+
+  /**
+   * Sets whether or not to visually mark required fields with a background
+   * color.
+   *
+   * @param manditoryBackground true to mark required fields, false otherwise.
+   */
+  public void setManditoryBackground (boolean manditoryBackground)
+  {
+    this.manditoryBackground = manditoryBackground;
+    if(manditoryBackground){
+      ValidationComponentUtils
+        .updateComponentTreeMandatoryAndBlankBackground(this);
+    }
+  }
+
+  /**
+   * Sets whether or not to visually mark required fields with a colored border.
+   *
+   * @param manditoryBorder true to mark required fields, false otherwise.
+   */
+  public void setManditoryBorder (boolean manditoryBorder)
+  {
+    this.manditoryBorder = manditoryBorder;
+    if(manditoryBorder){
+      ValidationComponentUtils
+        .updateComponentTreeMandatoryBorder(this);
+    }
+  }
+
+  /**
+   * Sets whether or not to visually mark invalid fields with a background
+   * color.
+   *
+   * @param invalidBackground true to mark invalid fields, false otherwise.
+   */
+  public void setInvalidBackground (boolean invalidBackground)
+  {
+    this.invalidBackground = invalidBackground;
+    if(invalidBackground){
+      ValidationComponentUtils
+        .updateComponentTreeSeverityBackground(this, validationResult);
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel.FormFieldListener#propertyChange(PropertyChangeEvent)
+   */
+  public void propertyChange (PropertyChangeEvent evt)
+  {
+    if(evt.getSource() instanceof FormFieldModel){
+      // update manditory background
+      setManditoryBackground(manditoryBackground);
+
+      // update invalid background
+      if(FormFieldModel.VALID.equals(evt.getPropertyName())){
+        FormFieldModel field = (FormFieldModel)evt.getSource();
+        ValidationMessage message = null;
+        if(Boolean.FALSE == evt.getNewValue()){
+          String key = field.getValidator().getErrorMessage();
+          String display = Installer.getString(field.getName(), field.getName());
+          message = new SimpleValidationMessage(
+              Installer.getString(key, (Object)display),
+              Severity.ERROR, field.getName());
+
+          validationResult.add(message);
+        }else{
+          removeMessages(field.getName());
+        }
+        setInvalidBackground(invalidBackground);
+      }
+    }
+  }
+
+  /**
+   * Since jgoodies ValidationResult does not support removal of keys, we must
+   * create a new instance.
+   *
+   * @param key The key to the messages to be removed.
+   */
+  private void removeMessages (String key)
+  {
+    ValidationResult result = new ValidationResult();
+    for (Iterator ii = validationResult.getMessages().iterator(); ii.hasNext();){
+      ValidationMessage message = (ValidationMessage)ii.next();
+      if(!key.equals(message.key())){
+        result.add(message);
+      }
+    }
+    this.validationResult = result;
   }
 }

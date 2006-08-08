@@ -43,10 +43,20 @@ public interface FormModel
   public String getName ();
 
   /**
+   * Creates the FormFieldModel for the given field name if one does not already
+   * exist.
+   *
+   * @param name The field name.
+   * @param validator The possibly null validator for this field.
+   * @return The FormFieldModel.
+   */
+  public FormFieldModel createFieldModel (String name, Validator validator);
+
+  /**
    * Gets the FormFieldModel for the given field name.
    *
    * @param name The field name.
-   * @return The FormFieldModel.
+   * @return The FormFieldModel or null if not found.
    */
   public FormFieldModel getFieldModel (String name);
 
@@ -70,4 +80,27 @@ public interface FormModel
    * @param listener The listener.
    */
   public void removePropertyChangeListener (PropertyChangeListener listener);
+
+  /**
+   * Adds the supplied listener.
+   *
+   * @param listener The listener.
+   */
+  public void addFormFieldListener (FormFieldListener listener);
+
+  /**
+   * Removes the supplied listener.
+   *
+   * @param listener The listener.
+   */
+  public void removeFormFieldListener (FormFieldListener listener);
+
+  /**
+   * Defines a listener that listens for property change events to underlying
+   * form fields.
+   */
+  public static interface FormFieldListener
+    extends PropertyChangeListener
+  {
+  }
 }

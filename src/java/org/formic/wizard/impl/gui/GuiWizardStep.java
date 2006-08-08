@@ -68,6 +68,9 @@ public class GuiWizardStep
     super(step.getTitle(), step.getDescription());
     this.step = step;
     step.addPropertyChangeListener(this);
+
+    // set complete to true by default.
+    setComplete(true);
   }
 
   /**

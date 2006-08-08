@@ -187,10 +187,12 @@ public abstract class AbstractStep
 
   /**
    * Sets whether this step's data is valid.
+   *
+   * @param valid true if the data is valid, false otherwise.
    */
-  public void setValid (boolean _valid)
+  public void setValid (boolean valid)
   {
-    changeSupport.firePropertyChange(VALID, valid, valid = _valid);
+    changeSupport.firePropertyChange(VALID, this.valid, this.valid = valid);
   }
 
   /**

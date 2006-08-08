@@ -49,6 +49,8 @@
         <include name="org/formic/**/*.class"/>
         <exclude name="org/formic/bootstrap/"/>
         <exclude name="org/formic/bootstrap/*.class"/>
+        <!-- for debugging -->
+        <include name="com/jgoodies/**/*.class"/>
       </fileset>
       <fileset dir="src/java">
         <include name="org/formic/**/*"/>

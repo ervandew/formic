@@ -19,6 +19,7 @@
 package org.formic.form.impl;
 
 import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 
@@ -29,6 +30,10 @@ import foxtrot.AsyncWorker;
 
 import org.formic.form.FormFieldModel;
 import org.formic.form.Validator;
+
+import org.formic.form.validator.AggregateValidator;
+import org.formic.form.validator.RequiredValidator;
+import org.formic.form.validator.ValidatorBuilder;
 
 /**
  * Implementation of {@link FormFieldModel}.
@@ -43,17 +48,24 @@ public class FormFieldModelImpl
   private String name;
   private String value;
   private Validator validator;
-  private boolean valid;
+  private boolean valid = true;
 
   /**
    * Constructs a new instance.
    *
    * @param name The field name.
+   * @param validator The validator for this field.
+   * @param listener Initial listener for property change events.
    */
-  public FormFieldModelImpl (String name)
+  public FormFieldModelImpl (
+      String name, Validator validator, PropertyChangeListener listener)
   {
     this.name = name;
+    this.validator = validator;
     addPropertyChangeListener(new DelayedValidator());
+    addPropertyChangeListener(listener);
+
+    setValid(validator != null ? validator.isValid(value) : true);
   }
 
   /**
@@ -112,6 +124,23 @@ public class FormFieldModelImpl
   }
 
   /**
+   * {@inheritDoc}
+   * @see FormFieldModel#isRequired()
+   */
+  public boolean isRequired ()
+  {
+    if(validator != null){
+      if(validator instanceof RequiredValidator){
+        return true;
+      }else if(validator instanceof AggregateValidator){
+        return ((AggregateValidator)validator)
+          .containsValidator(ValidatorBuilder.REQUIRED);
+      }
+    }
+    return false;
+  }
+
+  /**
    * Sets whether or not this field is valid.
    *
    * @param valid True if valid, false otherwise.
@@ -119,6 +148,16 @@ public class FormFieldModelImpl
   public void setValid (boolean valid)
   {
     firePropertyChange(VALID, this.valid, this.valid = valid);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see Object#toString()
+   */
+  public String toString ()
+  {
+    return new StringBuffer()
+      .append(name).append(':').append(getValue()).toString();
   }
 
   /**

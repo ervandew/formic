@@ -75,6 +75,13 @@ public interface FormFieldModel
   public boolean isValid ();
 
   /**
+   * Determines if this field is required.
+   *
+   * @return true if required, false otherwise.
+   */
+  public boolean isRequired ();
+
+  /**
    * Adds the supplied listener.
    *
    * @param listener The listener.

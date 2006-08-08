@@ -39,6 +39,8 @@ import com.jgoodies.binding.adapter.BasicComponentFactory;
 
 import com.jgoodies.binding.list.SelectionInList;
 
+import com.jgoodies.validation.view.ValidationComponentUtils;
+
 import org.formic.Installer;
 
 import org.formic.form.FormFieldModel;
@@ -535,9 +537,7 @@ public class GuiComponentFactory
    */
   private FormFieldModel getField (String name, Validator validator)
   {
-    FormFieldModel field = model.getFieldModel(name);
-    field.setValidator(validator);
-    return field;
+    return model.createFieldModel(name, validator);
   }
 
   /**
@@ -551,6 +551,14 @@ public class GuiComponentFactory
   {
     component.setName(name);
     component.putClientProperty(FORM_FIELD, Boolean.TRUE);
+
+    FormFieldModel field = model.getFieldModel(name);
+    if(field.isRequired()){
+      ValidationComponentUtils.setMandatory(component, true);
+      ValidationComponentUtils.setMessageKey(
+          component, model.getName() + '.' + name);
+    }
+
     return component;
   }
 }
