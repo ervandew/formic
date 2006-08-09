@@ -88,7 +88,7 @@
       </fileset>
     </jar>
 
-    <!-- build patched ant jar file -->
+    <!-- patched ant jar file -->
     <copy todir="build/dist" file="ant/lib/ant.jar"/>
     <jar jarfile="build/dist/ant.jar" update="true">
       <fileset dir="build/classes">
@@ -117,6 +117,15 @@
     <jar jarfile="build/dist/backport-util-concurrent.jar">
       <fileset dir="build/classes">
         <include name="edu/**/*.class"/>
+      </fileset>
+    </jar>
+
+    <!-- patched charva jar -->
+    <copy todir="build/dist" file="lib/charva-1.1.2.jar"/>
+    <jar jarfile="build/dist/charva-1.1.2.jar" update="true">
+      <fileset dir="build/classes">
+        <include name="charva/**/*.class"/>
+        <include name="charvax/**/*.class"/>
       </fileset>
     </jar>
 

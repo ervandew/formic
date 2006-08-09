@@ -14,6 +14,17 @@ Open Source Code in Formic CVS
     - To facilitate proper feedback of the progress of certain ant tasks during
       an install, several parts of the code have been patched to facilitate the
       required monitoring.
+  - charva: 1.1.2
+    - Implementing necessary gabs between charva and swing that are needed to
+      build robust console based interfaces.  I plan to contribute these
+      upstream periodically and hopefully remove the code out of the formic cvs
+      tree if they are accepted.
+      List of modified src files:
+        - charva.awt.Component
+          - Property change support.
+        - charvax.swing.JComponent
+          - Client property support.
+
   - swingfx waitwithstyle
     - The included classes make up a modified version (by Andy DePue) of the
       infinite progress code found in swingfx.  Since there is no online
