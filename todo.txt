@@ -32,6 +32,7 @@ Linux
 Windows
   - Splash screen viewable until installer has started (between intialization
     progress window + installer window)?
+    - how can installer notify splash screen that it has started.
 
 Uninstaller
   - uninstall wizard panels
@@ -44,9 +45,6 @@ Uninstaller
     Windows: register uninstaller in registry.
 
 Forms
-  - installLocation.location.hint=\
-      Choose a folder where you would like the application to be installed.
-
   - Validators
     - min length
     - max length
