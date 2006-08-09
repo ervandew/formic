@@ -64,6 +64,7 @@ public class GuiFormBuilder
   private GuiComponentFactory factory;
   private DefaultFormBuilder builder;
   private CellConstraints cc;
+  private boolean formRetrieved;
 
   /**
    * Constructs a new instance with the supplied layout.
@@ -89,6 +90,11 @@ public class GuiFormBuilder
    */
   public GuiForm getForm ()
   {
+    form.setMandatoryBorderEnabled(form.isMandatoryBorderEnabled());
+    form.setMandatoryBackgroundEnabled(form.isMandatoryBackgroundEnabled());
+    form.setInvalidBackgroundEnabled(form.isInvalidBackgroundEnabled());
+
+    formRetrieved = true;
     return form;
   }
 
@@ -119,6 +125,9 @@ public class GuiFormBuilder
    */
   public GuiFormBuilder nextRow ()
   {
+    if(formRetrieved){
+      throw new IllegalStateException(Installer.getString("builder.form.retrieved"));
+    }
     builder.nextLine();
     return this;
   }
@@ -130,6 +139,9 @@ public class GuiFormBuilder
    */
   public void setBorder (Border border)
   {
+    if(formRetrieved){
+      throw new IllegalStateException(Installer.getString("builder.form.retrieved"));
+    }
     builder.setBorder(border);
   }
 
@@ -143,6 +155,10 @@ public class GuiFormBuilder
    */
   public GuiFormBuilder appendSeparator (String text)
   {
+    if(formRetrieved){
+      throw new IllegalStateException(Installer.getString("builder.form.retrieved"));
+    }
+
     builder.appendSeparator(
         Installer.getString(name + '.' + text, text));
     return this;
@@ -188,6 +204,10 @@ public class GuiFormBuilder
   public GuiFormBuilder append (
       JComponent component, int colspan, int rowspan, String insets)
   {
+    if(formRetrieved){
+      throw new IllegalStateException(Installer.getString("builder.form.retrieved"));
+    }
+
     if(component.getClientProperty(GuiComponentFactory.FORM_FIELD) != null){
       return append(component.getName(), component, colspan, rowspan, insets);
     }
@@ -353,17 +373,17 @@ public class GuiFormBuilder
 
     int units = Integer.parseInt(count);
     if(DLU.equals(measurement) || measurement.trim().length() == 0){
-      return Sizes.dialogUnitXAsPixel(units, getForm());
+      return Sizes.dialogUnitXAsPixel(units, form);
     }else if(PX.equals(measurement)){
       return units;
     }else if(PT.equals(measurement)){
-      return Sizes.pointAsPixel(units, getForm());
+      return Sizes.pointAsPixel(units, form);
     }else if(IN.equals(measurement)){
-      return Sizes.inchAsPixel(units, getForm());
+      return Sizes.inchAsPixel(units, form);
     }else if(CM.equals(measurement)){
-      return Sizes.centimeterAsPixel(units, getForm());
+      return Sizes.centimeterAsPixel(units, form);
     }else if(MM.equals(measurement)){
-      return Sizes.millimeterAsPixel(units, getForm());
+      return Sizes.millimeterAsPixel(units, form);
     }
 
     throw new RuntimeException(

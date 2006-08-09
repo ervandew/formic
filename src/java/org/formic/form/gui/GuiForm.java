@@ -24,7 +24,9 @@ import java.awt.KeyboardFocusManager;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -73,10 +75,14 @@ public class GuiForm
   private Icon errorIcon;
   private Icon warningIcon;
 
-  private boolean manditoryBackground;
-  private boolean invalidBackground;
+  private boolean mandatoryBorderEnabled;
+  private boolean mandatoryBackgroundEnabled;
+  private boolean invalidBackgroundEnabled = true;
 
   private ValidationResult validationResult = new ValidationResult();
+  private List visited = new ArrayList();
+  private String visitingField;
+  private String currentField;
 
   /**
    * Constructs a new instance.
@@ -210,45 +216,89 @@ public class GuiForm
   }
 
   /**
+   * Gets whether or not to visually mark required fields with a background
+   * color.
+   *
+   * @return The true if enabled, false otherwise.
+   */
+  public boolean isMandatoryBackgroundEnabled ()
+  {
+    return this.mandatoryBackgroundEnabled;
+  }
+
+  /**
    * Sets whether or not to visually mark required fields with a background
    * color.
    *
-   * @param manditoryBackground true to mark required fields, false otherwise.
+   * @param enabled true to mark required fields, false otherwise.
    */
-  public void setManditoryBackground (boolean manditoryBackground)
+  public void setMandatoryBackgroundEnabled (boolean enabled)
   {
-    this.manditoryBackground = manditoryBackground;
-    if(manditoryBackground){
+    this.mandatoryBackgroundEnabled = enabled;
+    if(mandatoryBackgroundEnabled){
       ValidationComponentUtils
         .updateComponentTreeMandatoryAndBlankBackground(this);
     }
   }
 
   /**
+   * Gets whether or not to visually mark required fields with a colored border.
+   *
+   * @return The true if enabled, false otherwise.
+   */
+  public boolean isMandatoryBorderEnabled ()
+  {
+    return this.mandatoryBorderEnabled;
+  }
+
+  /**
    * Sets whether or not to visually mark required fields with a colored border.
    *
-   * @param manditoryBorder true to mark required fields, false otherwise.
+   * @param enabled true to mark required fields, false otherwise.
    */
-  public void setManditoryBorder (boolean manditoryBorder)
+  public void setMandatoryBorderEnabled (boolean enabled)
   {
-    if(manditoryBorder){
+    this.mandatoryBorderEnabled = enabled;
+    if(mandatoryBorderEnabled){
       ValidationComponentUtils
         .updateComponentTreeMandatoryBorder(this);
     }
   }
 
   /**
+   * Gets whether or not to visually mark invalid fields with a background
+   * color.
+   *
+   * @return The true if enabled, false otherwise.
+   */
+  public boolean isInvalidBackgroundEnabled ()
+  {
+    return this.invalidBackgroundEnabled;
+  }
+
+  /**
    * Sets whether or not to visually mark invalid fields with a background
    * color.
    *
-   * @param invalidBackground true to mark invalid fields, false otherwise.
+   * @param enabled true to mark invalid fields, false otherwise.
    */
-  public void setInvalidBackground (boolean invalidBackground)
+  public void setInvalidBackgroundEnabled (boolean enabled)
   {
-    this.invalidBackground = invalidBackground;
-    if(invalidBackground){
+    this.invalidBackgroundEnabled = enabled;
+    if(invalidBackgroundEnabled){
+      ValidationResult result = validationResult;
+      for (Iterator ii = getModel().getFieldModels().iterator(); ii.hasNext();){
+        FormFieldModel field = (FormFieldModel)ii.next();
+        if(!visited.contains(field.getName())){
+          result = removeMessages(field.getName(), result);
+        }else if(field.getValue() == null && field.getName().equals(visitingField)){
+          result = removeMessages(field.getName(), result);
+        }else if(field.getName().equals(currentField)){
+          setInputHint(field.getName());
+        }
+      }
       ValidationComponentUtils
-        .updateComponentTreeSeverityBackground(this, validationResult);
+        .updateComponentTreeSeverityBackground(this, result);
     }
   }
 
@@ -259,8 +309,8 @@ public class GuiForm
   public void propertyChange (PropertyChangeEvent evt)
   {
     if(evt.getSource() instanceof FormFieldModel){
-      // update manditory background
-      setManditoryBackground(manditoryBackground);
+      // update mandatory background
+      setMandatoryBackgroundEnabled(isMandatoryBackgroundEnabled());
 
       // update invalid background
       if(FormFieldModel.VALID.equals(evt.getPropertyName())){
@@ -275,9 +325,9 @@ public class GuiForm
 
           validationResult.add(message);
         }else{
-          removeMessages(field.getName());
+          validationResult = removeMessages(field.getName(), validationResult);
         }
-        setInvalidBackground(invalidBackground);
+        setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
       }
     }
   }
@@ -287,8 +337,10 @@ public class GuiForm
    * create a new instance.
    *
    * @param key The key to the messages to be removed.
+   * @return The updated ValidationResult.
    */
-  private void removeMessages (String key)
+  private ValidationResult removeMessages (
+      String key, ValidationResult validationResult)
   {
     ValidationResult result = new ValidationResult();
     for (Iterator ii = validationResult.getMessages().iterator(); ii.hasNext();){
@@ -297,11 +349,40 @@ public class GuiForm
         result.add(message);
       }
     }
-    this.validationResult = result;
+    return result;
   }
 
   /**
-   * Displays an input hint for components that get the focus permanently.
+   * Sets the appropriate input hint for the field with the given name.
+   *
+   * @param name The field name.
+   */
+  private void setInputHint (String name)
+  {
+    // see if the field has an error to be displayed.
+    ValidationResult result = validationResult.subResult(name);
+    FormFieldModel field = getModel().getFieldModel(name);
+    if (!result.isEmpty() &&
+        (field.getValue() != null || !field.getName().equals(visitingField)))
+    {
+      StringBuffer buffer = new StringBuffer();
+      for (Iterator ii = result.getMessages().iterator(); ii.hasNext();){
+        if(buffer.length() != 0){
+          buffer.append("  ");
+        }
+        ValidationMessage message = (ValidationMessage)ii.next();
+        buffer.append(message.formattedText());
+      }
+      showErrorMessage(buffer.toString());
+    }else{
+      // standard hint.
+      showInfoMessage(Installer.getString(name + ".hint"));
+    }
+  }
+
+  /**
+   * FocusChangeHandler for diplaying validation errors, input hints, and
+   * tracking what fields have been visited.
    */
   private final class FocusChangeHandler
     implements PropertyChangeListener
@@ -316,11 +397,13 @@ public class GuiForm
       Component focusOwner = KeyboardFocusManager
         .getCurrentKeyboardFocusManager().getFocusOwner();
       if(focusOwner == null){
+        visitingField = null;
         return;
       }
 
       // ignore buttons
       if (focusOwner instanceof JButton){
+        visitingField = null;
         return;
       }
 
@@ -328,22 +411,21 @@ public class GuiForm
         String key = (String)
           ValidationComponentUtils.getMessageKey((JComponent)focusOwner);
 
-        // see if the field has an error to be displayed.
-        ValidationResult result = validationResult.subResult(key);
-        if(!result.isEmpty()){
-          StringBuffer buffer = new StringBuffer();
-          for (Iterator ii = result.getMessages().iterator(); ii.hasNext();){
-            if(buffer.length() != 0){
-              buffer.append("  ");
-            }
-            ValidationMessage message = (ValidationMessage)ii.next();
-            buffer.append(message.formattedText());
-          }
-          showErrorMessage(buffer.toString());
+        // track what fields have been visited.
+        if(!visited.contains(key)){
+          visitingField = key;
+          visited.add(key);
         }else{
-          // standard hint.
-          showInfoMessage(Installer.getString(key + ".hint"));
+          visitingField = null;
         }
+        currentField = key;
+
+        // update invalid backgrounds
+        setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
+
+        setInputHint(key);
+      }else{
+        visitingField = null;
       }
     }
   }

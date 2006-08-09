@@ -80,11 +80,7 @@ public class FileChooserStep
     builder.nextRow();
     builder.append(factory.createTextField("foo", null));
 
-    GuiForm form = builder.getForm();
-    form.setManditoryBorder(true);
-    form.setInvalidBackground(true);
-
-    return form;
+    return builder.getForm();
   }
 
   /**
