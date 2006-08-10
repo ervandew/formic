@@ -146,6 +146,9 @@
       <fileset dir="lib" includes="**/*.jar"/>
       <fileset dir="lib" includes="native/**/*"/>
     </copy>
+    <!-- copy update charva jar -->
+    <copy todir="build/formic/ant/lib" file="build/dist/charva-1.1.2.jar"
+        overwrite="true"/>
 
     <!-- copy over resource files -->
     <copy todir="build/formic/ant/resources">
