@@ -43,6 +43,7 @@ import com.jgoodies.validation.view.ValidationComponentUtils;
 
 import org.formic.Installer;
 
+import org.formic.form.AbstractComponentFactory;
 import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
 import org.formic.form.Validator;
@@ -56,11 +57,8 @@ import org.formic.form.impl.FormModelImpl;
  * @version $Revision$
  */
 public class GuiComponentFactory
+  extends AbstractComponentFactory
 {
-  public static final String FORM_FIELD = "formic.form.field";
-
-  private FormModel model;
-
   /**
    * Constructs a new instance using a default FormModel.
    *
@@ -69,7 +67,7 @@ public class GuiComponentFactory
    */
   public GuiComponentFactory (String name)
   {
-    this.model = new FormModelImpl(name);
+    super(name);
   }
 
   /**
@@ -79,17 +77,7 @@ public class GuiComponentFactory
    */
   public GuiComponentFactory (FormModel model)
   {
-    this.model = model;
-  }
-
-  /**
-   * Gets the underlying FormModel.
-   *
-   * @return The FormModel.
-   */
-  public FormModel getFormModel ()
-  {
-    return model;
+    super(model);
   }
 
   /**
@@ -104,7 +92,7 @@ public class GuiComponentFactory
     return (JCheckBox)component(
       BasicComponentFactory.createCheckBox(
         getField(name, validator),
-        Installer.getString(model.getName() + '.' + name, name)),
+        Installer.getString(getFormModel().getName() + '.' + name, name)),
       name);
   }
 
@@ -413,7 +401,8 @@ public class GuiComponentFactory
   public JLabel createLabel (String name)
   {
     return (JLabel)component(
-        BasicComponentFactory.createLabel(model.getFieldModel(name)), name);
+        BasicComponentFactory.createLabel(
+          getFormModel().getFieldModel(name)), name);
   }
 
   /**
@@ -426,7 +415,8 @@ public class GuiComponentFactory
   public JLabel createLabel (String name, Format format)
   {
     return (JLabel)component(
-        BasicComponentFactory.createLabel(model.getFieldModel(name), format),
+        BasicComponentFactory.createLabel(
+          getFormModel().getFieldModel(name), format),
         name);
   }
 
@@ -529,18 +519,6 @@ public class GuiComponentFactory
   }
 
   /**
-   * Gets the FormFieldModel for the named field.
-   *
-   * @param name The name of the field.
-   * @param validator The validator for the field.
-   * @return The FormFieldModel.
-   */
-  private FormFieldModel getField (String name, Validator validator)
-  {
-    return model.createFieldModel(name, validator);
-  }
-
-  /**
    * Sets any client properties on the component.
    *
    * @param component The component.
@@ -552,12 +530,12 @@ public class GuiComponentFactory
     component.setName(name);
     component.putClientProperty(FORM_FIELD, Boolean.TRUE);
 
-    FormFieldModel field = model.getFieldModel(name);
+    FormFieldModel field = getFormModel().getFieldModel(name);
     if(field.isRequired()){
       ValidationComponentUtils.setMandatory(component, true);
     }
     ValidationComponentUtils.setMessageKey(
-        component, model.getName() + '.' + name);
+        component, getFormModel().getName() + '.' + name);
 
     return component;
   }
