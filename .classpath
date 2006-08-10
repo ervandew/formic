@@ -6,7 +6,7 @@
 	<classpathentry kind="lib" path="ant/lib/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="ant/lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/binding-1.1.1.jar"/>
-	<classpathentry kind="lib" path="lib/charva-1.1.1.jar"/>
+	<classpathentry kind="lib" path="lib/charva-1.1.2.jar"/>
 	<classpathentry kind="lib" path="lib/forms-1.0.7.jar"/>
 	<classpathentry kind="lib" path="lib/foxtrot-3.0.beta1.jar"/>
 	<classpathentry kind="lib" path="lib/jregistrykey-1.4.0.jar"/>
