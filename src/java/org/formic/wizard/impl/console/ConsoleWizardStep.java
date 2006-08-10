@@ -160,6 +160,7 @@ public class ConsoleWizardStep
   public void applyState ()
     throws InvalidStateException
   {
+    step.proceed();
   }
 
   /**
