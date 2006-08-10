@@ -1,4 +1,4 @@
-Open Source Code in Formic CVS
+Third Party Open Source Code in Formic CVS
 
   The majority of the third party open source code residing in the formic cvs
   tree is there to help reduce the size of the jars attached to the resulting
@@ -6,14 +6,17 @@ Open Source Code in Formic CVS
   all others.
 
   - java.util.concurrent backport: 2.2
+
   - apache commons
     - collections: 3.2
     - io: 1.2
     - lang: 2.1
+
   - apache ant: 1.6.5
     - To facilitate proper feedback of the progress of certain ant tasks during
       an install, several parts of the code have been patched to facilitate the
       required monitoring.
+
   - charva: 1.1.2
     - Implementing necessary gabs between charva and swing that are needed to
       build robust console based interfaces.  I plan to contribute these
@@ -24,6 +27,8 @@ Open Source Code in Formic CVS
           - Property change support.
         - charvax.swing.JComponent
           - Client property support.
+        - charvax.swing.JTextField,JTextArea, charvax.swing.text.JTextComponent
+          - Added Document support.
 
   - swingfx waitwithstyle
     - The included classes make up a modified version (by Andy DePue) of the
