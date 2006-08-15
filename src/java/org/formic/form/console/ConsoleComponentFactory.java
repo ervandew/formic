@@ -1,8 +1,13 @@
 package org.formic.form.console;
 
-import javax.swing.JTextField;
+import javax.swing.text.PlainDocument;
 
 import charvax.swing.JComponent;
+import charvax.swing.JPasswordField;
+import charvax.swing.JTextArea;
+import charvax.swing.JTextField;
+
+import com.jgoodies.binding.adapter.DocumentAdapter;
 
 import org.formic.form.AbstractComponentFactory;
 import org.formic.form.FormFieldModel;
@@ -154,22 +159,6 @@ public class ConsoleComponentFactory
   }
 
   /**
-   * Creates a password field for the supplied field name.
-   *
-   * @param name The field name.
-   * @param validator Validator used to validate the field.
-   * @return The JPasswordField.
-   */
-  /*public JPasswordField createPasswordField (
-      String name, Validator validator)
-  {
-    return (JPasswordField)component(
-        BasicComponentFactory.createPasswordField(
-          getField(name, validator), false),
-        name);
-  }
-
-  /**
    * Creates a radio button for the supplied field name.
    *
    * @param name The field name.
@@ -188,18 +177,36 @@ public class ConsoleComponentFactory
   }
 
   /**
+   * Creates a password field for the supplied field name.
+   *
+   * @param name The field name.
+   * @param validator Validator used to validate the field.
+   * @return The JPasswordField.
+   */
+  public JPasswordField createPasswordField (
+      String name, Validator validator)
+  {
+    JPasswordField field = new JPasswordField();
+    field.setDocument(
+        new DocumentAdapter(
+          getField(name, validator), new PlainDocument(), true));
+    return (JPasswordField)component(field, name);
+  }
+
+  /**
    * Creates a text area for the supplied field name.
    *
    * @param name The field name.
    * @param validator Validator used to validate the field.
    * @return The JTextField.
    */
-  /*public JTextArea createTextArea (String name, Validator validator)
+  public JTextArea createTextArea (String name, Validator validator)
   {
-    return (JTextArea)component(
-        BasicComponentFactory.createTextArea(
-          getField(name, validator), false),
-        name);
+    JTextArea area = new JTextArea();
+    area.setDocument(
+        new DocumentAdapter(
+          getField(name, validator), new PlainDocument(), false));
+    return (JTextArea)component(area, name);
   }
 
   /**
@@ -209,12 +216,13 @@ public class ConsoleComponentFactory
    * @param validator Validator used to validate the field.
    * @return The JTextField.
    */
-  /*public JTextField createTextField (String name, Validator validator)
+  public JTextField createTextField (String name, Validator validator)
   {
-    return (JTextField)component(
-        BasicComponentFactory.createTextField(
-          getField(name, validator), false),
-        name);
+    JTextField field = new JTextField();
+    field.setDocument(
+        new DocumentAdapter(
+          getField(name, validator), new PlainDocument(), true));
+    return (JTextField)component(field, name);
   }
 
   /**
