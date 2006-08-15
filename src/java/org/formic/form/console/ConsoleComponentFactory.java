@@ -2,12 +2,16 @@ package org.formic.form.console;
 
 import javax.swing.text.PlainDocument;
 
+import charvax.swing.JCheckBox;
 import charvax.swing.JComponent;
 import charvax.swing.JPasswordField;
+import charvax.swing.JRadioButton;
 import charvax.swing.JTextArea;
 import charvax.swing.JTextField;
 
 import com.jgoodies.binding.adapter.DocumentAdapter;
+import com.jgoodies.binding.adapter.RadioButtonAdapter;
+import com.jgoodies.binding.adapter.ToggleButtonAdapter;
 
 import org.formic.form.AbstractComponentFactory;
 import org.formic.form.FormFieldModel;
@@ -54,13 +58,12 @@ public class ConsoleComponentFactory
    * @param validator Validator used to validate the field.
    * @return The JCheckBox.
    */
-  /*public JCheckBox createCheckBox (String name, Validator validator)
+  public JCheckBox createCheckBox (String name, Validator validator)
   {
-    return (JCheckBox)component(
-      BasicComponentFactory.createCheckBox(
-        getField(name, validator),
-        Installer.getString(model.getName() + '.' + name, name)),
-      name);
+    JCheckBox box = new JCheckBox(name);
+    box.setModel(
+        new ToggleButtonAdapter(getField(name, validator)));
+    return (JCheckBox)component(box, name);
   }
 
   /**
@@ -167,13 +170,13 @@ public class ConsoleComponentFactory
    * @param text The text for the radio button.
    * @return The JRadioButton.
    */
-  /*public JRadioButton createRadioButton (
+  public JRadioButton createRadioButton (
       String name, Validator validator, String value, String text)
   {
-    return (JRadioButton)component(
-        BasicComponentFactory.createRadioButton(
-          getField(name, validator), value, text),
-        name);
+    JRadioButton button = new JRadioButton(text);
+    button.setModel(
+        new RadioButtonAdapter(getField(name, validator), value));
+    return (JRadioButton)component(button, name);
   }
 
   /**
