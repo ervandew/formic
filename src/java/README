@@ -23,11 +23,11 @@ Third Party Open Source Code in Formic CVS
       upstream periodically and hopefully remove the code out of the formic cvs
       tree if they are accepted.
       List of modified src files:
-        - charva.awt.Component
+        - Component
           - Property change support.
-        - charvax.swing.JComponent
+        - JComponent
           - Client property support.
-        - charvax.swing.JTextField,JTextArea, charvax.swing.text.JTextComponent
+        - JTextField, JTextArea, JTextComponent, JPasswordField
           - Added Document support.
 
   - swingfx waitwithstyle
