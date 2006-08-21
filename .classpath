@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="ant/etc/ant-bootstrap.jar"/>
 	<classpathentry kind="lib" path="ant/lib/ant-contrib.jar"/>
-	<classpathentry kind="lib" path="ant/lib/ant-launcher.jar"/>
 	<classpathentry kind="lib" path="ant/lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/binding-1.1.1.jar"/>
 	<classpathentry kind="lib" path="lib/charva-1.1.2.jar"/>
