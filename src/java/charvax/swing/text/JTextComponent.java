@@ -29,7 +29,7 @@ import charvax.swing.JComponent;
 /**
  * JTextComponent is a much-simplified version of the Swing
  * java.swing.text.JTextComponent class, and is the base class
- * for JTextArea.
+ * for JTextArea and JTextField.
  */
 public abstract class JTextComponent
         extends JComponent {
