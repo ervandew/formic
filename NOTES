@@ -1,7 +1,8 @@
 Notes for myself.
 
   Running sample script to build sample installers.
-    FORMIC_HOME="/home/ervandew/files/development/formic/build/formic/" \
+    FORMIC_HOME="/home/ervandew/files/development/java/formic/build/formic/" \
+    ANT_HOME="/home/ervandew/files/development/java/formic/build/formic/ant" \
       ant/bin/ant -lib samples -buildfile samples/build.xml
 
   When upgrading ant be sure to modify ant.bat to return an error code on
