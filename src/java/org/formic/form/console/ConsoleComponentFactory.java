@@ -1,8 +1,11 @@
 package org.formic.form.console;
 
+import java.util.List;
+
 import javax.swing.text.PlainDocument;
 
 import charvax.swing.JCheckBox;
+import charvax.swing.JComboBox;
 import charvax.swing.JComponent;
 import charvax.swing.JPasswordField;
 import charvax.swing.JRadioButton;
@@ -13,10 +16,14 @@ import com.jgoodies.binding.adapter.DocumentAdapter;
 import com.jgoodies.binding.adapter.RadioButtonAdapter;
 import com.jgoodies.binding.adapter.ToggleButtonAdapter;
 
+import com.jgoodies.binding.list.SelectionInList;
+
 import org.formic.form.AbstractComponentFactory;
 import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
 import org.formic.form.Validator;
+
+import org.formic.form.console.binding.ComboBoxAdapter;
 
 /**
  * Component factory for create components for a console based user interface.
@@ -74,13 +81,13 @@ public class ConsoleComponentFactory
    * @param list List of values.
    * @return The JComboBox.
    */
-  /*public JComboBox createComboBox (
+  public JComboBox createComboBox (
       String name, Validator validator, List list)
   {
     SelectionInList selection =
       new SelectionInList(list, getField(name, validator));
-    return (JComboBox)component(
-        BasicComponentFactory.createComboBox(selection), name);
+    JComboBox box = new JComboBox(new ComboBoxAdapter(selection));
+    return (JComboBox)component(box, name);
   }
 
   /**
