@@ -29,6 +29,8 @@ Third Party Open Source Code in Formic CVS
           - Client property support.
         - JTextField, JTextArea, JTextComponent, JPasswordField
           - Added Document support.
+        - JCheckBox, JRadioButton
+          - Added ButtonModel support.
 
   - swingfx waitwithstyle
     - The included classes make up a modified version (by Andy DePue) of the
