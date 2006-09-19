@@ -20,6 +20,8 @@ package org.formic.ant.util;
 
 import java.io.File;
 
+import org.apache.commons.io.FilenameUtils;
+
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.taskdefs.Chmod;
@@ -153,5 +155,30 @@ public class AntUtils
     filter.setValue(value);
 
     replace.execute();
+  }
+
+  /**
+   * Resolves the specified file relative to the current basedir.
+   *
+   * @param project The current ant project.
+   * @param file The file to resolve.
+   * @return The resolved file.
+   */
+  public static File resolve (Project project, File file)
+  {
+    return new File(resolve(project, file.getAbsolutePath()));
+  }
+
+  /**
+   * Resolves the specified file relative to the current basedir.
+   *
+   * @param project The current ant project.
+   * @param file The file to resolve.
+   * @return The resolved file.
+   */
+  public static String resolve (Project project, String file)
+  {
+    String basedir = project.getProperty("basedir");
+    return FilenameUtils.concat(basedir, file);
   }
 }

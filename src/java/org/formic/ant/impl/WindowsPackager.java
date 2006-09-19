@@ -48,7 +48,6 @@ public class WindowsPackager
   extends AbstractPackager
 {
   private Zip zip;
-  private String basedir;
 
   /**
    * {@inheritDoc}
@@ -59,8 +58,7 @@ public class WindowsPackager
   {
     getProject().log("Building Windows installer...");
 
-    basedir = getProject().getProperty("basedir");
-    File zipFile = new File(basedir + "/" + getBuildDir() + "/formic.zip");
+    File zipFile = new File(getBuildDir() + "/formic.zip");
 
     FileSet files = new FileSet();
     files.setDir(new File(getFormicHome()));
@@ -108,8 +106,7 @@ public class WindowsPackager
    */
   private File constructBoostrapJar (File archive)
   {
-    File bootstrap = new File(
-        basedir + "/" + getBuildDir() + "/formic-boostrap.jar");
+    File bootstrap = new File(getBuildDir() + "/formic-boostrap.jar");
 
     AntUtils.copy(getProject(), getTaskName(),
         new File(getFormicHome() + "/ant/resources/formic-bootstrap.jar"),

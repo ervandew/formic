@@ -183,7 +183,9 @@ public class PackageTask
   {
     // first try ant property.
     String dir = getProject().getProperty(FORMIC_BUILDDIR_PROPERTY);
-    return dir != null ? dir : DEFAULT_BUILDDIR;
+    return dir != null ?
+      AntUtils.resolve(getProject(), dir) :
+      AntUtils.resolve(getProject(), DEFAULT_BUILDDIR);
   }
 
   /**

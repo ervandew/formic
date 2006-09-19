@@ -48,8 +48,7 @@ public class UnixPackager
   {
     getProject().log("Building *nix installer...");
 
-    String basedir = getProject().getProperty("basedir");
-    File tarFile = new File(basedir + "/" + getBuildDir() + "/formic.tar.gz");
+    File tarFile = new File(getBuildDir() + "/formic.tar.gz");
     File formicHome = new File(getFormicHome());
 
     Tar.TarFileSet files = tar.createTarFileSet();
