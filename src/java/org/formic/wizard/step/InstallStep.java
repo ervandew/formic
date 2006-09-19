@@ -24,6 +24,7 @@ import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -51,7 +52,10 @@ import org.apache.tools.ant.UnknownElement;
 import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.CallTarget;
 
+import org.formic.InstallContext;
 import org.formic.Installer;
+
+import org.formic.ant.util.AntUtils;
 
 import org.formic.dialog.console.ConsoleDialogs;
 
@@ -237,6 +241,16 @@ public class InstallStep
    */
   public void displayed ()
   {
+    // push context values into ant properties
+    InstallContext context = Installer.getContext();
+    for (Iterator ii = context.keys(); ii.hasNext();){
+      Object key = ii.next();
+      Object value = context.getValue(key);
+      if(key != null && value != null){
+        AntUtils.property(Installer.getProject(), key.toString(), value.toString());
+      }
+    }
+
     if(Installer.isConsoleMode()){
       displayedConsole();
     }else{

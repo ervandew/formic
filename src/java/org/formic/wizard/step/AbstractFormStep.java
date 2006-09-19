@@ -27,9 +27,11 @@ import javax.swing.JComponent;
 
 import charva.awt.Component;
 
-import org.apache.log4j.Logger;
+import org.formic.InstallContext;
+import org.formic.Installer;
 
 import org.formic.form.Form;
+import org.formic.form.FormFieldModel;
 import org.formic.form.FormModel;
 
 import org.formic.form.console.ConsoleForm;
@@ -46,8 +48,6 @@ public abstract class AbstractFormStep
   extends AbstractStep
   implements PropertyChangeListener
 {
-  private static final Logger logger = Logger.getLogger(AbstractFormStep.class);
-
   private Form form;
 
   /**
@@ -92,12 +92,15 @@ public abstract class AbstractFormStep
    */
   public void proceed ()
   {
-    // FIXME: put form values into installation context.
-if(form != null){
-for (Iterator ii = form.getModel().getFieldModels().iterator(); ii.hasNext();){
-  logger.info("commit field - " + ii.next());
-}
-}
+    if(form != null){
+      InstallContext context = Installer.getContext();
+      FormModel model = form.getModel();
+      for (Iterator ii = model.getFieldModels().iterator(); ii.hasNext();){
+        FormFieldModel field = (FormFieldModel)ii.next();
+
+        context.setValue(field.getName(), field.getValue());
+      }
+    }
   }
 
   /**

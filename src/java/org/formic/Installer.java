@@ -67,6 +67,8 @@ public class Installer
   private static Image image;
   private static boolean consoleMode;
 
+  private static InstallContext context = new InstallContext();
+
   /**
    * Runs the installer.
    *
@@ -104,6 +106,16 @@ public class Installer
     logger.info("Installer Finished.");
 
     return !wizard.wasCanceled();
+  }
+
+  /**
+   * Gets the install context.
+   *
+   * @return The InstallContext.
+   */
+  public static InstallContext getContext ()
+  {
+    return context;
   }
 
   /**
