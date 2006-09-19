@@ -20,6 +20,9 @@ package org.formic.ant.logger;
 
 import java.io.PrintStream;
 
+import org.apache.commons.lang.StringUtils;
+
+import org.apache.tools.ant.BuildEvent;
 import org.apache.tools.ant.DefaultLogger;
 import org.apache.tools.ant.Project;
 
@@ -57,6 +60,40 @@ public class Log4jLogger
       case Project.MSG_VERBOSE:
         logger.debug(message);
         break;
+    }
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.apache.tools.ant.BuildListener#targetStarted(BuildEvent)
+   */
+  public void targetStarted (BuildEvent event)
+  {
+    logEvent(event);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.apache.tools.ant.BuildListener#targetFinished(BuildEvent)
+   */
+  public void targetFinished (BuildEvent event)
+  {
+    logEvent(event);
+  }
+
+  /**
+   * Logs the supplied event.
+   *
+   * @param event The event to log.
+   */
+  private void logEvent (BuildEvent event)
+  {
+    if(event.getMessage() != null){
+      logger.info("[{}] {}", event.getTask().getTaskName(), event.getMessage());
+    }
+
+    if(event.getException() != null){
+      logger.error(StringUtils.EMPTY, event.getException());
     }
   }
 }
