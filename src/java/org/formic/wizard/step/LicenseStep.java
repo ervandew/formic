@@ -87,7 +87,7 @@ public class LicenseStep
 
     if(getProperty(LICENSE) == null){
       throw new IllegalArgumentException(
-          Installer.getString("license.url.required"));
+          Installer.getString(PROPERTY_REQUIRED, LICENSE, getName()));
     }
   }
 
