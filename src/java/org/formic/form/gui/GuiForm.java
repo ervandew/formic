@@ -411,19 +411,21 @@ public class GuiForm
         String key = (String)
           ValidationComponentUtils.getMessageKey((JComponent)focusOwner);
 
-        // track what fields have been visited.
-        if(!visited.contains(key)){
-          visitingField = key;
-          visited.add(key);
-        }else{
-          visitingField = null;
+        if(key != null){
+          // track what fields have been visited.
+          if(!visited.contains(key)){
+            visitingField = key;
+            visited.add(key);
+          }else{
+            visitingField = null;
+          }
+          currentField = key;
+
+          // update invalid backgrounds
+          setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
+
+          setInputHint(key);
         }
-        currentField = key;
-
-        // update invalid backgrounds
-        setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
-
-        setInputHint(key);
       }else{
         visitingField = null;
       }
