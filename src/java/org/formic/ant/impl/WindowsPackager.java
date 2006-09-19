@@ -64,6 +64,7 @@ public class WindowsPackager
     files.setDir(new File(getFormicHome()));
     files.setIncludes("ant/**/*");
     files.setExcludes("ant/resources/**/*");
+    files.setExcludes("ant/lib/charva*.jar");
     files.setExcludes("ant/lib/native/linux");
     files.setExcludes("ant/lib/native/linux/*");
     zip.addFileset(files);

@@ -56,6 +56,7 @@ public class UnixPackager
     files.setIncludes("ant/**/*");
     files.setExcludes("ant/bin/**/*");
     files.setExcludes("ant/resources/**/*");
+    files.setExcludes("ant/lib/jregistrykey*.jar");
     files.setExcludes("ant/lib/native/windows");
     files.setExcludes("ant/lib/native/windows/*");
 
