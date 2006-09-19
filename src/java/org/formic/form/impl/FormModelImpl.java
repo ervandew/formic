@@ -109,7 +109,7 @@ public class FormModelImpl
    */
   public boolean isValid ()
   {
-    if (fields.size() == 0){
+    if (validFields.size() == 0){
       return true;
     }
 
