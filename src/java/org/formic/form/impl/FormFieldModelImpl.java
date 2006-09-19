@@ -28,6 +28,8 @@ import com.jgoodies.binding.value.AbstractValueModel;
 import foxtrot.AsyncTask;
 import foxtrot.AsyncWorker;
 
+import org.apache.log4j.Logger;
+
 import org.formic.form.FormFieldModel;
 import org.formic.form.Validator;
 
@@ -45,6 +47,9 @@ public class FormFieldModelImpl
   extends AbstractValueModel
   implements FormFieldModel
 {
+  private static final Logger logger =
+    Logger.getLogger(FormFieldModelImpl.class);
+
   private String name;
   private Object value;
   private Validator validator;
@@ -93,6 +98,7 @@ public class FormFieldModelImpl
    */
   public void setValue (Object value)
   {
+logger.info("Value = " + value);
     firePropertyChange(VALUE, this.value, this.value = value);
   }
 

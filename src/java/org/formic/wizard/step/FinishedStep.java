@@ -18,8 +18,6 @@
  */
 package org.formic.wizard.step;
 
-import java.util.Properties;
-
 /**
  * Step to be displayed at the very end of the wizard sequence, after the
  * application has been successfully installed.
@@ -35,9 +33,9 @@ public class FinishedStep
   /**
    * Constructs this step.
    */
-  public FinishedStep (String name, Properties properties)
+  public FinishedStep (String name)
   {
-    super(name, properties);
+    super(name);
   }
 
   /**

@@ -20,8 +20,6 @@ package org.formic.wizard.step;
 
 import java.awt.BorderLayout;
 
-import java.util.Properties;
-
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
@@ -48,9 +46,9 @@ public class WelcomeStep
   /**
    * Constructs the welcome step.
    */
-  public WelcomeStep (String name, Properties properties)
+  public WelcomeStep (String name)
   {
-    super(name, properties);
+    super(name);
   }
 
   /**

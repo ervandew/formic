@@ -207,10 +207,10 @@ public class WizardBuilder
             Installer.getString("step.not.found", _name));
       }
       Constructor constructor =
-        Class.forName(classname).getConstructor(
-            new Class[]{String.class, Properties.class});
+        Class.forName(classname).getConstructor(new Class[]{String.class});
       WizardStep step = (WizardStep)
-        constructor.newInstance(new Object[]{_name, _properties});
+        constructor.newInstance(new Object[]{_name});
+      step.initProperties(_properties);
 
       if(consoleMode){
         return new ConsoleWizardStep(step);

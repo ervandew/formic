@@ -64,15 +64,23 @@ public abstract class AbstractStep
    *
    * @param _properties The properties for this step.
    */
-  public AbstractStep (String name, Properties properties)
+  public AbstractStep (String name)
   {
     this.name = name;
-    this.properties = properties;
     title = Installer.getString(name + ".title");
     description = Installer.getString(name + ".description");
     iconPath = Installer.getString(name + ".icon");
 
     changeSupport = new PropertyChangeSupport(this);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see WizardStep#initProperties(Properties)
+   */
+  public void initProperties (Properties properties)
+  {
+    this.properties = properties;
   }
 
   /**

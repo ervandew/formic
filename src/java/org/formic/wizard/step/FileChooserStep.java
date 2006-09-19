@@ -87,9 +87,10 @@ public class FileChooserStep
   extends AbstractFormStep
 {
   private static final String ICON = "/images/32x32/folder.png";
-  private static final String PROPERTY = "property";
   private static final String SELECTION_MODE = "selectionMode";
   private static final String CHOOSABLE = "choosable";
+
+  protected static final String PROPERTY = "property";
 
   private String property;
   private FileFilter[] choosable;
@@ -98,9 +99,18 @@ public class FileChooserStep
   /**
    * Constructs the welcome step.
    */
-  public FileChooserStep (String name, Properties properties)
+  public FileChooserStep (String name)
   {
-    super(name, properties);
+    super(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#initProperties(Properties)
+   */
+  public void initProperties (Properties properties)
+  {
+    super.initProperties(properties);
 
     property = getProperty(PROPERTY);
     if(property == null){
@@ -135,7 +145,7 @@ public class FileChooserStep
    */
   public GuiForm initGuiForm ()
   {
-    FormLayout layout = new FormLayout("pref, 4dlu, 100dlu");
+    FormLayout layout = new FormLayout("pref, 4dlu, 150dlu");
     GuiFormBuilder builder = new GuiFormBuilder(getName(), layout);
     GuiComponentFactory factory = builder.getFactory();
 
@@ -172,7 +182,7 @@ public class FileChooserStep
     if(choosable != null){
       String[] values = StringUtils.split(choosable, ',');
       for (int ii = 0; ii < values.length; ii++){
-        String[] value = StringUtils.split(values[ii], ':');
+        String[] value = StringUtils.split(values[ii].trim(), ':');
         if(value.length > 1){
           results.add(new ExtensionFileFilter(value[0], value[1]));
         }else{
@@ -221,7 +231,7 @@ public class FileChooserStep
      */
     public boolean accept (File f)
     {
-      return ext.equalsIgnoreCase(
+      return f.isDirectory() || ext.equalsIgnoreCase(
           FilenameUtils.getExtension(f.getAbsolutePath()));
     }
 

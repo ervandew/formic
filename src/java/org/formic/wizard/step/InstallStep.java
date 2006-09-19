@@ -25,7 +25,6 @@ import java.awt.event.ActionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
@@ -95,9 +94,9 @@ public class InstallStep
   /**
    * Constructs this step.
    */
-  public InstallStep (String name, Properties properties)
+  public InstallStep (String name)
   {
-    super(name, properties);
+    super(name);
   }
 
   /**

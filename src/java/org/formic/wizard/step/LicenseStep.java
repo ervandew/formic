@@ -81,9 +81,18 @@ public class LicenseStep
   /**
    * Constructs this step.
    */
-  public LicenseStep (String name, Properties properties)
+  public LicenseStep (String name)
   {
-    super(name, properties);
+    super(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#initProperties(Properties)
+   */
+  public void initProperties (Properties properties)
+  {
+    super.initProperties(properties);
 
     if(getProperty(LICENSE) == null){
       throw new IllegalArgumentException(

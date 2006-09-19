@@ -34,9 +34,19 @@ public class InstallLocationStep
   /**
    * Constructs the welcome step.
    */
-  public InstallLocationStep (String name, Properties properties)
+  public InstallLocationStep (String name)
   {
-    super(name, properties);
+    super(name);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#initProperties(Properties)
+   */
+  public void initProperties (Properties properties)
+  {
+    properties.put(PROPERTY, "location");
+    super.initProperties(properties);
   }
 
   /**

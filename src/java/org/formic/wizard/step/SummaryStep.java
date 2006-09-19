@@ -18,8 +18,6 @@
  */
 package org.formic.wizard.step;
 
-import java.util.Properties;
-
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
@@ -38,9 +36,9 @@ public class SummaryStep
   /**
    * Constructs this step.
    */
-  public SummaryStep (String name, Properties properties)
+  public SummaryStep (String name)
   {
-    super(name, properties);
+    super(name);
   }
 
   /**

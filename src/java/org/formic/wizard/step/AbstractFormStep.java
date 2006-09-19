@@ -22,7 +22,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import java.util.Iterator;
-import java.util.Properties;
 
 import javax.swing.JComponent;
 
@@ -52,11 +51,11 @@ public abstract class AbstractFormStep
   private Form form;
 
   /**
-   * @see AbstractStep#AbstractStep(String,Properties)
+   * @see AbstractStep#AbstractStep(String)
    */
-  public AbstractFormStep (String name, Properties properties)
+  public AbstractFormStep (String name)
   {
-    super(name, properties);
+    super(name);
   }
 
   /**

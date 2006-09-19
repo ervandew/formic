@@ -20,6 +20,8 @@ package org.formic.wizard;
 
 import java.beans.PropertyChangeListener;
 
+import java.util.Properties;
+
 import javax.swing.Icon;
 
 /**
@@ -72,6 +74,13 @@ public interface WizardStep
    * @return The step's icon.
    */
   public Icon getIcon ();
+
+  /**
+   * Invoked after a step is first constructed to initialize its properties.
+   *
+   * @param properties The properties.
+   */
+  public void initProperties (Properties properties);
 
   /**
    * Invoked the first time this step is to be displayed in gui mode.
