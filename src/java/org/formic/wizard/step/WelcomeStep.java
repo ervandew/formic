@@ -18,19 +18,6 @@
  */
 package org.formic.wizard.step;
 
-import java.awt.BorderLayout;
-
-import javax.swing.JComponent;
-import javax.swing.JEditorPane;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
-
-import org.formic.Installer;
-
-import org.formic.event.gui.HyperlinkListener;
-
-import org.formic.wizard.impl.console.ConsoleWizard;
-
 /**
  * Wizard step that displays a welcome message at the beginning of the
  * installation process.
@@ -39,7 +26,7 @@ import org.formic.wizard.impl.console.ConsoleWizard;
  * @version $Revision$
  */
 public class WelcomeStep
-  extends AbstractStep
+  extends AbstractTemplateStep
 {
   protected static final String ICON = "/images/32x32/home.png";
 
@@ -59,55 +46,5 @@ public class WelcomeStep
   {
     String path = super.getIconPath();
     return path != null ? path : ICON;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initGui()
-   */
-  public JComponent initGui ()
-  {
-    String text = Installer.getString(getName() + ".text");
-    String html = Installer.getString(getName() + ".html");
-
-    JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
-
-    JComponent content = null;
-    if(html != null){
-      JEditorPane editor = new JEditorPane("text/html", html);
-      editor.setEditable(false);
-      editor.setOpaque(false);
-      editor.addHyperlinkListener(new HyperlinkListener());
-      editor.setBorder(null);
-      editor.setFocusable(false);
-      content = editor;
-    }else{
-      JTextArea area = new JTextArea(text);
-      area.setEditable(false);
-      content = area;
-    }
-
-    panel.add(content, BorderLayout.CENTER);
-    return panel;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initConsole()
-   */
-  public charva.awt.Component initConsole ()
-  {
-    String text = Installer.getString(getName() + ".text");
-
-    charvax.swing.JPanel panel = new charvax.swing.JPanel();
-    panel.setLayout(new charva.awt.BorderLayout());
-
-    charvax.swing.JTextArea area = new charvax.swing.JTextArea(text);
-    area.setColumns(ConsoleWizard.getFrame().getSize().width - 20);
-    area.setEditable(false);
-    panel.add(area, charva.awt.BorderLayout.CENTER);
-
-    return panel;
   }
 }

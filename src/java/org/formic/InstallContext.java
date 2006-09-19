@@ -22,6 +22,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.tools.ant.Project;
+
 /**
  * Context that contains the current state of the install process including any
  * user inputed values.
@@ -85,5 +87,15 @@ public class InstallContext
   public Iterator keys ()
   {
     return values.keySet().iterator();
+  }
+
+  /**
+   * Gets the current ant project.
+   *
+   * @return The ant project.
+   */
+  public Project getProject ()
+  {
+    return Installer.getProject();
   }
 }

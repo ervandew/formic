@@ -40,6 +40,8 @@ import javax.swing.JScrollPane;
 
 import org.apache.commons.io.IOUtils;
 
+import org.apache.log4j.Logger;
+
 import org.formic.Installer;
 
 import org.formic.event.gui.HyperlinkListener;
@@ -50,14 +52,14 @@ import org.formic.wizard.impl.console.ConsoleWizard;
  * Step that displays a license agreement and requires the user to accept it to
  * proceed.
  * <p/>
- * <b>Properties</b>
+ * <b>Resource</b>
  * <table class="properties">
  *   <tr>
  *     <th>Name</th><th>Description</th>
  *     <th>Required</th><th>Possible Values</th><th>Default</th>
  *   </tr>
  *   <tr>
- *     <td>license.url</td>
+ *     <td>url</td>
  *     <td>Defines the url containing the license content.</td>
  *     <td>true</td><td>&nbsp;</td><td>none</td>
  *   </tr>
@@ -69,12 +71,14 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 public class LicenseStep
   extends AbstractStep
 {
-  private static final String LICENSE = "license.url";
+  private static final Logger logger = Logger.getLogger(LicenseStep.class);
+
   private static final String ICON = "/images/32x32/license.png";
 
   private static final String ACCEPT = "Accept";
   private static final String DECLINE = "Decline";
 
+  private String license;
   private JScrollPane guiScrollPane;
   private charvax.swing.JScrollPane consoleScrollPane;
 
@@ -94,9 +98,11 @@ public class LicenseStep
   {
     super.initProperties(properties);
 
-    if(getProperty(LICENSE) == null){
+    String licenseKey = getName() + ".url";
+    license = Installer.getString(licenseKey);
+    if(license == null){
       throw new IllegalArgumentException(
-          Installer.getString(PROPERTY_REQUIRED, LICENSE, getName()));
+          Installer.getString(RESOURCE_REQUIRED, licenseKey, getName()));
     }
   }
 
@@ -253,7 +259,6 @@ public class LicenseStep
   private URL getLicenseUrl ()
     throws Exception
   {
-    String license = getProperty(LICENSE);
     if(license.indexOf("://") != -1){
       return new URL(license);
     }

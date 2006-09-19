@@ -46,6 +46,7 @@ public class InstallLocationStep
   public void initProperties (Properties properties)
   {
     properties.put(PROPERTY, "location");
+    properties.put("selectionMode", "directories");
     super.initProperties(properties);
   }
 

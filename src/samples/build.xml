@@ -18,6 +18,7 @@
         <include name="install.*"/>
         <include name="log4j.xml"/>
         <include name="steps.properties"/>
+        <include name="templates/**/*"/>
       </tarfileset>
     </formic:package>
 
@@ -27,6 +28,7 @@
         <include name="install.*"/>
         <include name="log4j.xml"/>
         <include name="steps.properties"/>
+        <include name="templates/**/*"/>
       </fileset>
     </formic:package>
   </target>

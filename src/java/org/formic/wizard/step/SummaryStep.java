@@ -29,7 +29,7 @@ import javax.swing.JPanel;
  * @version $Revision$
  */
 public class SummaryStep
-  extends AbstractStep
+  extends AbstractTemplateStep
 {
   private static final String ICON = "/images/32x32/summary.png";
 
@@ -49,25 +49,5 @@ public class SummaryStep
   {
     String path = super.getIconPath();
     return path != null ? path : ICON;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initGui()
-   */
-  public JComponent initGui ()
-  {
-    return new JPanel();
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#initConsole()
-   */
-  public charva.awt.Component initConsole ()
-  {
-    charvax.swing.JPanel panel = new charvax.swing.JPanel();
-    panel.add(new charvax.swing.JTextArea());
-    return panel;
   }
 }

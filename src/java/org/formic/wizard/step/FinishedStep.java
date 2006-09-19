@@ -26,7 +26,7 @@ package org.formic.wizard.step;
  * @version $Revision$
  */
 public class FinishedStep
-  extends WelcomeStep
+  extends AbstractTemplateStep
 {
   private static final String ICON = "/images/32x32/finished.png";
 
