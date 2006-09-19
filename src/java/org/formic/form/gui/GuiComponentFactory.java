@@ -519,6 +519,19 @@ public class GuiComponentFactory
   }
 
   /**
+   * Creates a file chooser component.
+   *
+   * @param name The field name.
+   * @param validator Validator used to validate the field.
+   * @return The GuiFileChooser.
+   */
+  public GuiFileChooser createFileChooser (String name, Validator validator)
+  {
+    return (GuiFileChooser)
+      component(new GuiFileChooser(this, name, validator), name);
+  }
+
+  /**
    * Sets any client properties on the component.
    *
    * @param component The component.

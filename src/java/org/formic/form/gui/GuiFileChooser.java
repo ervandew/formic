@@ -18,10 +18,19 @@
  */
 package org.formic.form.gui;
 
+import java.awt.BorderLayout;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+
+import org.formic.Installer;
+
+import org.formic.form.Validator;
 
 /**
  * Component consisting of a text field and a button which launches a
@@ -36,6 +45,33 @@ public class GuiFileChooser
   private JTextField textField;
   private JButton button;
   private JFileChooser chooser;
+
+  /**
+   * Creates a new instance.
+   *
+   * @param factory The gui factory.
+   * @param name The field name.
+   * @param validator Validator used to validate the field.
+   */
+  public GuiFileChooser (
+      GuiComponentFactory factory, String name, Validator validator)
+  {
+    super(new BorderLayout());
+    chooser = new JFileChooser();
+    textField = factory.createTextField(name, validator);
+    button = new JButton(Installer.getString("browse.text"));
+
+    button.addActionListener(new ActionListener(){
+      public void actionPerformed (ActionEvent event){
+        int result = chooser.showOpenDialog(getParent());
+        if(result == JFileChooser.APPROVE_OPTION){
+          textField.setText(chooser.getSelectedFile().getPath());
+        }
+      }
+    });
+    add(textField, BorderLayout.CENTER);
+    add(button, BorderLayout.EAST);
+  }
 
   /**
    * Gets the text field to hold the entry chosen from the JFileChooser.
