@@ -16,7 +16,7 @@ tail -n +$START $0 | gzip -dc | tar x -C $WRKDIR
 PREV=`pwd`
 cd $WRKDIR
 
-if [ "$DISPLAY" == "" ] ; then
+if [ -z "$DISPLAY" ] ; then
   ./formic ${formic.action} -Dformic.console=true $@
 else
   ./formic ${formic.action} $@
