@@ -20,7 +20,10 @@ package org.formic.ant;
 
 import java.io.File;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
@@ -30,11 +33,12 @@ import org.apache.tools.ant.taskdefs.Tar;
 import org.apache.tools.ant.taskdefs.Zip;
 
 import org.apache.tools.ant.types.FileSet;
-
 import org.apache.tools.ant.types.ZipFileSet;
 
 import org.formic.ant.impl.UnixPackager;
 import org.formic.ant.impl.WindowsPackager;
+
+import org.formic.ant.type.LibSet;
 
 import org.formic.ant.util.AntUtils;
 
@@ -63,6 +67,7 @@ public class PackageTask
   private File destFile;
   private Tar tar;
   private Zip zip;
+  private List libsets = new ArrayList();
 
   /**
    * Executes this task.
@@ -82,8 +87,20 @@ public class PackageTask
       packager.setDestFile(destFile);
 
       if(packager instanceof UnixPackager){
+        for (Iterator ii = libsets.iterator(); ii.hasNext();){
+          LibSet libset = (LibSet)ii.next();
+          Tar.TarFileSet tarset = new Tar.TarFileSet(libset);
+          tarset.setPrefix("ant/lib");
+          getTar().addFileset(tarset);
+        }
         ((UnixPackager)packager).setTar(getTar());
       }else if(packager instanceof WindowsPackager){
+        for (Iterator ii = libsets.iterator(); ii.hasNext();){
+          LibSet libset = (LibSet)ii.next();
+          ZipFileSet zipset = new ZipFileSet(libset);
+          zipset.setPrefix("ant/lib");
+          getZip().addFileset(zipset);
+        }
         ((WindowsPackager)packager).setZip(getZip());
       }
 
@@ -219,6 +236,16 @@ public class PackageTask
       throw new BuildException(
           "Attribute '" + _name + "' is required.\n" + _message);
     }
+  }
+
+  /**
+   * Adds the supplied libset.
+   *
+   * @param libset The libset to add.
+   */
+  public void addLibset (LibSet libset)
+  {
+    libsets.add(libset);
   }
 
 // Tar delegation methods.

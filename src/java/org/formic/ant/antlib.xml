@@ -9,4 +9,5 @@
   <typedef name="branch" classname="org.formic.ant.type.Branch"/>
   <typedef name="path" classname="org.formic.ant.type.Path"/>
   <typedef name="step" classname="org.formic.ant.type.Step"/>
+  <typedef name="libset" classname="org.formic.ant.type.LibSet"/>
 </antlib>

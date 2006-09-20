@@ -9,11 +9,34 @@
 <project xmlns:formic="antlib:org.formic.ant"
     name="installer" default="installer" basedir="..">
 
-  <target name="installer" depends="clean">
-    <mkdir dir="build"/>
+  <path id="classpath">
+    <fileset dir="ant" includes="lib/*.jar"/>
+  </path>
 
+  <target name="installer" depends="clean">
+    <mkdir dir="build/dist"/>
+    <mkdir dir="build/classes"/>
+
+    <!-- compile sample install steps and helper classes -->
+    <javac destdir="build/classes" debug="on" optimize="false">
+      <src path="samples/src/java"/>
+      <include name="**/*.java"/>
+      <classpath refid="classpath"/>
+    </javac>
+
+    <!-- create jar with sampl classes -->
+    <jar jarfile="build/dist/sample.jar">
+      <fileset dir="build/classes">
+        <include name="**/*.class"/>
+      </fileset>
+    </jar>
+
+    <!-- build linux installer -->
     <formic:package os="linux"
         destfile="build/test.sh" compression="gzip">
+      <formic:libset dir="build/dist">
+        <include name="sample.jar"/>
+      </formic:libset>
       <tarfileset dir="samples">
         <include name="install.*"/>
         <include name="log4j.xml"/>
@@ -22,8 +45,12 @@
       </tarfileset>
     </formic:package>
 
+    <!-- build windows installer -->
     <formic:package os="windows"
         destfile="build/test.exe">
+      <formic:libset dir="build/dist">
+        <include name="sample.jar"/>
+      </formic:libset>
       <fileset dir="samples">
         <include name="install.*"/>
         <include name="log4j.xml"/>

@@ -78,6 +78,15 @@ import org.formic.form.validator.ValidatorBuilder;
  *     </td>
  *     <td>false</td><td>&nbsp;</td><td>files or directories</td>
  *   </tr>
+ *   <tr>
+ *     <td>discoverer</td>
+ *     <td>
+ *       Optional fully qualified classname of a FileChooserStep.Discoverer
+ *       implementation used to discover a default value for the user's
+ *       environment.
+ *     </td>
+ *     <td>false</td><td>&nbsp;</td><td>none</td>
+ *   </tr>
  * </table>
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
@@ -89,10 +98,12 @@ public class FileChooserStep
   private static final String ICON = "/images/32x32/folder.png";
   private static final String SELECTION_MODE = "selectionMode";
   private static final String CHOOSABLE = "choosable";
+  private static final String DISCOVERER = "discoverer";
 
   protected static final String PROPERTY = "property";
 
   private String property;
+  private String discoverer;
   private FileFilter[] choosable;
   private int selectionMode = JFileChooser.FILES_AND_DIRECTORIES;
 
@@ -127,6 +138,8 @@ public class FileChooserStep
 
     String choose = getProperty(CHOOSABLE);
     choosable = parseChoosable(choose);
+
+    discoverer = getProperty(DISCOVERER);
   }
 
   /**
@@ -151,6 +164,8 @@ public class FileChooserStep
 
     Validator required = new ValidatorBuilder().required().validator();
     GuiFileChooser fileChooser = factory.createFileChooser(property, required);
+
+    fileChooser.getTextField().setText(getDefaultValue());
     fileChooser.getFileChooser().setFileSelectionMode(selectionMode);
     for (int ii = 0; ii < choosable.length; ii++){
       fileChooser.getFileChooser().addChoosableFileFilter(choosable[ii]);
@@ -167,6 +182,25 @@ public class FileChooserStep
   public ConsoleForm initConsoleForm ()
   {
     throw new UnsupportedOperationException("initConsoleForm()");
+  }
+
+  /**
+   * Gets the default value to use for the file chooser text field.
+   *
+   * @return The default value.
+   */
+  private String getDefaultValue ()
+  {
+    if(discoverer != null){
+      try{
+        Discoverer instance = (Discoverer)
+          Class.forName(discoverer).newInstance();
+        return instance.discover();
+      }catch(Exception e){
+        throw new RuntimeException(e);
+      }
+    }
+    return null;
   }
 
   /**
@@ -192,6 +226,20 @@ public class FileChooserStep
     }
 
     return (FileFilter[])results.toArray(new FileFilter[results.size()]);
+  }
+
+  /**
+   * Defines classes that can be used to discover a possible default in the
+   * user's environment.
+   */
+  public interface Discoverer
+  {
+    /**
+     * Invoked to discover the default value.
+     *
+     * @return The default value or null if none.
+     */
+    public String discover ();
   }
 
   /**
