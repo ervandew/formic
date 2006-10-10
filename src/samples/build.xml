@@ -9,9 +9,7 @@
 <project xmlns:formic="antlib:org.formic.ant"
     name="installer" default="installer" basedir="..">
 
-  <path id="classpath">
-    <fileset dir="ant" includes="lib/*.jar"/>
-  </path>
+  <formic:classpath id="formic.classpath"/>
 
   <target name="installer" depends="clean">
     <mkdir dir="build/dist"/>
@@ -21,10 +19,10 @@
     <javac destdir="build/classes" debug="on" optimize="false">
       <src path="samples/src/java"/>
       <include name="**/*.java"/>
-      <classpath refid="classpath"/>
+      <classpath refid="formic.classpath"/>
     </javac>
 
-    <!-- create jar with sampl classes -->
+    <!-- create jar with sample classes -->
     <jar jarfile="build/dist/sample.jar">
       <fileset dir="build/classes">
         <include name="**/*.class"/>

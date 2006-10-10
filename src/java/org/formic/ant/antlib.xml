@@ -7,7 +7,8 @@
   <taskdef name="installer" classname="org.formic.ant.InstallerTask"/>
 
   <typedef name="branch" classname="org.formic.ant.type.Branch"/>
+  <typedef name="classpath" classname="org.formic.ant.type.Classpath"/>
+  <typedef name="libset" classname="org.formic.ant.type.LibSet"/>
   <typedef name="path" classname="org.formic.ant.type.Path"/>
   <typedef name="step" classname="org.formic.ant.type.Step"/>
-  <typedef name="libset" classname="org.formic.ant.type.LibSet"/>
 </antlib>
