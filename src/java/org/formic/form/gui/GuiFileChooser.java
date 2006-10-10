@@ -102,4 +102,13 @@ public class GuiFileChooser
   {
     return chooser;
   }
+
+  /**
+   * {@inheritDoc}
+   * @see javax.swing.JComponent#grabFocus()
+   */
+  public void grabFocus ()
+  {
+    textField.grabFocus();
+  }
 }
