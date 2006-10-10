@@ -70,7 +70,10 @@ public class FormFieldModelImpl
     addPropertyChangeListener(new DelayedValidator());
     addPropertyChangeListener(listener);
 
-    setValid(validator != null ? validator.isValid(value) : true);
+    this.valid = validator != null ? validator.isValid(value) : true;
+    // results in flash by errors if related component grabs focus when form is
+    // displayed.
+    //setValid(validator != null ? validator.isValid(value) : true);
   }
 
   /**
