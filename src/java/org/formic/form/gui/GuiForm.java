@@ -387,9 +387,9 @@ public class GuiForm
   private final class FocusChangeHandler
     implements PropertyChangeListener
   {
-    public void propertyChange (PropertyChangeEvent _event)
+    public void propertyChange (PropertyChangeEvent event)
     {
-      String propertyName = _event.getPropertyName();
+      String propertyName = event.getPropertyName();
       if (!"permanentFocusOwner".equals(propertyName)){
         return;
       }
