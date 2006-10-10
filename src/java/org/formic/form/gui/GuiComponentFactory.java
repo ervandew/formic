@@ -522,13 +522,19 @@ public class GuiComponentFactory
    * Creates a file chooser component.
    *
    * @param name The field name.
+   * @param defaultValue The possibly null default value to use.
    * @param validator Validator used to validate the field.
    * @return The GuiFileChooser.
    */
-  public GuiFileChooser createFileChooser (String name, Validator validator)
+  public GuiFileChooser createFileChooser (
+      String name, String defaultValue, Validator validator)
   {
-    return (GuiFileChooser)
-      component(new GuiFileChooser(this, name, validator), name);
+    GuiFileChooser fileChooser = new GuiFileChooser(this, name, validator);
+    if(defaultValue != null){
+      fileChooser.getTextField().setText(defaultValue);
+    }
+
+    return (GuiFileChooser)component(fileChooser, name);
   }
 
   /**
