@@ -36,7 +36,7 @@ Third Party Open Source Code in Formic CVS
     - The included classes make up a modified version (by Andy DePue) of the
       infinite progress code found in swingfx.  Since there is no online
       repository established for this code, no signs of Andy's modification
-      making it into the swingfx tree, and the fact I made a couple minor
+      making it into the swingfx tree, and the fact that I made a couple minor
       modifications to allow it to adapt to the look and feel of the
       application, the code has been committed to the formic cvs tree.
     - http://forums.java.net/jive/thread.jspa?threadID=14761
