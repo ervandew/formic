@@ -107,6 +107,9 @@ public class FileChooserStep
   private FileFilter[] choosable;
   private int selectionMode = JFileChooser.FILES_AND_DIRECTORIES;
 
+  private GuiFileChooser guiFileChooser;
+  //private ConsoleFileChooser consoleFileChooser;
+
   /**
    * Constructs the welcome step.
    */
@@ -154,6 +157,19 @@ public class FileChooserStep
 
   /**
    * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+    if(Installer.isConsoleMode()){
+      //consoleFileChooser.requestFocus();
+    }else{
+      guiFileChooser.grabFocus();
+    }
+  }
+
+  /**
+   * {@inheritDoc}
    * @see AbstractFormStep#initGuiForm()
    */
   public GuiForm initGuiForm ()
@@ -163,14 +179,14 @@ public class FileChooserStep
     GuiComponentFactory factory = builder.getFactory();
 
     Validator required = new ValidatorBuilder().required().validator();
-    GuiFileChooser fileChooser = factory.createFileChooser(property, required);
+    guiFileChooser = factory.createFileChooser(
+        property, getDefaultValue(), required);
 
-    fileChooser.getTextField().setText(getDefaultValue());
-    fileChooser.getFileChooser().setFileSelectionMode(selectionMode);
+    guiFileChooser.getFileChooser().setFileSelectionMode(selectionMode);
     for (int ii = 0; ii < choosable.length; ii++){
-      fileChooser.getFileChooser().addChoosableFileFilter(choosable[ii]);
+      guiFileChooser.getFileChooser().addChoosableFileFilter(choosable[ii]);
     }
-    builder.append(fileChooser);
+    builder.append(guiFileChooser);
 
     return builder.getForm();
   }
