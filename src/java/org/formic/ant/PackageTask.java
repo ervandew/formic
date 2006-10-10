@@ -51,9 +51,7 @@ import org.formic.ant.util.AntUtils;
 public class PackageTask
   extends Task
 {
-  private static final String FORMIC_HOME_PROPERTY = "formic.home";
   private static final String FORMIC_BUILDDIR_PROPERTY = "formic.builddir";
-  private static final String FORMIC_HOME_ENV = "env.FORMIC_HOME";
   private static final String DEFAULT_BUILDDIR = "build/formic";
 
   private static final Map PACKAGERS = new HashMap();
@@ -82,7 +80,7 @@ public class PackageTask
       Packager packager = (Packager)((Class)PACKAGERS.get(os)).newInstance();
       packager.setProject(getProject());
       packager.setTaskName(getTaskName());
-      packager.setFormicHome(determineFormicHome());
+      packager.setFormicHome(AntUtils.getFormicHome(getProject()));
       packager.setBuildDir(determineBuildDir());
       packager.setDestFile(destFile);
 
@@ -160,34 +158,6 @@ public class PackageTask
       zip = new Zip();
     }
     return zip;
-  }
-
-  /**
-   * Determines the location of the formic distribution based on the current
-   * settings.
-   *
-   * @return The formic home directory.
-   */
-  private String determineFormicHome ()
-    throws BuildException
-  {
-    // first try ant property.
-    String home = getProject().getProperty(FORMIC_HOME_PROPERTY);
-
-    // attempt to locate environment variable.
-    if(home == null){
-      AntUtils.property(getProject(), "env");
-      home = getProject().getProperty(FORMIC_HOME_ENV);
-    }
-
-    if(home == null){
-      throw new BuildException(
-          "Unable to determine location of formic distribution:  " +
-          "Property 'formic.home' not set. " +
-          "Environment variable 'FORMIC_HOME' not found.");
-    }
-
-    return home;
   }
 
   /**

@@ -22,6 +22,7 @@ import java.io.File;
 
 import org.apache.commons.io.FilenameUtils;
 
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import org.apache.tools.ant.taskdefs.Chmod;
@@ -38,6 +39,39 @@ import org.apache.tools.ant.taskdefs.Replace;
  */
 public class AntUtils
 {
+  private static final String FORMIC_HOME_PROPERTY = "formic.home";
+  private static final String FORMIC_HOME_ENV = "env.FORMIC_HOME";
+  private static String formicHome;
+
+  /**
+   * Gets the location of the formic distribution based on the current
+   * settings.
+   *
+   * @return The formic home directory.
+   */
+  public static String getFormicHome (Project project)
+    throws BuildException
+  {
+    if(formicHome == null){
+      // first try ant property.
+      formicHome = project.getProperty(FORMIC_HOME_PROPERTY);
+
+      // attempt to locate environment variable.
+      if(formicHome == null){
+        AntUtils.property(project, "env");
+        formicHome = project.getProperty(FORMIC_HOME_ENV);
+      }
+
+      if(formicHome == null){
+        throw new BuildException(
+            "Unable to determine location of formic distribution:  " +
+            "Property 'formic.home' not set. " +
+            "Environment variable 'FORMIC_HOME' not found.");
+      }
+    }
+
+    return formicHome;
+  }
   /**
    * Executes a chmod for the specified file.
    *
