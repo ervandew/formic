@@ -182,38 +182,28 @@
   <target name="dist" depends="clean,build,javadoc,docs"
       description="Creates the distributable jars.">
     <mkdir dir="dist"/>
-    <move todir="build/doc">
+    <move todir="build/formic/doc">
       <fileset dir="build" includes="site/**/*"/>
     </move>
 
     <zip destfile="dist/formic-${formic.version}.zip">
       <zipfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
-        <include name="src/samples/**/*"/>
-        <include name="LICENSE"/>
-        <include name="NOTICE"/>
       </zipfileset>
-      <zipfileset prefix="formic-${formic.version}/" dir="build">
-        <include name="ant/**/*"/>
-        <include name="doc/api/**/*"/>
-        <include name="doc/site/**/*"/>
+      <zipfileset prefix="formic-${formic.version}/" dir="build/formic">
+        <include name="**/*"/>
       </zipfileset>
     </zip>
 
     <tar destfile="dist/formic-${formic.version}.tar.gz" compression="gzip">
       <tarfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
-        <include name="src/samples/**/*"/>
-        <include name="LICENSE"/>
-        <include name="NOTICE"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/" dir="build">
-        <include name="ant/**/*"/>
+      <tarfileset prefix="formic-${formic.version}/" dir="build/formic">
+        <include name="**/*"/>
         <exclude name="ant/bin/ant"/>
-        <include name="doc/api/**/*"/>
-        <include name="doc/site/**/*"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/" dir="build" mode="755">
+      <tarfileset prefix="formic-${formic.version}/" dir="build/formic" mode="755">
         <include name="ant/bin/ant"/>
       </tarfileset>
     </tar>
