@@ -38,7 +38,6 @@
       <tarfileset dir="samples/src">
         <include name="*.xml"/>
         <include name="resources/**/*"/>
-        <include name="templates/**/*"/>
       </tarfileset>
     </formic:package>
 
@@ -51,7 +50,6 @@
       <fileset dir="samples/src">
         <include name="*.xml"/>
         <include name="resources/**/*"/>
-        <include name="templates/**/*"/>
       </fileset>
     </formic:package>
   </target>

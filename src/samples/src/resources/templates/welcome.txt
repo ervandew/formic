@@ -1,0 +1,2 @@
+This is a sample installer for formic.
+http://formic.sourceforge.net
