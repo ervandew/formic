@@ -93,7 +93,7 @@ public class WindowsPackager
     File jar = constructBoostrapJar(archive);
 
     // generate config
-    File config = generateLaunch4jConfig("install");
+    File config = generateLaunch4jConfig(INSTALL_ACTION);
 
     // execute launch4j
     executeLaunch4j(config, jar);

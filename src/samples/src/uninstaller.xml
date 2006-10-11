@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Author: Eric Van Dewoestine
+-->
+
+<!--
+  - Sample uninstaller build file that is executed upon uninstall.
+  -->
+<project xmlns:formic="antlib:org.formic.ant"
+    name="mock_uninstaller" default="uninstall">
+
+  <!--
+    - Standard target to uninstall the app.
+    - Note: Must be named "uninstall".
+    -->
+  <target name="uninstall">
+    <formic:installer resources="install"
+        steps="/steps.properties" property="complete">
+    </formic:installer>
+  </target>
+
+  <!--
+    - Standard target to uninstall the app.
+    - Note: Must be named "_uninstall_".
+    -->
+  <target name="_uninstall_">
+    <echo>Do some uninstall stuff...</echo>
+    <sleep seconds="1"/>
+    <echo>more uninstall stuff...</echo>
+    <sleep seconds="1"/>
+    <echo>Install Finished.</echo>
+  </target>
+
+  <!--
+    - Task that will run if the wizard was canceled, where any necessary
+    - cleanup can occur.
+    - Note: Must be named "_canceled_".
+    -->
+  <target name="_canceled_">
+    <echo>Installation canceled.</echo>
+  </target>
+
+</project>

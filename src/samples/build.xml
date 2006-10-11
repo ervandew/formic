@@ -35,10 +35,9 @@
       <formic:libset dir="build/dist">
         <include name="sample.jar"/>
       </formic:libset>
-      <tarfileset dir="samples">
-        <include name="install.*"/>
-        <include name="log4j.xml"/>
-        <include name="steps.properties"/>
+      <tarfileset dir="samples/src">
+        <include name="*.xml"/>
+        <include name="resources/**/*"/>
         <include name="templates/**/*"/>
       </tarfileset>
     </formic:package>
@@ -49,10 +48,9 @@
       <formic:libset dir="build/dist">
         <include name="sample.jar"/>
       </formic:libset>
-      <fileset dir="samples">
-        <include name="install.*"/>
-        <include name="log4j.xml"/>
-        <include name="steps.properties"/>
+      <fileset dir="samples/src">
+        <include name="*.xml"/>
+        <include name="resources/**/*"/>
         <include name="templates/**/*"/>
       </fileset>
     </formic:package>

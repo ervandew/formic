@@ -1,6 +1,6 @@
 #!/bin/sh
 echo ""
-echo "Initializing ${formic.action}er ..."
+echo "Initializing ${formic.action} ..."
 echo ""
 
 # create a temp directory to extract to.

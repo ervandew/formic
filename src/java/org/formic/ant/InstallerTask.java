@@ -46,6 +46,8 @@ import org.formic.wizard.WizardBuilder;
 public class InstallerTask
   extends Task
 {
+  private static final String CANCEL_TARGET = "canceled";
+
   private String property;
   private String resources;
   private String steps;
@@ -63,7 +65,7 @@ public class InstallerTask
 
     WizardBuilder.loadSteps("/org/formic/wizard/steps.properties");
     if(steps != null){
-      WizardBuilder.loadSteps(steps);
+      WizardBuilder.loadSteps("/" + steps.replace('.', '/') + ".properties");
     }
 
     getProperties().setProperty("formic.action", getOwningTarget().getName());
@@ -82,7 +84,7 @@ public class InstallerTask
 
     // run canceled target if install canceled and target exists.
     if(!completed){
-      Target target = (Target)getProject().getTargets().get("_canceled_");
+      Target target = (Target)getProject().getTargets().get(CANCEL_TARGET);
       if(target != null){
         target.execute();
       }

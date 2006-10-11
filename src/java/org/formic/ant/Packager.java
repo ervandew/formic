@@ -30,6 +30,9 @@ import org.apache.tools.ant.Project;
  */
 public interface Packager
 {
+  public static final String INSTALL_ACTION = "installer";
+  public static final String UNINSTALL_ACTION = "uninstaller";
+
   /**
    * Executes this packager.
    */

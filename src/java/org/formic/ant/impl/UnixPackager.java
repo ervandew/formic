@@ -89,7 +89,8 @@ public class UnixPackager
     AntUtils.copy(getProject(), getTaskName(),
         new File(getFormicHome() + "/ant/resources/selfextract"), selfextract);
 
-    AntUtils.replace(getProject(), selfextract, "${formic.action}", "install");
+    AntUtils.replace(
+        getProject(), selfextract, "${formic.action}", INSTALL_ACTION);
 
     Concat concat = new Concat();
     concat.setTaskName(getTaskName());

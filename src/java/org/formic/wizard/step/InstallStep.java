@@ -76,6 +76,7 @@ public class InstallStep
   implements BuildListener
 {
   private static final String ICON = "/images/32x32/install.png";
+  private static final String INSTALL_TARGET = "install";
 
   private JProgressBar guiOverallProgress;
   private JProgressBar guiTaskProgress;
@@ -90,8 +91,7 @@ public class InstallStep
   private charvax.swing.JButton consoleShowErrorButton;
 
   private List tasks = new ArrayList();
-
-  private String targetName = "_install_";
+  private String targetName = INSTALL_TARGET;
 
   private Throwable error;
 
@@ -270,7 +270,7 @@ public class InstallStep
           throws Exception
         {
           Target target = (Target)
-            Installer.getProject().getTargets().get(targetName);
+            Installer.getProject().getTargets().get(INSTALL_TARGET);
           registerListener(target);
           execute(target);
 
@@ -290,7 +290,7 @@ public class InstallStep
       error.printStackTrace();
       GuiDialogs.showError(error);
       guiOverallLabel.setText(
-          targetName + ": " + Installer.getString("error.dialog.text"));
+          INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
       guiShowErrorButton.setVisible(true);
     }finally{
       guiTaskProgress.setIndeterminate(false);
@@ -309,7 +309,7 @@ public class InstallStep
       {
         try{
           Target target = (Target)
-            Installer.getProject().getTargets().get(targetName);
+            Installer.getProject().getTargets().get(INSTALL_TARGET);
           registerListener(target);
           execute(target);
 
@@ -325,7 +325,7 @@ public class InstallStep
           error.printStackTrace();
           ConsoleDialogs.showError(error);
           consoleOverallLabel.setText(
-              targetName + ": " + Installer.getString("error.dialog.text"));
+              INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
           consoleShowErrorButton.setVisible(true);
         }finally{
           consoleTaskProgress.setIndeterminate(false);

@@ -252,11 +252,11 @@ public class ConsoleWizard
   /**
    * Close the wizard.
    *
-   * @param _canceled true if the wizard was canceled.
+   * @param canceled true if the wizard was canceled.
    */
-  public void close (boolean _canceled)
+  public void close (boolean canceled)
   {
-    canceled = _canceled;
+    canceled = canceled;
     //frame.setVisible(false);
     Toolkit.getDefaultToolkit().close();
     try{
