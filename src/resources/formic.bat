@@ -22,7 +22,7 @@ rem Script executed to run the installer.
 
 set BUILD_FILE=%1.xml
 
-set CUR_PATH=%~d0%~p0
+set CUR_PATH=%~dp0
 
 pushd "%CUR_PATH%"
 

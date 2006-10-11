@@ -20,7 +20,7 @@ rem Author: Eric Van Dewoestine
 
 rem Script used to execute ant tasks via formic's embedded ant.
 
-set FORMIC_HOME=%~d0%~p0
+set FORMIC_HOME=%~dp0..
 set ANT_HOME="%FORMIC_HOME%\ant"
 
 "%ANT_HOME%\bin\ant" %*
