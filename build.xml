@@ -133,11 +133,11 @@
     <copy todir="build/formic">
       <fileset dir="." includes="LICENSE*.txt,NOTICE"/>
       <fileset dir="." includes="ant/**/*"/>
-      <fileset dir="src" includes="samples/**/*"/>
       <fileset dir="lib" includes="license/*.license"/>
+      <fileset dir="src" includes="samples/**/*"/>
+      <fileset dir="src/shell" includes="*"/>
       <fileset dir="build/dist" includes="formic.jar"/>
     </copy>
-    <chmod file="build/formic/ant/bin/ant" perm="755"/>
 
     <!-- copy formic jar(s) to ant -->
     <copy todir="build/formic/ant/lib" overwrite="true">
@@ -162,6 +162,7 @@
 
     <!-- set permissions on scripts -->
     <chmod perm="755">
+      <fileset dir="build/formic/" includes="formic"/>
       <fileset dir="build/formic/ant/bin" includes="**/*"/>
       <fileset dir="build/formic/ant/resources/launch4j/bin"
           includes="ld,windres"/>
@@ -201,9 +202,11 @@
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/formic">
         <include name="**/*"/>
+        <exclude name="formic"/>
         <exclude name="ant/bin/ant"/>
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/formic" mode="755">
+        <include name="formic"/>
         <include name="ant/bin/ant"/>
       </tarfileset>
     </tar>
