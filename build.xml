@@ -135,8 +135,10 @@
       <fileset dir="." includes="ant/**/*"/>
       <fileset dir="lib" includes="license/*.license"/>
       <fileset dir="src" includes="samples/**/*"/>
-      <fileset dir="src/shell" includes="*"/>
       <fileset dir="build/dist" includes="formic.jar"/>
+    </copy>
+    <copy todir="build/formic/bin">
+      <fileset dir="src/shell" includes="**/*"/>
     </copy>
 
     <!-- copy formic jar(s) to ant -->
@@ -162,10 +164,12 @@
 
     <!-- set permissions on scripts -->
     <chmod perm="755">
-      <fileset dir="build/formic/" includes="formic"/>
-      <fileset dir="build/formic/ant/bin" includes="**/*"/>
-      <fileset dir="build/formic/ant/resources/launch4j/bin"
-          includes="ld,windres"/>
+      <fileset dir="build/formic/">
+        <include name="ant/bin/**/*"/>
+        <include name="bin/formic"/>
+        <include name="ant/resources/launch4j/bin/ld"/>
+        <include name="ant/resources/launch4j/bin/windres"/>
+      </fileset>
     </chmod>
   </target>
 
@@ -193,6 +197,10 @@
       </zipfileset>
       <zipfileset prefix="formic-${formic.version}/" dir="build/formic">
         <include name="**/*"/>
+        <exclude name="ant/bin/ant"/>
+        <exclude name="ant/resources/launch4j/bin/ld"/>
+        <exclude name="ant/resources/launch4j/bin/windres"/>
+        <exclude name="bin/formic"/>
       </zipfileset>
     </zip>
 
@@ -202,12 +210,18 @@
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/formic">
         <include name="**/*"/>
-        <exclude name="formic"/>
+        <exclude name="**/*.bat"/>
+        <exclude name="**/*.exe"/>
         <exclude name="ant/bin/ant"/>
+        <exclude name="ant/resources/launch4j/bin/ld"/>
+        <exclude name="ant/resources/launch4j/bin/windres"/>
+        <exclude name="bin/formic"/>
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/formic" mode="755">
-        <include name="formic"/>
         <include name="ant/bin/ant"/>
+        <include name="ant/resources/launch4j/bin/ld"/>
+        <include name="ant/resources/launch4j/bin/windres"/>
+        <include name="bin/formic"/>
       </tarfileset>
     </tar>
   </target>
