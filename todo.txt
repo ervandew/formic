@@ -1,7 +1,5 @@
 Panels
-  - Install location
   - Feature List
-  - Summary
   - Proxy setup
   - Feature Tree
   - Required software discovery / progress
