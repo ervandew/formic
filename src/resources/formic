@@ -19,6 +19,8 @@
 
 # Author: Eric Van Dewoestine
 
+# Script executed to run the installer.
+
 BUILD_FILE="${1}.xml"
 
 CUR_PATH=`dirname $0`

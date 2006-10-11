@@ -18,6 +18,8 @@ rem Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 rem Author: Eric Van Dewoestine
 
+rem Script executed to run the installer.
+
 set BUILD_FILE=%1.xml
 
 set CUR_PATH=%~d0%~p0
