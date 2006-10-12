@@ -7,23 +7,23 @@
   - Sample uninstaller build file that is executed upon uninstall.
   -->
 <project xmlns:formic="antlib:org.formic.ant"
-    name="mock_uninstaller" default="uninstall">
+    name="mock_uninstaller" default="uninstaller">
+
+  <!--
+    - Standard target to uninstall the app.
+    - Note: Must be named "uninstaller".
+    -->
+  <target name="uninstaller">
+    <formic:installer property="uninstall_complete"
+        resources="resources.install" steps="resources.steps">
+    </formic:installer>
+  </target>
 
   <!--
     - Standard target to uninstall the app.
     - Note: Must be named "uninstall".
     -->
   <target name="uninstall">
-    <formic:installer resources="install"
-        steps="/steps.properties" property="complete">
-    </formic:installer>
-  </target>
-
-  <!--
-    - Standard target to uninstall the app.
-    - Note: Must be named "_uninstall_".
-    -->
-  <target name="_uninstall_">
     <echo>Do some uninstall stuff...</echo>
     <sleep seconds="1"/>
     <echo>more uninstall stuff...</echo>
@@ -36,7 +36,7 @@
     - cleanup can occur.
     - Note: Must be named "_canceled_".
     -->
-  <target name="_canceled_">
+  <target name="canceled">
     <echo>Installation canceled.</echo>
   </target>
 

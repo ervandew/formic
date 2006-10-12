@@ -22,6 +22,8 @@
 
         <formic:step name="license"/>
 
+        <!--formic:step name="test"/-->
+
         <formic:step name="installLocation">
           <property name="discoverer" value="TestDiscoverer"/>
         </formic:step>
@@ -90,7 +92,7 @@
   <!--
     - Task that will run if the wizard was canceled, where any necessary
     - cleanup can occur.
-    - Note: Must be named "_canceled_".
+    - Note: Must be named "canceled".
     -->
   <target name="canceled">
     <echo>Installation canceled.</echo>
