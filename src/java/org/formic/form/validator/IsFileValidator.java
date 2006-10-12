@@ -18,31 +18,27 @@
  */
 package org.formic.form.validator;
 
-import java.lang.reflect.Array;
-
-import java.util.Collection;
-import java.util.Map;
+import java.io.File;
 
 import org.formic.form.Validator;
 
 /**
- * Implementation of {@link Validator} that validates that the value is not null
- * or empty.
+ * Validator that determines if the value is a valid file.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
  */
-public class RequiredValidator
+public class IsFileValidator
   implements Validator
 {
-  public static final RequiredValidator INSTANCE = new RequiredValidator();
+  public static final IsFileValidator INSTANCE = new IsFileValidator();
 
-  private static final String MESSAGE = "validator.required";
+  private static final String MESSAGE = "validator.isfile";
 
   /**
    * Prevent construction.
    */
-  private RequiredValidator ()
+  private IsFileValidator ()
   {
   }
 
@@ -52,23 +48,11 @@ public class RequiredValidator
    */
   public boolean isValid (Object value)
   {
-    if (value instanceof String){
-      return ((String)value).trim().length() > 0;
+    String file = (String)value;
+    if(file != null && file.trim().length() > 0){
+      return new File(file).isFile();
     }
-
-    if (value != null && value.getClass().isArray()){
-      return Array.getLength(value) > 0;
-    }
-
-    if (value instanceof Collection){
-      return ((Collection)value).size() > 0;
-    }
-
-    if (value instanceof Map){
-      return ((Map)value).size() > 0;
-    }
-
-    return value != null;
+    return true;
   }
 
   /**
@@ -78,27 +62,5 @@ public class RequiredValidator
   public String getErrorMessage ()
   {
     return MESSAGE;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see Object#hashCode()
-   */
-  public int hashCode ()
-  {
-    return 11;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see Object#equals(Object)
-   */
-  public boolean equals (Object obj)
-  {
-    if(obj == this){
-      return true;
-    }
-
-    return obj instanceof RequiredValidator;
   }
 }

@@ -80,6 +80,18 @@ public class AggregateValidator
    */
   public boolean containsValidator (Validator validator)
   {
-    return validators.contains(validator);
+    if(validators.contains(validator)){
+      return true;
+    }
+
+    for (Iterator ii = validators.iterator(); ii.hasNext();){
+      Object val = ii.next();
+      if(val instanceof AggregateValidator){
+        if(((AggregateValidator)val).containsValidator(validator)){
+          return true;
+        }
+      }
+    }
+    return false;
   }
 }

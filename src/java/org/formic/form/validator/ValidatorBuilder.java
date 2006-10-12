@@ -28,8 +28,6 @@ import org.formic.form.Validator;
  */
 public class ValidatorBuilder
 {
-  public static final Validator REQUIRED = new RequiredValidator();
-
   private AggregateValidator validator;
 
   /**
@@ -41,18 +39,51 @@ public class ValidatorBuilder
   }
 
   /**
-   * Adds RequiredValidator to the chain.
+   * Adds RequiredValidator to the aggregate valiator.
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
   public ValidatorBuilder required ()
   {
-    validator(REQUIRED);
+    validator(RequiredValidator.INSTANCE);
     return this;
   }
 
   /**
-   * Adds the supplied validator to the chain.
+   * Adds FileExistsValidator to the aggregate validator.
+   *
+   * @return This ValidatorBuilder instance for method chaining.
+   */
+  public ValidatorBuilder fileExists ()
+  {
+    validator(FileExistsValidator.INSTANCE);
+    return this;
+  }
+
+  /**
+   * Adds IsDirectoryValidator to the aggregate validator.
+   *
+   * @return This ValidatorBuilder instance for method chaining.
+   */
+  public ValidatorBuilder isDirectory ()
+  {
+    validator(IsDirectoryValidator.INSTANCE);
+    return this;
+  }
+
+  /**
+   * Adds IsFileValidator to the aggregate validator.
+   *
+   * @return This ValidatorBuilder instance for method chaining.
+   */
+  public ValidatorBuilder isFile ()
+  {
+    validator(IsFileValidator.INSTANCE);
+    return this;
+  }
+
+  /**
+   * Adds the supplied validator to the aggregate validator.
    *
    * @param validator The validator to add.
    * @return This ValidatorBuilder instance for method chaining.
