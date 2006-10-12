@@ -32,7 +32,7 @@ public class InstallLocationStep
   protected static final String ICON = "/images/32x32/install_folder.png";
 
   /**
-   * Constructs the welcome step.
+   * Constructs the step.
    */
   public InstallLocationStep (String name)
   {
