@@ -111,7 +111,7 @@ public class FileChooserStep
   //private ConsoleFileChooser consoleFileChooser;
 
   /**
-   * Constructs the welcome step.
+   * Constructs the step.
    */
   public FileChooserStep (String name)
   {
@@ -178,9 +178,9 @@ public class FileChooserStep
     GuiFormBuilder builder = new GuiFormBuilder(getName(), layout);
     GuiComponentFactory factory = builder.getFactory();
 
-    Validator required = new ValidatorBuilder().required().validator();
+    Validator validator = getValidator();
     guiFileChooser = factory.createFileChooser(
-        property, getDefaultValue(), required);
+        property, getDefaultValue(), validator);
 
     guiFileChooser.getFileChooser().setFileSelectionMode(selectionMode);
     for (int ii = 0; ii < choosable.length; ii++){
@@ -205,7 +205,7 @@ public class FileChooserStep
    *
    * @return The default value.
    */
-  private String getDefaultValue ()
+  protected String getDefaultValue ()
   {
     if(discoverer != null){
       try{
@@ -217,6 +217,16 @@ public class FileChooserStep
       }
     }
     return null;
+  }
+
+  /**
+   * Get the Validator used to validate the field.
+   *
+   * @return The Validator.
+   */
+  protected Validator getValidator ()
+  {
+    return new ValidatorBuilder().required().validator();
   }
 
   /**
@@ -242,6 +252,16 @@ public class FileChooserStep
     }
 
     return (FileFilter[])results.toArray(new FileFilter[results.size()]);
+  }
+
+  /**
+   * Gets the guiFileChooser for this instance.
+   *
+   * @return The guiFileChooser.
+   */
+  public GuiFileChooser getGuiFileChooser ()
+  {
+    return this.guiFileChooser;
   }
 
   /**
