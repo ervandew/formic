@@ -39,6 +39,8 @@ import com.jgoodies.looks.plastic.PlasticTheme;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
+import org.formic.ant.util.AntUtils;
+
 import org.formic.dialog.gui.GuiDialogs;
 
 import org.formic.util.ResourceBundleAggregate;
@@ -68,6 +70,8 @@ public class Installer
   private static boolean consoleMode;
 
   private static InstallContext context = new InstallContext();
+
+  private static boolean envInitialized;
 
   /**
    * Runs the installer.
@@ -311,5 +315,24 @@ public class Installer
   public static boolean isConsoleMode ()
   {
     return consoleMode;
+  }
+
+  /**
+   * Gets the value of an environment variable.
+   *
+   * @param name The name of the environment variable to get.
+   * @return The value of the environment variable, or null if not found.
+   */
+  public synchronized static String getEnvironmentVariable (String name)
+  {
+    if(!envInitialized){
+      envInitialized = true;
+      AntUtils.property(getProject(), "env");
+    }
+
+    String key = "${env." + name + '}';
+    String value = getProject().replaceProperties(key);
+
+    return key.equals(value) ? null : value;
   }
 }
