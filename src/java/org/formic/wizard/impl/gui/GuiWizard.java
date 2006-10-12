@@ -18,7 +18,9 @@
  */
 package org.formic.wizard.impl.gui;
 
+import java.awt.Component;
 import java.awt.Image;
+import java.awt.KeyboardFocusManager;
 
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -27,6 +29,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Action;
+import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.RootPaneContainer;
 import javax.swing.SwingUtilities;
@@ -73,6 +76,8 @@ public class GuiWizard
     super(_model);
     setDefaultExitMode(org.pietschy.wizard.Wizard.EXIT_ON_FINISH);
     getModel().addPropertyChangeListener(this);
+    KeyboardFocusManager.getCurrentKeyboardFocusManager()
+        .addPropertyChangeListener(new FocusChangeHandler());
 
     try{
       semaphore.acquire();
@@ -305,6 +310,30 @@ public class GuiWizard
     if(events != null){
       for (int ii = 0; ii < events.length; ii++){
         propertyChange(events[ii]);
+      }
+    }
+  }
+
+  /**
+   * FocusChangeHandler to ensure proper button is activated via <enter>.
+   */
+  private final class FocusChangeHandler
+    implements PropertyChangeListener
+  {
+    public void propertyChange (PropertyChangeEvent event)
+    {
+      String propertyName = event.getPropertyName();
+      if (!"permanentFocusOwner".equals(propertyName)){
+        return;
+      }
+
+      Component focusOwner = KeyboardFocusManager
+        .getCurrentKeyboardFocusManager().getFocusOwner();
+
+      if (focusOwner instanceof JButton){
+        getRootPane().setDefaultButton((JButton)focusOwner);
+      }else{
+        updateDefaultButton();
       }
     }
   }
