@@ -19,14 +19,18 @@
 package org.formic.form.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
+import java.awt.KeyboardFocusManager;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.KeyStroke;
 
 import org.formic.Installer;
 
@@ -57,7 +61,23 @@ public class GuiFileChooser
       GuiComponentFactory factory, String name, Validator validator)
   {
     super(new BorderLayout());
-    chooser = new JFileChooser();
+    chooser = new JFileChooser(){
+      // force "proper" behavior of <enter> when a button has focus
+      protected boolean processKeyBinding (
+        KeyStroke key, KeyEvent event, int condition, boolean pressed)
+      {
+        if(event.getKeyCode() == KeyEvent.VK_ENTER){
+          Component focusOwner = KeyboardFocusManager
+            .getCurrentKeyboardFocusManager().getFocusOwner();
+          // if a button has focus, click it.
+          if(focusOwner instanceof JButton){
+            ((JButton)focusOwner).doClick();
+            return true;
+          }
+        }
+        return super.processKeyBinding(key, event, condition, pressed);
+      }
+    };
     textField = factory.createTextField(name, validator);
     button = new JButton(Installer.getString("browse.text"));
 
