@@ -263,8 +263,8 @@ public class InstallStep
    */
   protected void displayedGui ()
   {
+    setBusy(true);
     try{
-      setBusy(true);
       Worker.post(new foxtrot.Task(){
         public Object run ()
           throws Exception
@@ -284,7 +284,6 @@ public class InstallStep
           return null;
         }
       });
-      setBusy(false);
     }catch(Exception e){
       error = e;
       error.printStackTrace();
@@ -293,6 +292,7 @@ public class InstallStep
           INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
       guiShowErrorButton.setVisible(true);
     }finally{
+      setBusy(false);
       guiTaskProgress.setIndeterminate(false);
     }
   }
