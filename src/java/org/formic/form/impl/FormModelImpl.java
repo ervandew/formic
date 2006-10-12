@@ -166,7 +166,7 @@ public class FormModelImpl
    */
   private String resolveName (String name)
   {
-    if(!name.startsWith(this.name)){
+    if(!name.startsWith(this.name + '.')){
       return this.name + '.' + name;
     }
     return name;
