@@ -47,8 +47,8 @@
       <fileset dir="build/classes">
         <include name="net/java/swingfx/**/*.class"/>
         <include name="org/formic/**/*.class"/>
-        <exclude name="org/formic/bootstrap/"/>
-        <exclude name="org/formic/bootstrap/*.class"/>
+        <exclude name="org/formic/bootstrap"/>
+        <exclude name="org/formic/bootstrap/**/*"/>
         <!-- for debugging -->
         <include name="com/jgoodies/**/*.class"/>
       </fileset>
@@ -70,6 +70,7 @@
       </manifest>
       <fileset dir="build/classes">
         <include name="org/formic/bootstrap/**/*.class"/>
+        <include name="org/formic/util/CommandExecutor.class"/>
         <include name="org/formic/wizard/gui/dialog/*.class"/>
       </fileset>
       <fileset dir="src/java">

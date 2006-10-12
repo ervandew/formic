@@ -38,10 +38,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
-import org.formic.bootstrap.util.CommandExecutor;
 import org.formic.bootstrap.util.Extractor;
 
 import org.formic.dialog.gui.GuiDialogs;
+
+import org.formic.util.CommandExecutor;
 
 /**
  * Class responsible for extracting embedded archive and kicking off the ant
