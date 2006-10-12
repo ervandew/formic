@@ -32,6 +32,8 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.io.IOUtils;
 
+import org.apache.tools.ant.taskdefs.condition.Os;
+
 import org.formic.Installer;
 
 import org.formic.event.gui.HyperlinkListener;
@@ -68,6 +70,11 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 public abstract class AbstractTemplateStep
   extends AbstractStep
 {
+  private static final String INSTALLER_KEY = "installer";
+  private static final Installer INSTALLER = new Installer();
+  private static final String OS_KEY = "os";
+  private static final Os OS = new Os();
+
   private String text;
   private String html;
 
@@ -155,7 +162,10 @@ public abstract class AbstractTemplateStep
   protected String processTemplate (String template)
   {
     HashMap values = new HashMap();
-    values.put("context", Installer.getContext());
+
+    values.put(INSTALLER_KEY, INSTALLER);
+    values.put(OS_KEY, OS);
+
     InputStream in = null;
     try{
       in = AbstractTemplateStep.class.getResourceAsStream(template);
