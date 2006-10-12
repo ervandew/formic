@@ -76,7 +76,7 @@ public class GuiForm
   private Icon warningIcon;
 
   private boolean mandatoryBorderEnabled;
-  private boolean mandatoryBackgroundEnabled;
+  private boolean mandatoryBackgroundEnabled = true;
   private boolean invalidBackgroundEnabled = true;
 
   private ValidationResult validationResult = new ValidationResult();
@@ -309,9 +309,6 @@ public class GuiForm
   public void propertyChange (PropertyChangeEvent evt)
   {
     if(evt.getSource() instanceof FormFieldModel){
-      // update mandatory background
-      setMandatoryBackgroundEnabled(isMandatoryBackgroundEnabled());
-
       // update invalid background
       if(FormFieldModel.VALID.equals(evt.getPropertyName())){
         FormFieldModel field = (FormFieldModel)evt.getSource();
@@ -320,14 +317,25 @@ public class GuiForm
           String key = field.getValidator().getErrorMessage();
           String display = Installer.getString(field.getName(), field.getName());
           message = new SimpleValidationMessage(
-              Installer.getString(key, (Object)display),
+              Installer.getString(key, (Object)display, field.getValue()),
               Severity.ERROR, field.getName());
 
-          validationResult.add(message);
+          if(!validationResult.contains(message)){
+            validationResult = removeMessages(field.getName(), validationResult);
+            validationResult.add(message);
+            setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
+          }
         }else{
           validationResult = removeMessages(field.getName(), validationResult);
+          setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
         }
-        setInvalidBackgroundEnabled(isInvalidBackgroundEnabled());
+      }else{
+        // update mandatory background
+        if ((evt.getOldValue() == null ||
+              ((String)evt.getOldValue()).trim().length() == 0) &&
+            evt.getNewValue() != null){
+          setMandatoryBackgroundEnabled(isMandatoryBackgroundEnabled());
+        }
       }
     }
   }
