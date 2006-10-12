@@ -62,7 +62,7 @@ public abstract class AbstractFormStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#initGui()
    */
-  public final JComponent initGui ()
+  public JComponent initGui ()
   {
     form = initGuiForm();
     setValid(form.getModel().isValid());
@@ -76,7 +76,7 @@ public abstract class AbstractFormStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#initConsole()
    */
-  public final Component initConsole ()
+  public Component initConsole ()
   {
     form = initConsoleForm();
     setValid(form.getModel().isValid());
