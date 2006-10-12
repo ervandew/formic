@@ -284,6 +284,7 @@ public class InstallStep
           return null;
         }
       });
+      setValid(true);
     }catch(Exception e){
       error = e;
       error.printStackTrace();
@@ -291,6 +292,7 @@ public class InstallStep
       guiOverallLabel.setText(
           INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
       guiShowErrorButton.setVisible(true);
+      setValid(false);
     }finally{
       setBusy(false);
       guiTaskProgress.setIndeterminate(false);
