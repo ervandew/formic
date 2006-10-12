@@ -28,14 +28,11 @@ import com.jgoodies.binding.value.AbstractValueModel;
 import foxtrot.AsyncTask;
 import foxtrot.AsyncWorker;
 
-import org.apache.log4j.Logger;
-
 import org.formic.form.FormFieldModel;
 import org.formic.form.Validator;
 
 import org.formic.form.validator.AggregateValidator;
 import org.formic.form.validator.RequiredValidator;
-import org.formic.form.validator.ValidatorBuilder;
 
 /**
  * Implementation of {@link FormFieldModel}.
@@ -47,9 +44,6 @@ public class FormFieldModelImpl
   extends AbstractValueModel
   implements FormFieldModel
 {
-  private static final Logger logger =
-    Logger.getLogger(FormFieldModelImpl.class);
-
   private String name;
   private Object value;
   private Validator validator;
@@ -101,7 +95,6 @@ public class FormFieldModelImpl
    */
   public void setValue (Object value)
   {
-logger.info("Value = " + value);
     firePropertyChange(VALUE, this.value, this.value = value);
   }
 
@@ -143,7 +136,7 @@ logger.info("Value = " + value);
         return true;
       }else if(validator instanceof AggregateValidator){
         return ((AggregateValidator)validator)
-          .containsValidator(ValidatorBuilder.REQUIRED);
+          .containsValidator(RequiredValidator.INSTANCE);
       }
     }
     return false;
@@ -156,7 +149,7 @@ logger.info("Value = " + value);
    */
   public void setValid (boolean valid)
   {
-    firePropertyChange(VALID, this.valid, this.valid = valid);
+    firePropertyChange(VALID, !valid, this.valid = valid);
   }
 
   /**
