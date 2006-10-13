@@ -139,7 +139,7 @@ public class Launcher
 
       frame.setVisible(false);
       execute(args);
-    }catch(Exception e){
+    }catch(Throwable e){
       GuiDialogs.showError(e);
     }finally{
       try{
@@ -159,9 +159,10 @@ public class Launcher
     try{
       join(2000);
       cleanup();
-    }catch(Exception e){
+    }catch(Throwable e){
       GuiDialogs.showError(e);
     }
+    System.exit(0);
   }
 
   /**
@@ -201,11 +202,7 @@ public class Launcher
       command.append(' ').append(args[ii]);
     }
 
-    String[] cmd = {
-      "cmd", "/c", "\"" + drive + " && " + command + "\""
-    };
-
-    System.out.println("Initializing " + args[0] + "er ...");
+    String[] cmd = {"cmd", "/c", drive + " && " + command};
     CommandExecutor result = CommandExecutor.execute(cmd);
     if(result.getReturnCode() != 0){
       GuiDialogs.showError(result.getErrorMessage(), result.getResult());
@@ -218,8 +215,10 @@ public class Launcher
   private void cleanup ()
     throws Exception
   {
-    File tempDir = new File(this.tempDir);
-    deleteDir(tempDir);
+    if(this.tempDir != null){
+      File tempDir = new File(this.tempDir);
+      deleteDir(tempDir);
+    }
   }
 
   /**
@@ -231,11 +230,13 @@ public class Launcher
     throws Exception
   {
     File[] files = dir.listFiles();
-    for (int ii = 0; ii < files.length; ii++){
-      if(files[ii].isDirectory()){
-        deleteDir(files[ii]);
-      }else{
-        files[ii].delete();
+    if(files != null){
+      for (int ii = 0; ii < files.length; ii++){
+        if(files[ii].isDirectory()){
+          deleteDir(files[ii]);
+        }else{
+          files[ii].delete();
+        }
       }
     }
     dir.delete();
