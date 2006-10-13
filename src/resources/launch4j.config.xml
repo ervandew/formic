@@ -7,7 +7,7 @@
   <jarArgs>${formic.action}</jarArgs>
   <jre>
     <!-- x.x.x[_xx] -->
-    <minVersion>1.5.0</minVersion>
+    <minVersion>1.4.0</minVersion>
     <!--minVersion>${jre.version.minimum}</minVersion-->
     <!--maxVersion>${jre.version.maximum}</maxVersion-->
     <!-- Heap sizes in MB, 0-use default -->
