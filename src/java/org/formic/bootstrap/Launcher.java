@@ -205,7 +205,21 @@ public class Launcher
     String[] cmd = {"cmd", "/c", drive + " && " + command};
     CommandExecutor result = CommandExecutor.execute(cmd);
     if(result.getReturnCode() != 0){
-      GuiDialogs.showError(result.getErrorMessage(), result.getResult());
+      command = new StringBuffer();
+      for (int ii = 0; ii < cmd.length; ii++){
+        command.append(cmd[ii]).append(' ');
+      }
+      GuiDialogs.showError(result.getErrorMessage(),
+          new StringBuffer()
+            .append("Command: ")
+            .append(command)
+            .append("\nResult Code: ")
+            .append(result.getReturnCode())
+            .append("\nResult: ")
+            .append(result.getResult())
+            .append("\nError: ")
+            .append(result.getErrorMessage())
+            .toString());
     }
   }
 
