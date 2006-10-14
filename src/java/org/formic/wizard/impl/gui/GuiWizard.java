@@ -219,10 +219,10 @@ public class GuiWizard
   {
     SwingUtilities.invokeLater(new Runnable(){
       public void run (){
-        if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
-          MultiPathModel model = (MultiPathModel)getModel();
-          org.pietschy.wizard.WizardStep step = model.getActiveStep();
+        MultiPathModel model = (MultiPathModel)getModel();
+        org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
+        if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
           // update step listening.
           if (activeStep != null){
              activeStep.removePropertyChangeListener(GuiWizard.this);
@@ -244,13 +244,20 @@ public class GuiWizard
 
             updateDefaultButton();
           }
-        }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
-          boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
-          getCancelAction().setEnabled(cancelEnabled);
-        }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
-            evt.getPropertyName().equals(WizardStep.BUSY))
-        {
-          updateDefaultButton();
+        }else{
+          if(step != null){
+            WizardStep ws = ((GuiWizardStep)step).getStep();
+            updateButtonStatus(model, ws, step);
+          }
+
+          if (evt.getPropertyName().equals(WizardStep.CANCEL)){
+            boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+            getCancelAction().setEnabled(cancelEnabled);
+          }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
+              evt.getPropertyName().equals(WizardStep.BUSY))
+          {
+            updateDefaultButton();
+          }
         }
       }
     });
@@ -262,6 +269,9 @@ public class GuiWizard
   private void updateButtonStatus (
       MultiPathModel model, WizardStep ws, org.pietschy.wizard.WizardStep step)
   {
+    // set whether next step is enabled or not.
+    model.setNextAvailable(step.isComplete() && !model.isLastStep(step));
+
     // set whether previous step is enabled or not.
     boolean previousAvailable =
       !model.isFirstStep(step) &&
