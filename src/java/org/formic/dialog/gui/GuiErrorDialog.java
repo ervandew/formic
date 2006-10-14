@@ -84,6 +84,9 @@ public class GuiErrorDialog
 
     JPanel info = new JPanel(new FlowLayout(FlowLayout.LEFT, 20, 10));
     info.add(new JLabel(ERROR));
+    if(message.length() > 100){
+      message = message.substring(0, 97) + "...";
+    }
     info.add(new JLabel(message));
     panel.add(info, BorderLayout.NORTH);
 
