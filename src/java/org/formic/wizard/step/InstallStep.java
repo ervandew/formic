@@ -27,6 +27,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import java.util.regex.Pattern;
+
 import javax.swing.AbstractAction;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -77,6 +79,8 @@ public class InstallStep
 {
   private static final String ICON = "/images/32x32/install.png";
   private static final String INSTALL_TARGET = "install";
+  private static final Pattern STACK_ELEMENT =
+    Pattern.compile("^\\s+at .*(.*)$");
 
   private JProgressBar guiOverallProgress;
   private JProgressBar guiTaskProgress;
@@ -91,7 +95,7 @@ public class InstallStep
   private charvax.swing.JButton consoleShowErrorButton;
 
   private List tasks = new ArrayList();
-  private String targetName = INSTALL_TARGET;
+  private List targetStack = new ArrayList();
 
   private Throwable error;
 
@@ -101,6 +105,7 @@ public class InstallStep
   public InstallStep (String name)
   {
     super(name);
+    targetStack.add(INSTALL_TARGET);
   }
 
   /**
@@ -280,11 +285,11 @@ public class InstallStep
           guiTaskProgress.setValue(guiTaskProgress.getMaximum());
           guiTaskLabel.setText(Installer.getString("install.done"));
 
-          setCancelEnabled(false);
           return null;
         }
       });
       setValid(true);
+      setCancelEnabled(false);
     }catch(Exception e){
       error = e;
       error.printStackTrace();
@@ -296,6 +301,7 @@ public class InstallStep
     }finally{
       setBusy(false);
       guiTaskProgress.setIndeterminate(false);
+      Installer.getProject().removeBuildListener(this);
     }
   }
 
@@ -332,6 +338,7 @@ public class InstallStep
         }finally{
           consoleTaskProgress.setIndeterminate(false);
           setBusy(false);
+          Installer.getProject().removeBuildListener(InstallStep.this);
         }
       }
     }.start();
@@ -367,11 +374,13 @@ public class InstallStep
     for (int ii = 0; ii < tasks.length; ii++){
       Task task = tasks[ii];
 
+/* Breaks ant property scope for some reason.
       if(task instanceof UnknownElement){
         UnknownElement ue = (UnknownElement)task;
         ue.maybeConfigure();
         task = ((UnknownElement)task).getTask();
       }
+*/
       this.tasks.add(task);
 
       if (task instanceof Ant ||
@@ -437,7 +446,7 @@ public class InstallStep
    */
   public void targetStarted (BuildEvent e)
   {
-    targetName = e.getTarget().getName();
+    targetStack.add(e.getTarget().getName());
   }
 
   /**
@@ -446,6 +455,7 @@ public class InstallStep
    */
   public void targetFinished (BuildEvent e)
   {
+    targetStack.remove(targetStack.size() - 1);
   }
 
   /**
@@ -456,9 +466,9 @@ public class InstallStep
   {
     if(Installer.isConsoleMode()){
       consoleOverallLabel.setText(
-          targetName + " - " + e.getTask().getTaskName());
+          getTargetPath() + " - " + e.getTask().getTaskName());
     }else{
-      guiOverallLabel.setText(targetName + " - " + e.getTask().getTaskName());
+      guiOverallLabel.setText(getTargetPath() + " - " + e.getTask().getTaskName());
     }
   }
 
@@ -484,11 +494,30 @@ public class InstallStep
    */
   public void messageLogged (BuildEvent e)
   {
-    if(Installer.isConsoleMode()){
-      consoleTaskLabel.setText(e.getMessage());
-    }else{
-      guiTaskLabel.setText(e.getMessage());
+    if(!STACK_ELEMENT.matcher(e.getMessage()).matches()){
+      if(Installer.isConsoleMode()){
+        consoleTaskLabel.setText(e.getMessage());
+      }else{
+        guiTaskLabel.setText(e.getMessage());
+      }
     }
+  }
+
+  /**
+   * Converts the current target stack to a canonical path.
+   *
+   * @return The path.
+   */
+  private String getTargetPath ()
+  {
+    StringBuffer buffer = new StringBuffer();
+    for (Iterator ii = targetStack.iterator(); ii.hasNext();){
+      if(buffer.length() != 0){
+        buffer.append('/');
+      }
+      buffer.append(ii.next());
+    }
+    return buffer.toString();
   }
 
   private class ShowErrorAction
