@@ -142,6 +142,15 @@ public class MultiPathModel
 
   /**
    * {@inheritDoc}
+   * @see org.pietschy.wizard.AbstractWizardModel#setNextAvailable(boolean)
+   */
+  public void setNextAvailable (boolean available)
+  {
+    super.setNextAvailable(available);
+  }
+
+  /**
+   * {@inheritDoc}
    * @see org.pietschy.wizard.AbstractWizardModel#setPreviousAvailable(boolean)
    */
   public void setPreviousAvailable (boolean available)
@@ -156,5 +165,14 @@ public class MultiPathModel
   public void setCancelAvailable (boolean available)
   {
     super.setCancelAvailable(available);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.pietschy.wizard.models.MultiPathModel#refreshModelState()
+   */
+  public void refreshModelState ()
+  {
+    // do nothing.
   }
 }
