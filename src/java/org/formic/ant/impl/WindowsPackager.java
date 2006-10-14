@@ -135,10 +135,13 @@ public class WindowsPackager
   private File generateLaunch4jConfig (String action)
   {
     File launch4jConfig = new File(getBuildDir() + "/launch4j.config.xml");
+    File icon = new File(getBuildDir() + "/icon.ico");
 
     AntUtils.copy(getProject(), getTaskName(),
         new File(getFormicHome() + "/ant/resources/launch4j.config.xml"),
         launch4jConfig);
+    AntUtils.copy(getProject(), getTaskName(),
+        new File(getFormicHome() + "/ant/resources/icon.ico"), icon);
 
     AntUtils.replace(getProject(), launch4jConfig, "${formic.action}", action);
 

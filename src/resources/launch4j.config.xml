@@ -2,6 +2,7 @@
 
 <launch4jConfig>
   <headerType>0</headerType>
+  <icon>icon.ico</icon>
   <!--outfile>${launch4j.outfile}</outfile-->
   <!--jar>${launch4j.jar}</jar-->
   <jarArgs>${formic.action}</jarArgs>

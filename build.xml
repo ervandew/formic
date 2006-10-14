@@ -81,6 +81,7 @@
       <fileset dir="src">
         <include name="images/16x16/details_hide.png"/>
         <include name="images/16x16/details_show.png"/>
+        <include name="images/16x16/wizard.png"/>
         <include name="images/32x32/error.png"/>
         <include name="images/32x32/info.png"/>
         <include name="images/32x32/question.png"/>
