@@ -21,10 +21,7 @@
 
 # Script used to execute ant tasks via formic's embedded ant.
 
-
-FORMIC_HOME=`dirname $0`
-FORMIC_HOME=`dirname $FORMIC_HOME`
-
+FORMIC_HOME=$(dirname $(dirname $0))
 ANT_HOME="$FORMIC_HOME/ant"
 
 FORMIC_HOME="$FORMIC_HOME" ANT_HOME="$ANT_HOME" "$ANT_HOME/bin/ant" $@
