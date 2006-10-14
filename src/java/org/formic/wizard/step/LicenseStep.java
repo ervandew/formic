@@ -247,7 +247,7 @@ public class LicenseStep
     if(Installer.isConsoleMode()){
       consoleScrollPane.requestFocus();
     }else{
-      guiScrollPane.grabFocus();
+      ((JComponent)guiScrollPane.getViewport().getView()).grabFocus();
     }
   }
 
