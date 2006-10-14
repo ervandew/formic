@@ -20,6 +20,7 @@ package org.formic.bootstrap;
 
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.Toolkit;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -87,6 +88,8 @@ public class Launcher
 
     frame = new JFrame(TITLE);
     frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+    frame.setIconImage(Toolkit.getDefaultToolkit().createImage(
+          Launcher.class.getResource("/images/16x16/wizard.png")));
 
     JPanel panel = new JPanel();
     panel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
