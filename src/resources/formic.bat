@@ -35,3 +35,5 @@ set EXIT_CODE=%ERRORLEVEL%
 popd
 
 exit %EXIT_CODE%
+
+rem vim:fileformats=unix,dos:fileformat=dos
