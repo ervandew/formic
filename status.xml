@@ -9,10 +9,6 @@
 
   <todo>
     <actions priority="high">
-      <action context="ui" dev="ervandew">
-        Create api based form builder via
-        <a href="http://www.jgoodies.com/downloads/libraries.html">jgoodies</a>.
-      </action>
       <action context="native" dev="ervandew">
         <ul>
           <li>
