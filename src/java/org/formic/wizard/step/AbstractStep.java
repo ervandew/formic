@@ -64,7 +64,7 @@ public abstract class AbstractStep
   /**
    * Constructs a new instance.
    *
-   * @param _properties The properties for this step.
+   * @param name The name of the step.
    */
   public AbstractStep (String name)
   {

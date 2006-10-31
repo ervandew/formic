@@ -166,7 +166,7 @@ public class ConsoleComponentFactory
       new SelectionInList(list, getField(name, validator));
     return (JList)component(
         BasicComponentFactory.createList(selection, renderer), name);
-  }
+  }*/
 
   /**
    * Creates a radio button for the supplied field name.

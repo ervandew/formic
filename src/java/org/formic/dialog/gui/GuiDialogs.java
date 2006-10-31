@@ -159,7 +159,7 @@ public class GuiDialogs
    * Shows an error dialog.
    *
    * @param message The error message.
-   * @param thrown The error detail.
+   * @param detail The error detail.
    */
   public static void showError (String message, String detail)
   {

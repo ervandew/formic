@@ -14,9 +14,8 @@
     <javadoc packagenames="org.formic" destdir="build/formic/doc/api"
         stylesheetfile="src/ant/javadoc_stylesheet.css">
       <classpath refid="classpath"/>
-      <fileset dir="src">
-        <include name="**/*.java"/>
-        <exclude name="org/formic/**/impl/**/*.java"/>
+      <fileset dir="src/java">
+        <include name="org/formic/**/*.java"/>
       </fileset>
     </javadoc>
   </target>
