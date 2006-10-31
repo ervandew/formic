@@ -171,6 +171,7 @@ public class Installer
    * key.
    * @return The value or the supplied default.
    */
+  /* Removed so as not to conflict with getString(String,Object)
   public static String getString (String key, String dflt)
   {
     try{
@@ -178,7 +179,7 @@ public class Installer
     }catch(MissingResourceException mre){
       return dflt;
     }
-  }
+  }*/
 
   /**
    * Gets the value for the supplied resource key and formats the result using
@@ -218,7 +219,7 @@ public class Installer
   public static String getString (String key, Object[] args)
   {
     String message = getString(key);
-    return MessageFormat.format(message, args);
+    return MessageFormat.format(message != null ? message : key, args);
   }
 
   /**
