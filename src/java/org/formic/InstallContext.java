@@ -18,6 +18,7 @@
  */
 package org.formic;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -55,6 +56,25 @@ public class InstallContext
   public Object getValue (Object key)
   {
     return values.get(key);
+  }
+
+  /**
+   * Gets all keys that have the specified prefix.
+   *
+   * @param keyPrefix The prefix.
+   * @return array of keys.
+   */
+  public String[] getKeysByPrefix (String keyPrefix)
+  {
+    ArrayList results = new ArrayList();
+    for (Iterator ii = values.keySet().iterator(); ii.hasNext();){
+      String key = (String)ii.next();
+      if(key.startsWith(keyPrefix)){
+        results.add(key);
+      }
+    }
+
+    return (String[])results.toArray(new String[results.size()]);
   }
 
   /**
