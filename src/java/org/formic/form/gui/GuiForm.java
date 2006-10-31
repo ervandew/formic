@@ -332,7 +332,7 @@ public class GuiForm
       }else{
         // update mandatory background
         if ((evt.getOldValue() == null ||
-              ((String)evt.getOldValue()).trim().length() == 0) &&
+              evt.getOldValue().toString().trim().length() == 0) &&
             evt.getNewValue() != null){
           setMandatoryBackgroundEnabled(isMandatoryBackgroundEnabled());
         }
