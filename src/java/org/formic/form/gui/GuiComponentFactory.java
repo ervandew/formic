@@ -84,16 +84,30 @@ public class GuiComponentFactory
    * Creates a check box for the supplied field name.
    *
    * @param name The field name.
+   * @return The JCheckBox.
+   */
+  public JCheckBox createCheckBox (String name)
+  {
+    return createCheckBox(name, null);
+  }
+
+  /**
+   * Creates a check box for the supplied field name.
+   *
+   * @param name The field name.
    * @param validator Validator used to validate the field.
    * @return The JCheckBox.
    */
   public JCheckBox createCheckBox (String name, Validator validator)
   {
-    return (JCheckBox)component(
+    JCheckBox box = (JCheckBox)component(
       BasicComponentFactory.createCheckBox(
         getField(name, validator),
         Installer.getString(getFormModel().getName() + '.' + name, name)),
       name);
+    // use seperate label instead.
+    box.setText(null);
+    return box;
   }
 
   /**
