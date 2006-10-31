@@ -195,6 +195,10 @@ public class GuiDialogs
     if(m == null || m.length() == 0){
       m = thrown != null ? thrown.getLocalizedMessage() :
         RESOURCES.getString("error.dialog.text");
+
+      if(m == null){
+        m = RESOURCES.getString("error.dialog.text");
+      }
     }
 
     new GuiErrorDialog(t, m, thrown, detail).setVisible(true);
