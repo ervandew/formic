@@ -130,6 +130,14 @@
       </fileset>
     </jar>
 
+    <!-- patched wizard jar -->
+    <copy todir="build/dist" file="lib/wizard-0.1.12.jar"/>
+    <jar jarfile="build/dist/wizard-0.1.12.jar" update="true">
+      <fileset dir="build/classes">
+        <include name="org/pietschy/**/*.class"/>
+      </fileset>
+    </jar>
+
     <!-- copy ant and formic scripts over to build dir -->
     <copy todir="build/formic">
       <fileset dir="." includes="LICENSE*.txt,NOTICE"/>
