@@ -1,5 +1,12 @@
 <html>
   <body>
     <b>Install Folder:</b> $installer.context.getValue("installLocation.location")
+    <p>
+    <b>Features:</b>
+    #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
+      #if($installer.context.getValue("${feature}"))
+        <br>&nbsp;&nbsp;$installer.getString("${feature}.title")
+      #end
+    #end
   </body>
 </html>
