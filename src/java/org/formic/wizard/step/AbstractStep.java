@@ -45,6 +45,7 @@ public abstract class AbstractStep
 
   protected static final String PROPERTY_REQUIRED = "property.required";
   protected static final String RESOURCE_REQUIRED = "resource.required";
+  protected static final String RESOURCE_NOT_FOUND = "resource.not.found";
 
   protected WizardModel wizardModel;
 
