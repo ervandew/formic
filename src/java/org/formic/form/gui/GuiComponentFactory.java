@@ -105,8 +105,6 @@ public class GuiComponentFactory
         getField(name, validator),
         Installer.getString(getFormModel().getName() + '.' + name, name)),
       name);
-    // use seperate label instead.
-    box.setText(null);
     return box;
   }
 
