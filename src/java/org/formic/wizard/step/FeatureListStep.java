@@ -18,34 +18,53 @@
  */
 package org.formic.wizard.step;
 
+import java.awt.BorderLayout;
+import java.awt.Dimension;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
 import java.io.InputStream;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JCheckBox;
+import javax.swing.JEditorPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
+
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import com.jgoodies.forms.layout.FormLayout;
 
 import foxtrot.Task;
 import foxtrot.Worker;
 
 import org.apache.commons.io.IOUtils;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.formic.Installer;
 
 import org.formic.dialog.gui.GuiDialogs;
+
+import org.formic.event.gui.HyperlinkListener;
 
 import org.formic.form.console.ConsoleForm;
 
 import org.formic.form.gui.GuiComponentFactory;
 import org.formic.form.gui.GuiForm;
-import org.formic.form.gui.GuiFormBuilder;
+
+import org.formic.swing.ComponentTableCellRenderer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -79,6 +98,7 @@ public class FeatureListStep
 
   private String featuresXml;
   private List features;
+  private JEditorPane featureInfo;
 
   /**
    * Constructs the step.
@@ -116,19 +136,65 @@ public class FeatureListStep
   {
     initFeatures();
 
-    FormLayout layout = new FormLayout("pref, 4dlu, 150dlu");
-    GuiFormBuilder builder = new GuiFormBuilder(getName(), layout);
-    GuiComponentFactory factory = builder.getFactory();
+    GuiComponentFactory factory = new GuiComponentFactory(getName());
+    GuiForm form = new GuiForm();
+    form.setModel(factory.getFormModel());
 
-    for (Iterator ii = features.iterator(); ii.hasNext();){
-      Feature feature = (Feature)ii.next();
+    featureInfo = new JEditorPane("text/html", StringUtils.EMPTY);
+    featureInfo.setEditable(false);
+    featureInfo.addHyperlinkListener(new HyperlinkListener());
+
+    JTable table = new JTable(features.size(), 2){
+      public Class getColumnClass (int column){
+        return getValueAt(0, column).getClass();
+      }
+      public boolean isCellEditable (int row, int column){
+        return false;
+      }
+    };
+    table.setBackground(new javax.swing.JList().getBackground());
+    for (int ii = 0; ii < features.size(); ii++){
+      Feature feature = (Feature)features.get(ii);
       JCheckBox box = factory.createCheckBox(feature.getProperty());
       box.setSelected(feature.isEnabled());
-      builder.append(box);
-      builder.nextRow();
+
+      feature.setTitle(box.getText());
+      feature.setInfo(Installer.getString(
+            getName() + "." + feature.getProperty() + ".html"));
+
+      box.setText(null);
+      box.setBackground(table.getBackground());
+
+      table.setValueAt(box, ii, 0);
+      table.setValueAt(feature, ii, 1);
     }
 
-    return builder.getForm();
+    table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
+    table.getColumnModel().getColumn(0).setMaxWidth(20);
+    table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    table.setShowHorizontalLines(false);
+    table.setShowVerticalLines(false);
+    table.setDefaultRenderer(JCheckBox.class, new ComponentTableCellRenderer());
+
+    table.addKeyListener(new FeatureListKeyListener());
+    table.addMouseListener(new FeatureListMouseListener());
+    table.getSelectionModel().addListSelectionListener(
+        new FeatureListSelectionListener(table));
+
+    table.setRowSelectionInterval(0, 0);
+
+    JPanel panel = form.getContentPanel();
+    panel.setLayout(new BorderLayout());
+    JPanel container = new JPanel(new BorderLayout());
+    container.add(table, BorderLayout.CENTER);
+    panel.add(new JScrollPane(container), BorderLayout.CENTER);
+    JScrollPane infoScroll = new JScrollPane(featureInfo);
+    infoScroll.setMinimumSize(new Dimension(0, 50));
+    infoScroll.setMaximumSize(new Dimension(0, 50));
+    infoScroll.setPreferredSize(new Dimension(0, 50));
+    panel.add(infoScroll, BorderLayout.SOUTH);
+
+    return form;
   }
 
   /**
@@ -195,6 +261,8 @@ public class FeatureListStep
   private class Feature
   {
     private String property;
+    private String title;
+    private String info;
     private boolean enabled;
 
     /**
@@ -221,6 +289,46 @@ public class FeatureListStep
     }
 
     /**
+     * Gets the title for this instance.
+     *
+     * @return The title.
+     */
+    public String getTitle ()
+    {
+      return this.title;
+    }
+
+    /**
+     * Sets the title for this instance.
+     *
+     * @param title The title.
+     */
+    public void setTitle (String title)
+    {
+      this.title = title;
+    }
+
+    /**
+     * Gets the info for this instance.
+     *
+     * @return The info.
+     */
+    public String getInfo ()
+    {
+      return this.info;
+    }
+
+    /**
+     * Sets the info for this instance.
+     *
+     * @param info The info.
+     */
+    public void setInfo (String info)
+    {
+      this.info = info;
+    }
+
+    /**
      * Determines if this instance is enabled.
      *
      * @return The enabled.
@@ -228,6 +336,112 @@ public class FeatureListStep
     public boolean isEnabled ()
     {
       return this.enabled;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see Object#toString()
+     */
+    public String toString ()
+    {
+      return title;
+    }
+  }
+
+  /**
+   * Mouse listener for the feature list.
+   */
+  private class FeatureListMouseListener
+    extends MouseAdapter
+  {
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mouseClicked(MouseEvent)
+     */
+    public void mouseClicked (MouseEvent e)
+    {
+      if(e.getButton() == MouseEvent.BUTTON1){
+        JTable table = (JTable)e.getSource();
+        int row = table.rowAtPoint(e.getPoint());
+        int col = table.columnAtPoint(e.getPoint());
+        if(col == 0){
+          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, col);
+          box.doClick();
+          table.revalidate();
+          table.repaint();
+        }
+      }
+    }
+  }
+
+  /**
+   * Key listener for the feature list.
+   */
+  private class FeatureListKeyListener
+    implements KeyListener
+  {
+    /**
+     * {@inheritDoc}
+     * @see KeyListener#keyTyped(KeyEvent)
+     */
+    public void keyTyped (KeyEvent e)
+    {
+      if(e.getKeyChar() == ' '){
+        JTable table = (JTable)e.getSource();
+        int row = table.getSelectedRow();
+        if(row != -1){
+          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
+          box.doClick();
+          table.revalidate();
+          table.repaint();
+        }
+      }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see KeyListener#keyPressed(KeyEvent)
+     */
+    public void keyPressed (KeyEvent e)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see KeyListener#keyReleased(KeyEvent)
+     */
+    public void keyReleased (KeyEvent e)
+    {
+    }
+  }
+
+  /**
+   * List selection listener responsible for updating feature info text area.
+   */
+  private class FeatureListSelectionListener
+    implements ListSelectionListener
+  {
+    private JTable table;
+
+    /**
+     * Constructs a new instance.
+     */
+    public FeatureListSelectionListener (JTable table)
+    {
+      this.table = table;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ListSelectionListener#valueChanged(ListSelectionEvent)
+     */
+    public void valueChanged (ListSelectionEvent e)
+    {
+      if(!e.getValueIsAdjusting()){
+        Feature feature = (Feature)
+          table.getModel().getValueAt(table.getSelectedRow(), 1);
+        featureInfo.setText(feature.getInfo());
+      }
     }
   }
 }
