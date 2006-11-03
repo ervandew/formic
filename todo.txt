@@ -1,5 +1,4 @@
 Panels
-  - Feature List
   - Proxy setup
   - Feature Tree
   - Required software discovery / progress
