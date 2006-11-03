@@ -32,6 +32,8 @@ import javax.swing.JTextArea;
 
 import org.apache.commons.io.IOUtils;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.tools.ant.taskdefs.condition.Os;
 
 import org.formic.Installer;
@@ -78,6 +80,8 @@ public abstract class AbstractTemplateStep
   private String text;
   private String html;
 
+  private Object content;
+
   /**
    * Constructs the template step.
    */
@@ -116,9 +120,8 @@ public abstract class AbstractTemplateStep
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
 
-    JComponent content = null;
     if(html != null){
-      JEditorPane editor = new JEditorPane("text/html", processTemplate(html));
+      JEditorPane editor = new JEditorPane("text/html", StringUtils.EMPTY);
       editor.setEditable(false);
       editor.setOpaque(false);
       editor.addHyperlinkListener(new HyperlinkListener());
@@ -126,12 +129,12 @@ public abstract class AbstractTemplateStep
       editor.setFocusable(false);
       content = editor;
     }else{
-      JTextArea area = new JTextArea(processTemplate(text));
+      JTextArea area = new JTextArea();
       area.setEditable(false);
       content = area;
     }
 
-    panel.add(content, BorderLayout.CENTER);
+    panel.add((JComponent)content, BorderLayout.CENTER);
     return panel;
   }
 
@@ -144,13 +147,29 @@ public abstract class AbstractTemplateStep
     charvax.swing.JPanel panel = new charvax.swing.JPanel();
     panel.setLayout(new charva.awt.BorderLayout());
 
-    charvax.swing.JTextArea area =
-      new charvax.swing.JTextArea(processTemplate(text));
+    charvax.swing.JTextArea area = new charvax.swing.JTextArea();
     area.setColumns(ConsoleWizard.getFrame().getSize().width - 20);
     area.setEditable(false);
     panel.add(area, charva.awt.BorderLayout.CENTER);
 
+    content = area;
+
     return panel;
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#displayed()
+   */
+  public void displayed ()
+  {
+    if(content instanceof JEditorPane){
+      ((JEditorPane)content).setText(processTemplate(html));
+    }else if(content instanceof JTextArea){
+      ((JTextArea)content).setText(processTemplate(text));
+    }else if(content instanceof charvax.swing.JTextArea){
+      ((charvax.swing.JTextArea)content).setText(processTemplate(text));
+    }
   }
 
   /**
