@@ -76,7 +76,7 @@ public class HyperlinkListener
             }
           }
           if (browser == null){
-            throw new RuntimeException("Could not find web browser");
+            throw new RuntimeException("Could not find a web browser.");
           }
         }catch(IOException ioe){
           throw new RuntimeException(ioe);
