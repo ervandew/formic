@@ -3,6 +3,6 @@ Install Folder: $installer.context.getValue("installLocation.location")
 Features:
 #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
   #if($installer.context.getValue("${feature}"))
-  $installer.getString("${feature}.title")
+  $installer.getString("${feature}")
   #end
 #end

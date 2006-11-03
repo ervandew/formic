@@ -5,7 +5,7 @@
     <b>Features:</b>
     #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
       #if($installer.context.getValue("${feature}"))
-        <br>&nbsp;&nbsp;$installer.getString("${feature}.title")
+        <br>&nbsp;&nbsp;$installer.getString("${feature}")
       #end
     #end
   </body>
