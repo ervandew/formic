@@ -114,7 +114,7 @@ public class FeatureListStep
             PROPERTY_TYPE_INVALID, PROVIDER, FeatureProvider.class.getName()));
     }catch(ClassNotFoundException cnfe){
       throw new IllegalArgumentException(Installer.getString(
-            PROPERTY_CLASS_NOT_FOUND, PROVIDER, FeatureProvider.class.getName()));
+            PROPERTY_CLASS_NOT_FOUND, PROVIDER, provider));
     }catch(Exception e){
       throw new RuntimeException(e);
     }
