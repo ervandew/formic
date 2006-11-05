@@ -27,10 +27,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
-import java.io.InputStream;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Properties;
 
 import javax.swing.JCheckBox;
@@ -43,19 +43,9 @@ import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import foxtrot.Task;
-import foxtrot.Worker;
-
-import org.apache.commons.io.IOUtils;
-
 import org.apache.commons.lang.StringUtils;
 
 import org.formic.Installer;
-
-import org.formic.dialog.gui.GuiDialogs;
 
 import org.formic.event.gui.HyperlinkListener;
 
@@ -65,10 +55,6 @@ import org.formic.form.gui.GuiComponentFactory;
 import org.formic.form.gui.GuiForm;
 
 import org.formic.swing.ComponentTableCellRenderer;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * Step which allows the user to select features to be installed.
@@ -94,10 +80,9 @@ public class FeatureListStep
 {
   private static final String ICON = "/images/32x32/component_list.png";
 
-  protected static final String FEATURES_XML = "features.xml";
+  protected static final String PROVIDER = "provider";
 
-  private String featuresXml;
-  private List features;
+  private FeatureProvider provider;
   private JEditorPane featureInfo;
 
   /**
@@ -116,15 +101,22 @@ public class FeatureListStep
   {
     super.initProperties(properties);
 
-    featuresXml = getProperty(FEATURES_XML);
-    if(featuresXml == null){
+    String provider = getProperty(PROVIDER);
+    if(provider == null){
       throw new IllegalArgumentException(
-          Installer.getString(PROPERTY_REQUIRED, FEATURES_XML, getName()));
+          Installer.getString(PROPERTY_REQUIRED, PROVIDER, getName()));
     }
 
-    if (FeatureListStep.class.getResourceAsStream(featuresXml) == null){
-      throw new IllegalArgumentException(
-          Installer.getString(RESOURCE_NOT_FOUND, FEATURES_XML, getName()));
+    try{
+      this.provider = (FeatureProvider)Class.forName(provider).newInstance();
+    }catch(ClassCastException cce){
+      throw new IllegalArgumentException(Installer.getString(
+            PROPERTY_TYPE_INVALID, PROVIDER, FeatureProvider.class.getName()));
+    }catch(ClassNotFoundException cnfe){
+      throw new IllegalArgumentException(Installer.getString(
+            PROPERTY_CLASS_NOT_FOUND, PROVIDER, FeatureProvider.class.getName()));
+    }catch(Exception e){
+      throw new RuntimeException(e);
     }
   }
 
@@ -134,17 +126,17 @@ public class FeatureListStep
    */
   protected GuiForm initGuiForm ()
   {
-    initFeatures();
-
     GuiComponentFactory factory = new GuiComponentFactory(getName());
     GuiForm form = new GuiForm();
     form.setModel(factory.getFormModel());
+    provider.setGuiForm(form);
 
     featureInfo = new JEditorPane("text/html", StringUtils.EMPTY);
     featureInfo.setEditable(false);
     featureInfo.addHyperlinkListener(new HyperlinkListener());
 
-    JTable table = new JTable(features.size(), 2){
+    Feature[] features = provider.getFeatures();
+    JTable table = new JTable(features.length, 2){
       public Class getColumnClass (int column){
         return getValueAt(0, column).getClass();
       }
@@ -153,14 +145,24 @@ public class FeatureListStep
       }
     };
     table.setBackground(new javax.swing.JList().getBackground());
-    for (int ii = 0; ii < features.size(); ii++){
-      Feature feature = (Feature)features.get(ii);
-      JCheckBox box = factory.createCheckBox(feature.getProperty());
+    for (int ii = 0; ii < features.length; ii++){
+      final Feature feature = (Feature)features[ii];
+      final JCheckBox box = factory.createCheckBox(feature.getProperty());
       box.setSelected(feature.isEnabled());
 
-      feature.setTitle(box.getText());
+      feature.setTitle(Installer.getString(
+            getName() + '.' + feature.getProperty()));
       feature.setInfo(Installer.getString(
             getName() + "." + feature.getProperty() + ".html"));
+      feature.addPropertyChangeListener(new PropertyChangeListener(){
+        public void propertyChange (PropertyChangeEvent event){
+          if(Feature.ENABLED_PROPERTY.equals(event.getPropertyName())){
+            if(box.isSelected() != feature.isEnabled()){
+              box.setSelected(feature.isEnabled());
+            }
+          }
+        }
+      });
 
       box.setText(null);
       box.setBackground(table.getBackground());
@@ -207,45 +209,6 @@ public class FeatureListStep
   }
 
   /**
-   * Initializes the feature list.
-   */
-  public void initFeatures ()
-  {
-    setBusy(true);
-    try{
-      features = (List)Worker.post(new Task(){
-        public Object run ()
-          throws Exception
-        {
-          List list = new ArrayList();
-          DocumentBuilder builder =
-            DocumentBuilderFactory.newInstance().newDocumentBuilder();
-
-          InputStream xml = FeatureListStep.class.getResourceAsStream(featuresXml);
-          try{
-            Document document = builder.parse(xml);
-            NodeList children = document.getElementsByTagName("feature");
-            for (int ii = 0; ii < children.getLength(); ii++){
-              Element element = (Element)children.item(ii);
-              list.add(new Feature(
-                  element.getAttribute("property"),
-                  Boolean.valueOf(element.getAttribute("enabled")).booleanValue()
-              ));
-            }
-          }finally{
-            IOUtils.closeQuietly(xml);
-          }
-          return list;
-        }
-      });
-    }catch(Exception e){
-      GuiDialogs.showError(e);
-    }finally{
-      setBusy(false);
-    }
-  }
-
-  /**
    * {@inheritDoc}
    * @see AbstractStep#getIconPath()
    */
@@ -258,12 +221,15 @@ public class FeatureListStep
   /**
    * Represents an available feature.
    */
-  private class Feature
+  public static class Feature
   {
+    public static final String ENABLED_PROPERTY = "enabled";
+
     private String property;
     private String title;
     private String info;
     private boolean enabled;
+    private PropertyChangeSupport propertyChangeSupport;
 
     /**
      * Constructs a new instance.
@@ -276,6 +242,7 @@ public class FeatureListStep
     {
       this.property = property;
       this.enabled = enabled;
+      this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     /**
@@ -289,46 +256,6 @@ public class FeatureListStep
     }
 
     /**
-     * Gets the title for this instance.
-     *
-     * @return The title.
-     */
-    public String getTitle ()
-    {
-      return this.title;
-    }
-
-    /**
-     * Sets the title for this instance.
-     *
-     * @param title The title.
-     */
-    public void setTitle (String title)
-    {
-      this.title = title;
-    }
-
-    /**
-     * Gets the info for this instance.
-     *
-     * @return The info.
-     */
-    public String getInfo ()
-    {
-      return this.info;
-    }
-
-    /**
-     * Sets the info for this instance.
-     *
-     * @param info The info.
-     */
-    public void setInfo (String info)
-    {
-      this.info = info;
-    }
-
-    /**
      * Determines if this instance is enabled.
      *
      * @return The enabled.
@@ -339,6 +266,47 @@ public class FeatureListStep
     }
 
     /**
+     * Sets whether or not this instance is enabled.
+     *
+     * @param enabled True if enabled, false otherwise.
+     */
+    public void setEnabled (boolean enabled)
+    {
+      propertyChangeSupport.firePropertyChange(
+          ENABLED_PROPERTY, this.enabled, this.enabled = enabled);
+    }
+
+    /**
+     * Gets the info for this instance.
+     *
+     * @return The info.
+     */
+    private String getInfo ()
+    {
+      return this.info;
+    }
+
+    /**
+     * Sets the info for this instance.
+     *
+     * @param info The info.
+     */
+    private void setInfo (String info)
+    {
+      this.info = info;
+    }
+
+    /**
+     * Sets the title for this feature.
+     *
+     * @param title The title.
+     */
+    private void setTitle (String title)
+    {
+      this.title = title;
+    }
+
+    /**
      * {@inheritDoc}
      * @see Object#toString()
      */
@@ -346,6 +314,49 @@ public class FeatureListStep
     {
       return title;
     }
+
+    /**
+     * @see PropertyChangeSupport#addPropertyChangeListener(PropertyChangeListener)
+     */
+    public void addPropertyChangeListener (PropertyChangeListener listener)
+    {
+      propertyChangeSupport.addPropertyChangeListener(listener);
+    }
+
+    /**
+     * @see PropertyChangeSupport#removePropertyChangeListener(PropertyChangeListener)
+     */
+    public void removePropertyChangeListener (PropertyChangeListener listener)
+    {
+      propertyChangeSupport.removePropertyChangeListener(listener);
+    }
+  }
+
+  /**
+   * Defines a feature provider for determining available features.
+   */
+  public static interface FeatureProvider
+  {
+    /**
+     * Gets the available features.
+     *
+     * @return Array of Feature.
+     */
+    public Feature[] getFeatures ();
+
+    /**
+     * Sets the GuiForm where the feature list is to be displayed.
+     *
+     * @param form The GuiForm.
+     */
+    public void setGuiForm (GuiForm form);
+
+    /**
+     * Sets the ConsoleForm where the feature list is to be displayed.
+     *
+     * @param form The ConsoleForm.
+     */
+    public void setConsoleForm (ConsoleForm form);
   }
 
   /**
@@ -365,8 +376,10 @@ public class FeatureListStep
         int row = table.rowAtPoint(e.getPoint());
         int col = table.columnAtPoint(e.getPoint());
         if(col == 0){
-          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, col);
+          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
+          Feature feature = (Feature)table.getModel().getValueAt(row, 1);
           box.doClick();
+          feature.setEnabled(box.isSelected());
           table.revalidate();
           table.repaint();
         }
@@ -391,7 +404,10 @@ public class FeatureListStep
         int row = table.getSelectedRow();
         if(row != -1){
           JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
+          Feature feature = (Feature)table.getModel().getValueAt(row, 1);
           box.doClick();
+          feature.setEnabled(box.isSelected());
+          table.revalidate();
           table.revalidate();
           table.repaint();
         }

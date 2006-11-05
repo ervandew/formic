@@ -41,7 +41,7 @@
         </formic:branch>
 
         <formic:step name="featureList">
-          <property name="features.xml" value="/resources/features.xml"/>
+          <property name="provider" value="TestFeatureProvider"/>
         </formic:step>
 
         <formic:step name="summary"/>

@@ -44,6 +44,8 @@ public abstract class AbstractStep
   private static final String DEFAULT_ICON = "/images/32x32/wizard.png";
 
   protected static final String PROPERTY_REQUIRED = "property.required";
+  protected static final String PROPERTY_TYPE_INVALID = "property.type.invalid";
+  protected static final String PROPERTY_CLASS_NOT_FOUND = "property.class.not.found";
   protected static final String RESOURCE_REQUIRED = "resource.required";
   protected static final String RESOURCE_NOT_FOUND = "resource.not.found";
 
