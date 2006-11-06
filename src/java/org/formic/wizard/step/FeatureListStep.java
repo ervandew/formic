@@ -66,8 +66,8 @@ import org.formic.swing.ComponentTableCellRenderer;
  *     <th>Required</th><th>Possible Values</th><th>Default</th>
  *   </tr>
  *   <tr>
- *     <td>features.xml</td>
- *     <td>Classpath relative location of the features.xml file.</td>
+ *     <td>provider</td>
+ *     <td>Implementation of {@link #FeatureProvider}.</td>
  *     <td>true</td><td>&nbsp;</td><td>none</td>
  *   </tr>
  * </table>
@@ -147,13 +147,13 @@ public class FeatureListStep
     table.setBackground(new javax.swing.JList().getBackground());
     for (int ii = 0; ii < features.length; ii++){
       final Feature feature = (Feature)features[ii];
-      final JCheckBox box = factory.createCheckBox(feature.getProperty());
+      final JCheckBox box = factory.createCheckBox(feature.getKey());
       box.setSelected(feature.isEnabled());
 
       feature.setTitle(Installer.getString(
-            getName() + '.' + feature.getProperty()));
+            getName() + '.' + feature.getKey()));
       feature.setInfo(Installer.getString(
-            getName() + "." + feature.getProperty() + ".html"));
+            getName() + "." + feature.getKey() + ".html"));
       feature.addPropertyChangeListener(new PropertyChangeListener(){
         public void propertyChange (PropertyChangeEvent event){
           if(Feature.ENABLED_PROPERTY.equals(event.getPropertyName())){
@@ -225,7 +225,7 @@ public class FeatureListStep
   {
     public static final String ENABLED_PROPERTY = "enabled";
 
-    private String property;
+    private String key;
     private String title;
     private String info;
     private boolean enabled;
@@ -234,25 +234,25 @@ public class FeatureListStep
     /**
      * Constructs a new instance.
      *
-     * @param property The property for this instance.
+     * @param key The key for this instance.
      * @param enabled True if the feature is enabled by default, false
      * otherwise.
      */
-    public Feature (String property, boolean enabled)
+    public Feature (String key, boolean enabled)
     {
-      this.property = property;
+      this.key = key;
       this.enabled = enabled;
       this.propertyChangeSupport = new PropertyChangeSupport(this);
     }
 
     /**
-     * Gets the property for this instance.
+     * Gets the key for this instance.
      *
-     * @return The property.
+     * @return The key.
      */
-    public String getProperty ()
+    public String getKey()
     {
-      return this.property;
+      return this.key;
     }
 
     /**
@@ -407,7 +407,6 @@ public class FeatureListStep
           Feature feature = (Feature)table.getModel().getValueAt(row, 1);
           box.doClick();
           feature.setEnabled(box.isSelected());
-          table.revalidate();
           table.revalidate();
           table.repaint();
         }
