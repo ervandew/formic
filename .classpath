@@ -15,4 +15,5 @@
 	<classpathentry kind="lib" path="lib/wizard-0.1.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
 	<classpathentry kind="src" path="src/java"/>
+  <classpathentry kind="src" path="src/samples/src/java"/>
 </classpath>
