@@ -44,6 +44,10 @@
           <property name="provider" value="TestFeatureProvider"/>
         </formic:step>
 
+        <formic:step name="requirements">
+          <property name="provider" value="TestRequirementProvider"/>
+        </formic:step>
+
         <formic:step name="summary"/>
         <formic:step name="install"/>
         <formic:step name="finished"/>
