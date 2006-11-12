@@ -145,7 +145,7 @@ public class WizardBuilder
       if(next instanceof Step){
         Step step = (Step)next;
         Log.debug("Adding step '" + step.getName() +
-            " to path '" + _path.getName() + "'");
+            "' to path '" + _path.getName() + "'");
         SimplePath simplePath = new SimplePath(step.getName(),
             (org.pietschy.wizard.WizardStep)
             getStep(step.getName(), step.getProperties()));
