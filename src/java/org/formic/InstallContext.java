@@ -86,6 +86,8 @@ public class InstallContext
   public void setValue (Object key, Object value)
   {
     values.put(key, value);
+    Installer.getProject().setProperty(
+        key.toString(), value != null ? value.toString() : (String)value);
   }
 
   /**
