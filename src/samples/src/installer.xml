@@ -28,39 +28,29 @@
           <property name="discoverer" value="TestDiscoverer"/>
         </formic:step>
 
-        <!-- Go to branch 1 if branch == "branch" -->
-        <formic:branch path="branch1">
-          <equals arg1="${branch}" arg2="branch"/>
-        </formic:branch>
-
-        <!-- Go to branch 2 if branch != "branch" -->
-        <formic:branch path="branch2">
-          <not>
-            <equals arg1="${branch}" arg2="branch"/>
-          </not>
-        </formic:branch>
-
         <formic:step name="featureList">
           <property name="provider" value="TestFeatureProvider"/>
         </formic:step>
 
-        <formic:step name="requirements">
-          <property name="provider" value="TestRequirementProvider"/>
-        </formic:step>
+        <!-- Go to requirements branch 1 if feature == "branch" -->
+        <formic:branch path="branch_requirements">
+          <or>
+            <istrue value="featureList.feature.three"/>
+            <istrue value="featureList.feature.four"/>
+            <istrue value="featureList.feature.five"/>
+          </or>
+        </formic:branch>
 
         <formic:step name="summary"/>
         <formic:step name="install"/>
         <formic:step name="finished"/>
       </formic:path>
 
-      <!-- first possible branch -->
-      <formic:path name="branch1">
-        <formic:step name="license1"/>
-      </formic:path>
-
-      <!-- second possible branch -->
-      <formic:path name="branch2">
-        <formic:step name="license2"/>
+      <!-- requirments branch -->
+      <formic:path name="branch_requirements">
+        <formic:step name="requirements">
+          <property name="provider" value="TestRequirementProvider"/>
+        </formic:step>
       </formic:path>
 
     </formic:installer>
