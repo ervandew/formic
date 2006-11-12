@@ -33,6 +33,9 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
+
 import javax.swing.table.TableModel;
 
 import foxtrot.Task;
@@ -165,10 +168,8 @@ public class RequirementsValidationStep
     guiTable.setShowVerticalLines(false);
     guiTable.setDefaultRenderer(JLabel.class, new ComponentTableCellRenderer());
 
-    //guiTable.addKeyListener(new FeatureListKeyListener());
-    //guiTable.addMouseListener(new FeatureListMouseListener());
-    //guiTable.getSelectionModel().addListSelectionListener(
-    //    new FeatureListSelectionListener(guiTable));
+    guiTable.getSelectionModel().addListSelectionListener(
+        new RequirementsSelectionListener(guiTable));
 
     guiTable.setRowSelectionInterval(0, 0);
 
@@ -380,7 +381,7 @@ public class RequirementsValidationStep
 
     /**
      * Validates the supplied Requirement returning one of {@link #OK},
-     * {@link #WARN}, or {@link FAIL} depending on whether the requirment was
+     * {@link #WARN}, or {@link FAIL} depending on whether the requirement was
      * satisfied, not satisfied but can be ignores, or not satisified and
      * installer must not proceed.
      *
@@ -402,5 +403,36 @@ public class RequirementsValidationStep
      * @param form The ConsoleForm.
      */
     public void setConsoleForm (ConsoleForm form);
+  }
+
+  /**
+   * List selection listener responsible for updating requirement info text
+   * area.
+   */
+  private class RequirementsSelectionListener
+    implements ListSelectionListener
+  {
+    private JTable table;
+
+    /**
+     * Constructs a new instance.
+     */
+    public RequirementsSelectionListener (JTable table)
+    {
+      this.table = table;
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see ListSelectionListener#valueChanged(ListSelectionEvent)
+     */
+    public void valueChanged (ListSelectionEvent e)
+    {
+      if(!e.getValueIsAdjusting()){
+        Requirement requirement = (Requirement)
+          table.getModel().getValueAt(table.getSelectedRow(), 0);
+        requirementInfo.setText(requirement.getInfo());
+      }
+    }
   }
 }
