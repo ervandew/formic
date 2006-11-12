@@ -65,9 +65,6 @@ public class Branch
   public boolean eval ()
     throws BuildException
   {
-    Condition condition = (Condition)getConditions().nextElement();
-    boolean result = condition.eval();
-
-    return result;
+    return ((Condition)getConditions().nextElement()).eval();
   }
 }
