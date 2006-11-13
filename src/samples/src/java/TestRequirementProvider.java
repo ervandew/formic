@@ -1,10 +1,13 @@
 
+import org.formic.Installer;
+
 import org.formic.form.console.ConsoleForm;
 
 import org.formic.form.gui.GuiForm;
 
-import org.formic.wizard.step.RequirementsValidationStep;
 import org.formic.wizard.step.RequirementsValidationStep.Requirement;
+
+import org.formic.wizard.step.RequirementsValidationStep;
 
 public class TestRequirementProvider
   implements RequirementsValidationStep.RequirementProvider
@@ -17,7 +20,14 @@ public class TestRequirementProvider
     Requirement[] requirements = new Requirement[3];
     requirements[0] = new Requirement("requirement.one");
     requirements[1] = new Requirement("requirement.two");
-    requirements[2] = new Requirement("requirement.three");
+    boolean three = ((Boolean)
+        Installer.getContext().getValue("featureList.feature.three"))
+      .booleanValue();
+    if(three){
+      requirements[2] = new Requirement("requirement.fail");
+    }else{
+      requirements[2] = new Requirement("requirement.three");
+    }
     return requirements;
   }
 
@@ -26,6 +36,9 @@ public class TestRequirementProvider
     try{
       Thread.sleep(2000);
     }catch(Exception ignore){
+    }
+    if("requirement.fail".equals(requirement.getKey())){
+      return FAIL;
     }
     return OK;
   }

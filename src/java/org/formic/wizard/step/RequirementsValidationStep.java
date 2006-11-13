@@ -36,6 +36,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
 import foxtrot.Task;
@@ -140,8 +141,7 @@ public class RequirementsValidationStep
     requirementInfo.setEditable(false);
     requirementInfo.addHyperlinkListener(new HyperlinkListener());
 
-    Requirement[] requirements = provider.getRequirements();
-    guiTable = new JTable(requirements.length, 2){
+    guiTable = new JTable(1, 2){
       public Class getColumnClass (int column){
         return getValueAt(0, column).getClass();
       }
@@ -149,20 +149,9 @@ public class RequirementsValidationStep
         return false;
       }
     };
+
     guiTable.setBackground(new javax.swing.JList().getBackground());
-    for (int ii = 0; ii < requirements.length; ii++){
-      Requirement requirement = (Requirement)requirements[ii];
-      requirement.setTitle(Installer.getString(
-            getName() + '.' + requirement.getKey()));
-      requirement.setInfo(Installer.getString(
-            getName() + "." + requirement.getKey() + ".html"));
-
-      guiTable.setValueAt(requirement, ii, 0);
-      guiTable.setValueAt(new JLabel(), ii, 1);
-    }
-
     guiTable.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    guiTable.getColumnModel().getColumn(1).setMaxWidth(20);
     guiTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     guiTable.setShowHorizontalLines(false);
     guiTable.setShowVerticalLines(false);
@@ -199,16 +188,39 @@ public class RequirementsValidationStep
 
   /**
    * {@inheritDoc}
+   * @see org.formic.wizard.WizardStep#prepare()
+   */
+  public void prepare ()
+  {
+    Requirement[] requirements = provider.getRequirements();
+    DefaultTableModel model = new DefaultTableModel(requirements.length, 2);
+    for (int ii = 0; ii < requirements.length; ii++){
+      Requirement requirement = (Requirement)requirements[ii];
+      requirement.setTitle(Installer.getString(
+            getName() + '.' + requirement.getKey()));
+      requirement.setInfo(Installer.getString(
+            getName() + '.' + requirement.getKey() + ".html"));
+
+      model.setValueAt(requirement, ii, 0);
+      model.setValueAt(new JLabel(), ii, 1);
+    }
+    guiTable.setModel(model);
+    guiTable.getColumnModel().getColumn(1).setMaxWidth(20);
+  }
+
+  /**
+   * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
   public void displayed ()
   {
     setBusy(true);
     try{
-      Worker.post(new Task(){
+      Boolean valid = (Boolean)Worker.post(new Task(){
         public Object run ()
           throws Exception
         {
+          boolean valid = true;
           TableModel model = guiTable.getModel();
           for (int ii = 0; ii < model.getRowCount(); ii++){
             final JLabel label = (JLabel)model.getValueAt(ii, 1);
@@ -230,6 +242,7 @@ public class RequirementsValidationStep
                 icon = warnIcon;
                 break;
               default:
+                valid = false;
                 icon = failedIcon;
             }
             final ImageIcon finalIcon = icon;
@@ -241,11 +254,10 @@ public class RequirementsValidationStep
               }
             });
           }
-
-          return null;
+          return Boolean.valueOf(valid);
         }
       });
-      setValid(true);
+      setValid(valid.booleanValue());
     }catch(Exception e){
       GuiDialogs.showError(e);
       setValid(false);
@@ -429,9 +441,14 @@ public class RequirementsValidationStep
     public void valueChanged (ListSelectionEvent e)
     {
       if(!e.getValueIsAdjusting()){
-        Requirement requirement = (Requirement)
-          table.getModel().getValueAt(table.getSelectedRow(), 0);
-        requirementInfo.setText(requirement.getInfo());
+        int row = table.getSelectedRow();
+        if(row >= 0){
+          Requirement requirement = (Requirement)
+            table.getModel().getValueAt(row, 0);
+          if(requirement != null){
+            requirementInfo.setText(requirement.getInfo());
+          }
+        }
       }
     }
   }
