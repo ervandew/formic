@@ -1,3 +1,8 @@
+Upgrade
+  - backport-util-concurrent from 2.2 to 3.0
+  - charva from 1.1.2 to 1.1.4
+  - commons-lang from 2.1 to 2.2
+
 Panels
   - Proxy setup
   - Feature Tree
