@@ -1,16 +1,16 @@
 #!/bin/sh
 
 BACKUP_DIR=`dirname $0`
-BACKUP_DIR="$BACKUP_DIR/../backup"
+BACKUP_DIR="$BACKUP_DIR/../backup/formic"
 
 if [ ! -d $BACKUP_DIR ]; then
   mkdir -p $BACKUP_DIR
 fi
 cd $BACKUP_DIR
 
-rsync -av rsync://formic.cvs.sourceforge.net/cvsroot/formic/* .
-
-tar zcvf backup-cvs-`date +%Y%m%d`.tar.gz CVSROOT formic
-rm -Rf CVSROOT formic
+rsync -av formic.svn.sourceforge.net::svn/formic/* .
+tar zcvf ../formic-backup-svn-`date +%Y%m%d`.tar.gz *
 
 cd -
+
+rm -rf $BACKUP_DIR
