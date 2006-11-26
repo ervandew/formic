@@ -83,6 +83,8 @@ public class RequirementsValidationStep
   protected static final String PROVIDER = "provider";
 
   private RequirementProvider provider;
+
+  private GuiForm guiForm;
   private JEditorPane requirementInfo;
   private JTable guiTable;
 
@@ -162,8 +164,8 @@ public class RequirementsValidationStep
 
     guiTable.setRowSelectionInterval(0, 0);
 
-    GuiForm form = new GuiForm();
-    JPanel panel = form.getContentPanel();
+    guiForm = new GuiForm();
+    JPanel panel = guiForm.getContentPanel();
     panel.setLayout(new BorderLayout());
     JPanel container = new JPanel(new BorderLayout());
     container.add(guiTable, BorderLayout.CENTER);
@@ -174,7 +176,7 @@ public class RequirementsValidationStep
     infoScroll.setPreferredSize(new Dimension(0, 50));
     panel.add(infoScroll, BorderLayout.SOUTH);
 
-    return form;
+    return guiForm;
   }
 
   /**
@@ -214,6 +216,9 @@ public class RequirementsValidationStep
    */
   public void displayed ()
   {
+    guiForm.showInfoMessage(null);
+    requirementInfo.setText(null);
+
     setBusy(true);
     try{
       Boolean valid = (Boolean)Worker.post(new Task(){
@@ -233,22 +238,25 @@ public class RequirementsValidationStep
               }
             });
             Requirement requirement = (Requirement)model.getValueAt(ii, 0);
-            ImageIcon icon = null;
-            switch(provider.validate(requirement)){
-              case RequirementProvider.OK:
-                icon = okIcon;
-                break;
-              case RequirementProvider.WARN:
-                icon = warnIcon;
-                break;
-              default:
-                valid = false;
-                icon = failedIcon;
+            final RequirementProvider.Status status =
+              provider.validate(requirement);
+            requirement.setStatus(status);
+            if(status.getCode() == RequirementProvider.FAIL){
+              valid = false;
             }
-            final ImageIcon finalIcon = icon;
+
             SwingUtilities.invokeLater(new Runnable(){
               public void run (){
-                label.setIcon(finalIcon);
+                switch(status.getCode()){
+                  case RequirementProvider.OK:
+                    label.setIcon(okIcon);
+                    break;
+                  case RequirementProvider.WARN:
+                    label.setIcon(warnIcon);
+                    break;
+                  default:
+                    label.setIcon(failedIcon);
+                }
                 guiTable.revalidate();
                 guiTable.repaint();
               }
@@ -293,6 +301,7 @@ public class RequirementsValidationStep
     private String key;
     private String title;
     private String info;
+    private RequirementProvider.Status status;
 
     /**
      * Constructs a new instance.
@@ -355,6 +364,26 @@ public class RequirementsValidationStep
     }
 
     /**
+     * Gets the status for this instance.
+     *
+     * @return The status.
+     */
+    public RequirementProvider.Status getStatus ()
+    {
+      return this.status;
+    }
+
+    /**
+     * Sets the status for this instance.
+     *
+     * @param status The status.
+     */
+    public void setStatus (RequirementProvider.Status status)
+    {
+      this.status = status;
+    }
+
+    /**
      * {@inheritDoc}
      * @see Object#toString()
      */
@@ -385,6 +414,11 @@ public class RequirementsValidationStep
     public static final int FAIL = 3;
 
     /**
+     * Status with a code of OK and no message.
+     */
+    public static final Status OK_STATUS = new Status(OK, StringUtils.EMPTY);
+
+    /**
      * Gets the requirements to be validated.
      *
      * @return Array of Requirement.
@@ -392,15 +426,15 @@ public class RequirementsValidationStep
     public Requirement[] getRequirements ();
 
     /**
-     * Validates the supplied Requirement returning one of {@link #OK},
-     * {@link #WARN}, or {@link FAIL} depending on whether the requirement was
-     * satisfied, not satisfied but can be ignores, or not satisified and
-     * installer must not proceed.
+     * Validates the supplied Requirement returning a status with a code of
+     * either {@link #OK}, {@link #WARN}, or {@link FAIL} depending on whether
+     * the requirement was satisfied, not satisfied but can be ignores, or not
+     * satisified and installer must not proceed.
      *
      * @param requirement The requirement to validate.
      * @return The status of the validation.
      */
-    public int validate (Requirement requirement);
+    public Status validate (Requirement requirement);
 
     /**
      * Sets the GuiForm where the feature list is to be displayed.
@@ -415,6 +449,47 @@ public class RequirementsValidationStep
      * @param form The ConsoleForm.
      */
     public void setConsoleForm (ConsoleForm form);
+
+    /**
+     * Represents a status returned when validating a requirement.
+     */
+    public static class Status
+    {
+      private int code;
+      private String message;
+
+      /**
+       * Constructs a new instance.
+       *
+       * @param code The code for this instance.
+       * @param message The message for this instance.
+       */
+      public Status (int code, String message)
+      {
+        this.code = code;
+        this.message = message;
+      }
+
+      /**
+       * Gets the code for this instance.
+       *
+       * @return The code.
+       */
+      public int getCode ()
+      {
+        return this.code;
+      }
+
+      /**
+       * Gets the message for this instance.
+       *
+       * @return The message.
+       */
+      public String getMessage ()
+      {
+        return this.message;
+      }
+    }
   }
 
   /**
@@ -447,6 +522,19 @@ public class RequirementsValidationStep
             table.getModel().getValueAt(row, 0);
           if(requirement != null){
             requirementInfo.setText(requirement.getInfo());
+            if(requirement.getStatus() != null){
+              switch(requirement.getStatus().getCode()){
+                case RequirementProvider.OK:
+                  guiForm.showInfoMessage(requirement.getStatus().getMessage());
+                  break;
+                case RequirementProvider.WARN:
+                  guiForm.showWarningMessage(
+                      requirement.getStatus().getMessage());
+                  break;
+                default:
+                  guiForm.showErrorMessage(requirement.getStatus().getMessage());
+              }
+            }
           }
         }
       }

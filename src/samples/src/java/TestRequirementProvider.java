@@ -31,16 +31,16 @@ public class TestRequirementProvider
     return requirements;
   }
 
-  public int validate (Requirement requirement)
+  public Status validate (Requirement requirement)
   {
     try{
       Thread.sleep(2000);
     }catch(Exception ignore){
     }
     if("requirement.fail".equals(requirement.getKey())){
-      return FAIL;
+      return new Status(FAIL, "A test failure message.");
     }
-    return OK;
+    return OK_STATUS;
   }
 
   public void setGuiForm (GuiForm form)
