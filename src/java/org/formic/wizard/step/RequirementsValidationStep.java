@@ -265,6 +265,9 @@ public class RequirementsValidationStep
           return Boolean.valueOf(valid);
         }
       });
+      if(valid.booleanValue()){
+        guiForm.showInfoMessage(Installer.getString("requirements.satisfied"));
+      }
       setValid(valid.booleanValue());
     }catch(Exception e){
       GuiDialogs.showError(e);
