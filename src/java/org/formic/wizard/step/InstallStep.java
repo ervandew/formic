@@ -82,16 +82,16 @@ public class InstallStep
   private static final Pattern STACK_ELEMENT =
     Pattern.compile("^\\s+at .*(.*)$");
 
-  private JProgressBar guiOverallProgress;
-  private JProgressBar guiTaskProgress;
-  private JLabel guiOverallLabel;
-  private JLabel guiTaskLabel;
+  protected JProgressBar guiOverallProgress;
+  protected JProgressBar guiTaskProgress;
+  protected JLabel guiOverallLabel;
+  protected JLabel guiTaskLabel;
   private JButton guiShowErrorButton;
 
-  private charvax.swing.JProgressBar consoleOverallProgress;
-  private charvax.swing.JProgressBar consoleTaskProgress;
-  private charvax.swing.JLabel consoleOverallLabel;
-  private charvax.swing.JLabel consoleTaskLabel;
+  protected charvax.swing.JProgressBar consoleOverallProgress;
+  protected charvax.swing.JProgressBar consoleTaskProgress;
+  protected charvax.swing.JLabel consoleOverallLabel;
+  protected charvax.swing.JLabel consoleTaskLabel;
   private charvax.swing.JButton consoleShowErrorButton;
 
   private List tasks = new ArrayList();
@@ -140,7 +140,7 @@ public class InstallStep
     JPanel panel = new JPanel();
     panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-    panel.setBorder(BorderFactory.createEmptyBorder(50, 125, 10, 125));
+    panel.setBorder(BorderFactory.createEmptyBorder(50, 25, 10, 25));
 
     panel.add(guiOverallProgress);
     panel.add(Box.createRigidArea(new Dimension(0, 5)));
@@ -274,10 +274,7 @@ public class InstallStep
         public Object run ()
           throws Exception
         {
-          Target target = (Target)
-            Installer.getProject().getTargets().get(INSTALL_TARGET);
-          registerListener(target);
-          execute(target);
+          execute();
 
           guiOverallProgress.setValue(guiOverallProgress.getMaximum());
           guiOverallLabel.setText(Installer.getString("install.done"));
@@ -316,10 +313,7 @@ public class InstallStep
       public void run ()
       {
         try{
-          Target target = (Target)
-            Installer.getProject().getTargets().get(INSTALL_TARGET);
-          registerListener(target);
-          execute(target);
+          execute();
 
           consoleOverallProgress.setValue(consoleOverallProgress.getMaximum());
           consoleOverallLabel.setText(Installer.getString("install.done"));
@@ -342,6 +336,18 @@ public class InstallStep
         }
       }
     }.start();
+  }
+
+  /**
+   * Executes the installation.
+   */
+  protected void execute ()
+    throws Exception
+  {
+    Target target = (Target)
+      Installer.getProject().getTargets().get(INSTALL_TARGET);
+    registerListener(target);
+    execute(target);
   }
 
   /**
