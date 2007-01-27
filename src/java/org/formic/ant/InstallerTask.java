@@ -53,6 +53,7 @@ public class InstallerTask
   private String steps;
   private List paths = new ArrayList();
   private Properties properties = new Properties();
+  private boolean completed;
 
   /**
    * Executes this task.
@@ -77,17 +78,40 @@ public class InstallerTask
           console != null ? console : "false");
     }
 
-    boolean completed = Installer.run(getProperties(), paths);
+    Runtime.getRuntime().addShutdownHook(new Thread(){
+      public void run () {
+        // run canceled target if install canceled and target exists.
+        if(!isCompleted()){
+          canceled();
+        }
+      }
+    });
+
+    completed = Installer.run(getProperties(), paths);
     if(property != null && completed){
       getProject().setProperty(property, String.valueOf(completed));
     }
+  }
 
-    // run canceled target if install canceled and target exists.
-    if(!completed){
-      Target target = (Target)getProject().getTargets().get(CANCEL_TARGET);
-      if(target != null){
-        target.execute();
-      }
+  /**
+   * Determines if the installer completed without being canceled.
+   *
+   * @return True if completed, false if canceled or aborted.
+   */
+  private boolean isCompleted ()
+  {
+    return completed;
+  }
+
+  /**
+   * Invoked if the installer is canceled, which in turn executes the 'canceled'
+   * target of the installer script.
+   */
+  private void canceled ()
+  {
+    Target target = (Target)getProject().getTargets().get(CANCEL_TARGET);
+    if(target != null){
+      target.execute();
     }
   }
 
