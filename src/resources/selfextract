@@ -28,6 +28,12 @@ echo ""
 # create a temp directory to extract to.
 WRKDIR=`mktemp -d /tmp/formic_XXXXXX`
 
+# trap signals
+trap cleanup 0 1 2 3 6
+cleanup () {
+  rm -rf $WRKDIR
+}
+
 # determine start of archive
 START=`awk '/^__BEGIN_ARCHIVE__/ { print NR + 1; exit 0; }' $0`
 
@@ -48,7 +54,6 @@ EXIT_CODE=$?
 
 # delete the temp files
 cd $PREV
-rm -rf $WRKDIR
 
 if [ $EXIT_CODE -gt 0 ]; then
   echo "Installer failed.  See /tmp/install.log for details."
