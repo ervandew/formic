@@ -73,6 +73,6 @@ public class IsTrue extends ProjectComponent implements Condition {
         }
         String val = getProject().getProperty(value);
         val = val != null ? val : value;
-        return Boolean.parseBoolean(val);
+        return "true".equalsIgnoreCase(val);
     }
 }

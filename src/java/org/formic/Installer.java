@@ -86,7 +86,8 @@ public class Installer
       Properties properties, List paths)
   {
     logger.info("Running Installer.");
-    consoleMode = Boolean.parseBoolean(properties.getProperty("formic.console"));
+    consoleMode = "true".equalsIgnoreCase(
+        properties.getProperty("formic.console"));
     if(!consoleMode){
       I18n.setBundle(getResourceBundle());
       GuiDialogs.setBundle(getResourceBundle());

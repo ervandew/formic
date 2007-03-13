@@ -118,7 +118,7 @@ public class ConsoleWizard
     int width = Installer.getDimension().width / 7;
     int height = Installer.getDimension().height / 12;
 
-    if(!Boolean.parseBoolean(Installer.getString("console.support", "true"))){
+    if(!"true".equalsIgnoreCase(Installer.getString("console.support", "true"))){
       error = Installer.getString("console.not.supported");
     }else{
       if(screen.width < width){
