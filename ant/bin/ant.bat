@@ -129,4 +129,4 @@ if exist "%HOME%\antrc_post.bat" call "%HOME%\antrc_post.bat"
 rem CHANGE: Exit with exit code.
 exit %ERRORLEVEL%
 
-rem vim:fileformats=unix,dos:fileformat=dos
+rem vim:fileformats=unix,dos:fileformat=dos:ssop-=unix

@@ -24,3 +24,7 @@ set FORMIC_HOME=%~dp0..
 set ANT_HOME="%FORMIC_HOME%\ant"
 
 "%ANT_HOME%\bin\ant" %*
+
+exit %EXIT_CODE%
+
+rem vim:fileformats=unix,dos:fileformat=dos:ssop-=unix
