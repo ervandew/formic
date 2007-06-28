@@ -288,18 +288,28 @@ public class InstallStep
       setValid(true);
       setCancelEnabled(false);
     }catch(Exception e){
-      error = e;
-      error.printStackTrace();
-      GuiDialogs.showError(error);
-      guiOverallLabel.setText(
-          INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
-      guiShowErrorButton.setVisible(true);
-      setValid(false);
+      setError(e);
     }finally{
       setBusy(false);
       guiTaskProgress.setIndeterminate(false);
       Installer.getProject().removeBuildListener(this);
     }
+  }
+
+  /**
+   * Invoked when an error occurs during execution of this step.
+   *
+   * @param error The Throwable error that occured.
+   */
+  protected void setError (Throwable error)
+  {
+    this.error = error;
+    error.printStackTrace();
+    GuiDialogs.showError(error);
+    guiOverallLabel.setText(
+        INSTALL_TARGET + ": " + Installer.getString("error.dialog.text"));
+    guiShowErrorButton.setVisible(true);
+    setValid(false);
   }
 
   /**
