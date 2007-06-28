@@ -44,7 +44,8 @@ tail -n +$START $0 | gzip -dc | tar x -C $WRKDIR
 PREV=`pwd`
 cd $WRKDIR
 
-if [ -z "$DISPLAY" ] ; then
+IS_MAC=`which sw_vers 2> /dev/null`
+if [ -z "$DISPLAY" -a -z "$IS_MAC" ] ; then
   ./formic ${formic.action} -Dformic.console=true $@
 else
   ./formic ${formic.action} $@
