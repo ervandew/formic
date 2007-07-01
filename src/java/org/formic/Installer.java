@@ -92,7 +92,7 @@ public class Installer
       I18n.setBundle(getResourceBundle());
       GuiDialogs.setBundle(getResourceBundle());
 
-      setLookAndFeel(properties);
+      setLookAndFeel();
 
       String imagePath = getString("wizard.icon", "/images/16x16/wizard.png");
       if(imagePath != null){
@@ -244,7 +244,7 @@ public class Installer
   /**
    * Sets the look and feel.
    */
-  private static void setLookAndFeel (Properties properties)
+  private static void setLookAndFeel ()
   {
     try {
       String laf = getString("wizard.laf",
@@ -253,8 +253,7 @@ public class Installer
       if(laf != null){
         // plastic settings
         if(laf.startsWith("com.jgoodies.looks.plastic")){
-          String theme = properties.getProperty("wizard.theme");
-
+          String theme = getString("wizard.theme");
           if(theme != null){
             PlasticLookAndFeel.setPlasticTheme(
                 (PlasticTheme)Class.forName(theme).newInstance());
