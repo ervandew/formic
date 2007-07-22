@@ -25,6 +25,13 @@ public class TestFeatureProvider
     false,
     false,
   };
+  private static final String[][] FEATURES_DEPENDS = {
+    null,
+    null,
+    {"feature.two"},
+    null,
+    {"feature.three", "feature.four"},
+  };
 
   private GuiForm guiForm;
   private ConsoleForm consoleForm;
@@ -35,11 +42,11 @@ public class TestFeatureProvider
       new Feature[FEATURES.length];
     for (int ii = 0; ii < FEATURES.length; ii++){
       features[ii] = new Feature(
-          FEATURES[ii], FEATURES_ENABLED[ii]);
+          FEATURES[ii], FEATURES_ENABLED[ii], FEATURES_DEPENDS[ii]);
     }
 
     // make feature 5 require feature 4
-    features[3].addPropertyChangeListener(new PropertyChangeListener(){
+    /*features[3].addPropertyChangeListener(new PropertyChangeListener(){
       public void propertyChange (PropertyChangeEvent event){
         if(Feature.ENABLED_PROPERTY.equals(event.getPropertyName())){
           Feature feature = (Feature)event.getSource();
@@ -53,7 +60,7 @@ public class TestFeatureProvider
           }
         }
       }
-    });
+    });*/
     return features;
   }
 

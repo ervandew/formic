@@ -31,6 +31,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.JCheckBox;
@@ -84,6 +86,7 @@ public class FeatureListStep
 
   private FeatureProvider provider;
   private JEditorPane featureInfo;
+  private Map featureMap = new HashMap();
 
   /**
    * Constructs the step.
@@ -149,6 +152,8 @@ public class FeatureListStep
       final Feature feature = (Feature)features[ii];
       final JCheckBox box = factory.createCheckBox(feature.getKey());
       box.setSelected(feature.isEnabled());
+      box.putClientProperty("feature", feature);
+      featureMap.put(feature.getKey(), box);
 
       feature.setTitle(Installer.getString(
             getName() + '.' + feature.getKey()));
@@ -230,6 +235,7 @@ public class FeatureListStep
     private String info;
     private boolean enabled;
     private PropertyChangeSupport propertyChangeSupport;
+    private String[] dependencies;
 
     /**
      * Constructs a new instance.
@@ -243,6 +249,21 @@ public class FeatureListStep
       this.key = key;
       this.enabled = enabled;
       this.propertyChangeSupport = new PropertyChangeSupport(this);
+    }
+
+    /**
+     * Constructs a new instance.
+     *
+     * @param key The key for this instance.
+     * @param enabled True if the feature is enabled by default, false
+     * otherwise.
+     * @param dependencies Array of other feature keys, that are required for
+     * this feature to be installed.
+     */
+    public Feature (String key, boolean enabled, String[] dependencies)
+    {
+      this(key, enabled);
+      this.dependencies = dependencies;
     }
 
     /**
@@ -274,6 +295,26 @@ public class FeatureListStep
     {
       propertyChangeSupport.firePropertyChange(
           ENABLED_PROPERTY, this.enabled, this.enabled = enabled);
+    }
+
+    /**
+     * Gets the dependencies for this instance.
+     *
+     * @return The dependencies.
+     */
+    public String[] getDependencies ()
+    {
+      return this.dependencies;
+    }
+
+    /**
+     * Sets the dependencies for this instance.
+     *
+     * @param dependencies The dependencies.
+     */
+    public void setDependencies (String[] dependencies)
+    {
+      this.dependencies = dependencies;
     }
 
     /**
@@ -380,8 +421,33 @@ public class FeatureListStep
           Feature feature = (Feature)table.getModel().getValueAt(row, 1);
           box.doClick();
           feature.setEnabled(box.isSelected());
+
+          processDependencies(feature);
+
           table.revalidate();
           table.repaint();
+        }
+      }
+    }
+
+    private void processDependencies (Feature feature)
+    {
+      String[] dependencies = feature.getDependencies();
+      if (dependencies != null){
+        for(int ii = 0; ii < dependencies.length; ii++){
+          String key = dependencies[ii];
+          JCheckBox box = (JCheckBox)featureMap.get(key);
+          if(feature.isEnabled()){
+            box.setEnabled(false);
+            box.setSelected(true);
+            Feature dfeature = (Feature)box.getClientProperty("feature");
+            if(!dfeature.isEnabled()){
+              dfeature.setEnabled(true);
+              processDependencies(dfeature);
+            }
+          }else{
+            box.setEnabled(true);
+          }
         }
       }
     }
