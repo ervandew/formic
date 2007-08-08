@@ -148,10 +148,10 @@ public class FeatureListStep
       }
     };
     table.setBackground(new javax.swing.JList().getBackground());
+
     for (int ii = 0; ii < features.length; ii++){
       final Feature feature = (Feature)features[ii];
       final JCheckBox box = factory.createCheckBox(feature.getKey());
-      box.setSelected(feature.isEnabled());
       box.putClientProperty("feature", feature);
       featureMap.put(feature.getKey(), box);
 
@@ -176,6 +176,16 @@ public class FeatureListStep
       table.setValueAt(feature, ii, 1);
     }
 
+    FeatureListMouseListener mouseListener = new FeatureListMouseListener();
+    for (int ii = 0; ii < features.length; ii++){
+      Feature feature = (Feature)features[ii];
+      if(feature.isEnabled()){
+        JCheckBox box = (JCheckBox)featureMap.get(feature.getKey());
+        box.setSelected(true);
+        mouseListener.processDependencies(feature);
+      }
+    }
+
     table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
     table.getColumnModel().getColumn(0).setMaxWidth(20);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -184,7 +194,7 @@ public class FeatureListStep
     table.setDefaultRenderer(JCheckBox.class, new ComponentTableCellRenderer());
 
     table.addKeyListener(new FeatureListKeyListener());
-    table.addMouseListener(new FeatureListMouseListener());
+    table.addMouseListener(mouseListener);
     table.getSelectionModel().addListSelectionListener(
         new FeatureListSelectionListener(table));
 
@@ -430,7 +440,7 @@ public class FeatureListStep
       }
     }
 
-    private void processDependencies (Feature feature)
+    public void processDependencies (Feature feature)
     {
       String[] dependencies = feature.getDependencies();
       if (dependencies != null){
