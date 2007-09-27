@@ -315,7 +315,8 @@ public class GuiForm
         ValidationMessage message = null;
         if(Boolean.FALSE == evt.getNewValue()){
           String key = field.getValidator().getErrorMessage();
-          String display = Installer.getString(field.getName(), field.getName());
+          String display = Installer.getStringOrDefault(
+              field.getName(), field.getName());
           message = new SimpleValidationMessage(
               Installer.getString(key, (Object)display, field.getValue()),
               Severity.ERROR, field.getName());

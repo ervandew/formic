@@ -118,18 +118,14 @@ public class ConsoleWizard
     int width = Installer.getDimension().width / 7;
     int height = Installer.getDimension().height / 12;
 
-    if(!"true".equalsIgnoreCase(Installer.getString("console.support", "true"))){
-      error = Installer.getString("console.not.supported");
-    }else{
-      if(screen.width < width){
-        error = Installer.getString("console.width.min",
-            new Integer(screen.width), new Integer(width));
-      }
+    if(screen.width < width){
+      error = Installer.getString("console.width.min",
+          new Integer(screen.width), new Integer(width));
+    }
 
-      if(screen.height < height){
-        error = Installer.getString("console.height.min",
-            new Integer(screen.height), new Integer(height));
-      }
+    if(screen.height < height){
+      error = Installer.getString("console.height.min",
+          new Integer(screen.height), new Integer(height));
     }
 
     Dimension dimension = new Dimension(width, height);
@@ -404,7 +400,7 @@ public class ConsoleWizard
     {
       setLayout(new BorderLayout());
 
-      String message = Installer.getString(ws.getName() + ".busy", BUSY_TEXT);
+      String message = Installer.getStringOrDefault(ws.getName() + ".busy", BUSY_TEXT);
       JTextArea messageArea = new JTextArea(WordUtils.wrap(message, 50), 3, 50);
       messageArea.setEditable(false);
 

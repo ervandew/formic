@@ -54,8 +54,8 @@ public class ConsoleDialogs
    */
   public static boolean showConfirm (String title, String message)
   {
-    String t = Installer.getString(title, title);
-    String m = Installer.getString(message, message);
+    String t = Installer.getStringOrDefault(title, title);
+    String m = Installer.getStringOrDefault(message, message);
 
     int result = JOptionPane.showConfirmDialog(
         ConsoleWizard.getFrame(), m, t, JOptionPane.YES_NO_OPTION);
@@ -113,8 +113,8 @@ public class ConsoleDialogs
    */
   private static void showMessage (String title, String message, int type)
   {
-    String t = Installer.getString(title, title);
-    String m = Installer.getString(message, message);
+    String t = Installer.getStringOrDefault(title, title);
+    String m = Installer.getStringOrDefault(message, message);
 
     JOptionPane.showMessageDialog(ConsoleWizard.getFrame(), m, t, type);
   }
@@ -170,9 +170,9 @@ public class ConsoleDialogs
    */
   public static void showError (String title, String message, Throwable thrown)
   {
-    String t = Installer.getString(
+    String t = Installer.getStringOrDefault(
         title, Installer.getString("error.dialog.title"));
-    String m = Installer.getString(message,
+    String m = Installer.getStringOrDefault(message,
         thrown != null ? thrown.getLocalizedMessage() : message);
     if(m == null){
       m = Installer.getString("error.dialog.text");

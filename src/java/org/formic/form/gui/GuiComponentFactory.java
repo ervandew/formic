@@ -103,7 +103,7 @@ public class GuiComponentFactory
     JCheckBox box = (JCheckBox)component(
       BasicComponentFactory.createCheckBox(
         getField(name, validator),
-        Installer.getString(getFormModel().getName() + '.' + name, name)),
+        Installer.getStringOrDefault(getFormModel().getName() + '.' + name, name)),
       name);
     return box;
   }

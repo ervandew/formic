@@ -88,6 +88,13 @@ public class Installer
     logger.info("Running Installer.");
     consoleMode = "true".equalsIgnoreCase(
         properties.getProperty("formic.console"));
+    if(consoleMode &&
+        !"true".equalsIgnoreCase(Installer.getStringOrDefault("console.support", "true")))
+    {
+      logger.error(Installer.getString("console.not.supported"));
+      return false;
+    }
+
     if(!consoleMode){
       I18n.setBundle(getResourceBundle());
       GuiDialogs.setBundle(getResourceBundle());
@@ -172,15 +179,14 @@ public class Installer
    * key.
    * @return The value or the supplied default.
    */
-  /* Removed so as not to conflict with getString(String,Object)
-  public static String getString (String key, String dflt)
+  public static String getStringOrDefault (String key, String dflt)
   {
     try{
       return key != null ? getResourceBundle().getString(key) : dflt;
     }catch(MissingResourceException mre){
       return dflt;
     }
-  }*/
+  }
 
   /**
    * Gets the value for the supplied resource key and formats the result using

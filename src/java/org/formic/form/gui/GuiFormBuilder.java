@@ -160,7 +160,7 @@ public class GuiFormBuilder
     }
 
     builder.appendSeparator(
-        Installer.getString(name + '.' + text, text));
+        Installer.getStringOrDefault(name + '.' + text, text));
     return this;
   }
 
@@ -315,7 +315,7 @@ public class GuiFormBuilder
       int rowspan,
       String insets)
   {
-    append(new JLabel(Installer.getString(name + '.' + label, label)));
+    append(new JLabel(Installer.getStringOrDefault(name + '.' + label, label)));
     component.putClientProperty(GuiComponentFactory.FORM_FIELD, null);
     append(component, colspan, rowspan, insets);
     return this;
