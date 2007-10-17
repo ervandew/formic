@@ -26,23 +26,23 @@ echo "Initializing ${formic.action} ..."
 echo ""
 
 # create a temp directory to extract to.
-WRKDIR=`mktemp -d /tmp/formic_XXXXXX`
+FORMIC_WRKDIR=`mktemp -d /tmp/formic_XXXXXX`
 
 # trap signals
 trap cleanup 0 1 2 3 6
 cleanup () {
-  rm -rf $WRKDIR
+  rm -rf $FORMIC_WRKDIR
 }
 
 # determine start of archive
-START=`awk '/^__BEGIN_ARCHIVE__/ { print NR + 1; exit 0; }' $0`
+ARCHIVE_START=`awk '/^__BEGIN_ARCHIVE__/ { print NR + 1; exit 0; }' $0`
 
 # Take the archive portion of this file and extract it.
-tail -n +$START $0 | gzip -dc | tar x -C $WRKDIR
+tail -n +$ARCHIVE_START $0 | gzip -dc | tar x -C $FORMIC_WRKDIR -f -
 
 # execute the install script
 PREV=`pwd`
-cd $WRKDIR
+cd $FORMIC_WRKDIR
 
 IS_MAC=`which sw_vers 2> /dev/null`
 if [ -z "$DISPLAY" -a -z "$IS_MAC" ] ; then
@@ -53,7 +53,6 @@ fi
 
 EXIT_CODE=$?
 
-# delete the temp files
 cd $PREV
 
 if [ $EXIT_CODE -gt 0 ]; then
