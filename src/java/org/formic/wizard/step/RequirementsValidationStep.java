@@ -80,6 +80,10 @@ public class RequirementsValidationStep
 {
   private static final String ICON = "/images/32x32/component_list.png";
 
+  private static final Integer OK = new Integer(0);
+  private static final Integer WARN = new Integer(1);
+  private static final Integer FAIL = new Integer(2);
+
   protected static final String PROVIDER = "provider";
 
   private RequirementProvider provider;
@@ -145,7 +149,8 @@ public class RequirementsValidationStep
 
     guiTable = new JTable(1, 2){
       public Class getColumnClass (int column){
-        return getValueAt(0, column).getClass();
+        Object value = getValueAt(0, column);
+        return value != null ? value.getClass() : Object.class;
       }
       public boolean isCellEditable (int row, int column){
         return false;
@@ -221,11 +226,11 @@ public class RequirementsValidationStep
 
     setBusy(true);
     try{
-      Boolean valid = (Boolean)Worker.post(new Task(){
+      Integer result = (Integer)Worker.post(new Task(){
         public Object run ()
           throws Exception
         {
-          boolean valid = true;
+          Integer result = OK;
           TableModel model = guiTable.getModel();
           for (int ii = 0; ii < model.getRowCount(); ii++){
             final JLabel label = (JLabel)model.getValueAt(ii, 1);
@@ -242,7 +247,11 @@ public class RequirementsValidationStep
               provider.validate(requirement);
             requirement.setStatus(status);
             if(status.getCode() == RequirementProvider.FAIL){
-              valid = false;
+              result = FAIL;
+            }else if(OK.equals(result) &&
+                status.getCode() == RequirementProvider.WARN)
+            {
+              result = WARN;
             }
 
             SwingUtilities.invokeLater(new Runnable(){
@@ -262,13 +271,19 @@ public class RequirementsValidationStep
               }
             });
           }
-          return Boolean.valueOf(valid);
+          return result;
         }
       });
-      if(valid.booleanValue()){
-        guiForm.showInfoMessage(Installer.getString("requirements.satisfied"));
+      if(FAIL.equals(result)){
+        guiForm.showErrorMessage(
+            Installer.getString("requirements.message.failed"));
+      }else if(WARN.equals(result)){
+        guiForm.showWarningMessage(
+            Installer.getString("requirements.message.warning"));
+      }else{
+        guiForm.showInfoMessage(Installer.getString("requirements.message.ok"));
       }
-      setValid(valid.booleanValue());
+      setValid(!result.equals(FAIL));
     }catch(Exception e){
       GuiDialogs.showError(e);
       setValid(false);
