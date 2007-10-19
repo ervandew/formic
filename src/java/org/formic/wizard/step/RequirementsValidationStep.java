@@ -412,6 +412,20 @@ public class RequirementsValidationStep
   }
 
   /**
+   * Represents a requirement to be validated.
+   */
+  public static abstract class ValidatingRequirement
+    extends Requirement
+  {
+    public ValidatingRequirement (String key)
+    {
+      super(key);
+    }
+
+    public abstract RequirementProvider.Status validate ();
+  }
+
+  /**
    * Provides and validates requirements.
    */
   public static interface RequirementProvider
