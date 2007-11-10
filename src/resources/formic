@@ -28,6 +28,7 @@ CUR_PATH=`dirname $0`
 ANT_OPTS="-Djava.library.path=$CUR_PATH/ant/lib/native/linux -Djava.ext.dirs" \
 ANT_HOME="$CUR_PATH/ant" CLASSPATH=""\
   "$CUR_PATH/ant/bin/ant" \
+    --noconfig \
     -logger org.formic.ant.logger.Log4jLogger \
     -lib "$CUR_PATH" \
     -f "$CUR_PATH/$BUILD_FILE" $@
