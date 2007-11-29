@@ -138,7 +138,7 @@ public class AntUtils
   }
 
   /**
-   * Sets a new property to the value of the supplied location.
+   * Sets a new property to the supplied value.
    *
    * @param project The current project.
    * @param name The property name.
