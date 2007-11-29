@@ -73,6 +73,21 @@ public abstract class AbstractComponentFactory
    */
   protected FormFieldModel getField (String name, Validator validator)
   {
-    return model.createFieldModel(name, validator);
+    return getField(name, validator, false);
+  }
+
+  /**
+   * Gets the FormFieldModel for the named field.
+   *
+   * @param name The name of the field.
+   * @param validator The validator for the field.
+   * @param isPath true if the value will be a path for which all file
+   * seperators will be automatically converted to system independent slashes.
+   * @return The FormFieldModel.
+   */
+  protected FormFieldModel getField (
+      String name, Validator validator, boolean isPath)
+  {
+    return model.createFieldModel(name, validator, isPath);
   }
 }

@@ -55,6 +55,19 @@ public interface FormModel
   public FormFieldModel createFieldModel (String name, Validator validator);
 
   /**
+   * Creates the FormFieldModel for the given field name if one does not already
+   * exist.
+   *
+   * @param name The field name.
+   * @param validator The possibly null validator for this field.
+   * @param isPath true if the value will be a path for which all file
+   * seperators will be automatically converted to system independent slashes.
+   * @return The FormFieldModel.
+   */
+  public FormFieldModel createFieldModel (
+      String name, Validator validator, boolean isPath);
+
+  /**
    * Gets the FormFieldModel for the given field name.
    *
    * @param name The field name.

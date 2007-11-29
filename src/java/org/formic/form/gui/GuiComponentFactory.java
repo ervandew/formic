@@ -524,9 +524,24 @@ public class GuiComponentFactory
    */
   public JTextField createTextField (String name, Validator validator)
   {
+    return createTextField(name, validator, false);
+  }
+
+  /**
+   * Creates a text field for the supplied field name.
+   *
+   * @param name The field name.
+   * @param validator Validator used to validate the field.
+   * @param isPath true if the value will be a path for which all file
+   * seperators will be automatically converted to system independent slashes.
+   * @return The JTextField.
+   */
+  public JTextField createTextField (
+      String name, Validator validator, boolean isPath)
+  {
     return (JTextField)component(
         BasicComponentFactory.createTextField(
-          getField(name, validator), false),
+          getField(name, validator, isPath), false),
         name);
   }
 

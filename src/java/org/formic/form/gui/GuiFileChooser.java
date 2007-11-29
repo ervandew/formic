@@ -78,7 +78,7 @@ public class GuiFileChooser
         return super.processKeyBinding(key, event, condition, pressed);
       }
     };
-    textField = factory.createTextField(name, validator);
+    textField = factory.createTextField(name, validator, true);
     button = new JButton(Installer.getString("browse.text"));
 
     button.addActionListener(new ActionListener(){

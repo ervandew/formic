@@ -75,10 +75,20 @@ public class FormModelImpl
    */
   public FormFieldModel createFieldModel (String name, Validator validator)
   {
+    return createFieldModel(name, validator, false);
+  }
+
+  /**
+   * {@inheritDoc}
+   * @see FormModel#createFieldModel(String,Validator,boolean)
+   */
+  public FormFieldModel createFieldModel (
+      String name, Validator validator, boolean isPath)
+  {
     name = resolveName(name);
     FormFieldModel field = (FormFieldModel)fields.get(name);
     if(field == null){
-      field = new FormFieldModelImpl(name, validator, this);
+      field = new FormFieldModelImpl(name, validator, this, isPath);
       fields.put(name, field);
       validFields.put(name, field.isValid() ? Boolean.TRUE : Boolean.FALSE);
     }

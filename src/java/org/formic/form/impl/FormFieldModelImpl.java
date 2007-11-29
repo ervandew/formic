@@ -47,6 +47,7 @@ public class FormFieldModelImpl
   private String name;
   private Object value;
   private Validator validator;
+  private boolean isPath;
   private boolean valid = true;
 
   /**
@@ -55,12 +56,18 @@ public class FormFieldModelImpl
    * @param name The field name.
    * @param validator The validator for this field.
    * @param listener Initial listener for property change events.
+   * @param isPath true if the value will be a path for which all file
+   * seperators will be automatically converted to system independent slashes.
    */
   public FormFieldModelImpl (
-      String name, Validator validator, PropertyChangeListener listener)
+      String name,
+      Validator validator,
+      PropertyChangeListener listener,
+      boolean isPath)
   {
     this.name = name;
     this.validator = validator;
+    this.isPath = isPath;
     addPropertyChangeListener(new DelayedValidator());
     addPropertyChangeListener(listener);
 
@@ -95,6 +102,9 @@ public class FormFieldModelImpl
    */
   public void setValue (Object value)
   {
+    if (isPath){
+      value = ((String)value).replace('\\', '/');
+    }
     firePropertyChange(VALUE, this.value, this.value = value);
   }
 
