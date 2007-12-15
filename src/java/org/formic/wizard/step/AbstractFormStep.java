@@ -97,8 +97,9 @@ public abstract class AbstractFormStep
       FormModel model = form.getModel();
       for (Iterator ii = model.getFieldModels().iterator(); ii.hasNext();){
         FormFieldModel field = (FormFieldModel)ii.next();
-
-        context.setValue(field.getName(), field.getValue());
+        if (field.getValue() != null){
+          context.setValue(field.getName(), field.getValue());
+        }
       }
     }
   }
