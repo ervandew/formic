@@ -138,13 +138,12 @@ public class GuiWizard
    */
   public void cancel ()
   {
+    super.cancel();
     try{
       semaphore.release();
     }catch(Exception e){
       e.printStackTrace();
     }
-
-    super.cancel();
   }
 
   /**

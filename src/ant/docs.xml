@@ -17,6 +17,8 @@
       <fileset dir="src/java">
         <include name="org/formic/**/*.java"/>
       </fileset>
+      <link href="http://commons.apache.org/io/api-1.2/"/>
+      <link href="http://commons.apache.org/lang/api-2.1/"/>
     </javadoc>
   </target>
 

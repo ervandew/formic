@@ -21,7 +21,9 @@ package org.formic.form.impl;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
+import javax.swing.SwingUtilities;
+
+//import com.jgoodies.binding.beans.DelayedPropertyChangeHandler;
 
 import com.jgoodies.binding.value.AbstractValueModel;
 
@@ -177,13 +179,21 @@ public class FormFieldModelImpl
    * the value in the background.
    */
   private class DelayedValidator
-    extends DelayedPropertyChangeHandler
+    // Doesn't work on fedora's icedtea jvm
+    //extends DelayedPropertyChangeHandler
+    implements PropertyChangeListener
   {
     /**
      * {@inheritDoc}
      * @see DelayedPropertyChangeHandler#delayedPropertyChange(PropertyChangeEvent)
      */
-    public void delayedPropertyChange (PropertyChangeEvent evt)
+    //public void delayedPropertyChange (PropertyChangeEvent evt)
+
+    /**
+     * {@inheritDoc}
+     * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
+     */
+    public void propertyChange (PropertyChangeEvent evt)
     {
       String property = evt.getPropertyName();
       if(VALUE.equals(property)){
@@ -201,7 +211,7 @@ public class FormFieldModelImpl
     {
       if(validator != null){
         // run validation asynchronously in the background.
-        AsyncWorker.post(new AsyncTask(){
+        final AsyncTask task = new AsyncTask(){
           private boolean valid;
 
           // invoked on background thread.
@@ -214,7 +224,16 @@ public class FormFieldModelImpl
           public void finish () {
             FormFieldModelImpl.this.setValid(valid);
           }
-        });
+        };
+        if(SwingUtilities.isEventDispatchThread()){
+          AsyncWorker.post(task);
+        }else{
+          SwingUtilities.invokeLater(new Runnable(){
+            public void run (){
+              AsyncWorker.post(task);
+            }
+          });
+        }
       }else{
         FormFieldModelImpl.this.setValid(true);
       }

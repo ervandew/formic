@@ -32,10 +32,13 @@ import java.awt.geom.Rectangle2D;
 
 import java.awt.image.BufferedImage;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
-import javax.swing.Timer;
+//import javax.swing.Timer;
 
 import javax.swing.event.AncestorEvent;
 import javax.swing.event.AncestorListener;
@@ -74,7 +77,7 @@ import javax.swing.event.AncestorListener;
  */
 
 public class SingleComponentInfiniteProgress extends JComponent
-    implements ActionListener, CancelableAdaptee
+    implements /*ActionListener,*/ CancelableAdaptee
 {
   private static final double UNSCALED_BAR_SIZE       = 45d;
 
@@ -101,7 +104,7 @@ public class SingleComponentInfiniteProgress extends JComponent
       if(useBackBuffer == true) {
         setOpaque(false);
         imageBuf = null;
-        iterate = 3;
+        timerTask.iterate = 3;
       }
     }
   };
@@ -112,6 +115,8 @@ public class SingleComponentInfiniteProgress extends JComponent
   private Rectangle barsScreenBounds = null;
   private AffineTransform centerAndScaleTransform = null;
   private Timer timer;
+  private RedrawTask timerTask;
+  private int timerInterval;
   private Color[] colors = null;
   private int colorOffset = 0;
   private boolean tempHide = false;
@@ -182,7 +187,9 @@ public class SingleComponentInfiniteProgress extends JComponent
     this.resizeRatio = resizeRatio;
     this.maxBarSize = maxBarSize;
 
-    this.timer = new Timer(1000 / fps, this);
+    //this.timer = new Timer(1000 / fps, this);
+    this.timerInterval = 1000 / fps;
+    this.timerTask = new RedrawTask();
 
     setInfiniteProgressAdapter(infiniteProgressAdapter);
 
@@ -214,17 +221,6 @@ public class SingleComponentInfiniteProgress extends JComponent
     // set opaque
     setOpaque(useBackBuffer);
   }
-
-
-
-
-
-
-
-
-
-
-
 
   //
   // METHODS FROM JComponent
@@ -264,7 +260,7 @@ public class SingleComponentInfiniteProgress extends JComponent
             }
           });
         }
-        iterate = 3;
+        timerTask.iterate = 3;
       }
       // capture events
       addMouseListener(mouseAdapter);
@@ -275,10 +271,16 @@ public class SingleComponentInfiniteProgress extends JComponent
         infiniteProgressAdapter.animationStarting();
         infiniteProgressAdapter.rampUpEnded();
       }
-      timer.start();
+      //timer.start();
+      timer = new Timer();
+      timer.schedule(timerTask, 0, timerInterval);
     } else {
       // stop anim
-      timer.stop();
+      //timer.stop();
+      if (timer != null){
+        timer.cancel();
+        timer = null;
+      }
       if(infiniteProgressAdapter != null) {
         infiniteProgressAdapter.animationStopping();
       }
@@ -405,29 +407,16 @@ public class SingleComponentInfiniteProgress extends JComponent
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   //
   // METHODS FROM INTERFACE ActionListener
   //
 
-  int iterate;  //we draw use transparency to draw a number of iterations before making a snapshot
+  /*int iterate;  //we use transparency to draw a number of iterations before making a snapshot
 
   /**
    * Called to animate the rotation of the bar's colors
    */
-  public void actionPerformed(ActionEvent e)
+  /*public void actionPerformed(ActionEvent e)
   {
     // rotate colors
     if(colorOffset == (numBars - 1)) {
@@ -453,22 +442,44 @@ public class SingleComponentInfiniteProgress extends JComponent
         iterate--;
       }
     }
+  }*/
+
+  private class RedrawTask
+    extends TimerTask
+  {
+    int iterate;
+    public void run ()
+    {
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run (){
+          // rotate colors
+          if(colorOffset == (numBars - 1)) {
+            colorOffset = 0;
+          } else {
+            colorOffset++;
+          }
+          // repaint
+          if(barsScreenBounds != null) {
+            repaint(barsScreenBounds);
+          } else {
+            repaint();
+          }
+          if(useBackBuffer && imageBuf == null) {
+            if(iterate < 0) {
+              try {
+                makeSnapshot();
+                setOpaque(true);
+              } catch(AWTException e1) {
+                throw new RuntimeException(e1);
+              }
+            } else {
+              iterate--;
+            }
+          }
+        }
+      });
+    }
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
   //
   // PROPERTY ACCESSORS

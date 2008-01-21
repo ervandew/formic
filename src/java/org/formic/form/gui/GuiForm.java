@@ -417,10 +417,14 @@ public class GuiForm
       }
 
       if(focusOwner instanceof JComponent){
-        String key = (String)
-          ValidationComponentUtils.getMessageKey((JComponent)focusOwner);
+        Object[] keys =
+          ValidationComponentUtils.getMessageKeys((JComponent)focusOwner);
 
-        if(key != null){
+        if(keys != null && keys.length > 0){
+          // FIXME: jgoodies validator now supports multiple keys... might want
+          // to make use of that.
+          String key = (String)keys[0];
+
           // track what fields have been visited.
           if(!visited.contains(key)){
             visitingField = key;

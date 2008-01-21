@@ -26,8 +26,12 @@ set CUR_PATH=%~dp0
 
 pushd "%CUR_PATH%"
 
-set ANT_OPTS=-Djava.library.path=ant/lib/native/windows -Djava.ext.dirs
+rem FORMIC_OPTS=-Djava.ext.dirs
+set ANT_OPTS=-Djava.library.path=ant/lib/native/windows %FORMIC_OPTS%
 set ANT_HOME=%CUR_PATH%\ant
+echo "ANT_OPTS=%ANT_OPTS%"
+echo "ANT_HOME=%ANT_HOME%"
+echo "ANT=ant\bin\ant -logger org.formic.ant.logger.Log4jLogger -lib . -f %BUILD_FILE% %*"
 
 set CLASSPATH=
 ant\bin\ant -logger org.formic.ant.logger.Log4jLogger -lib . -f %BUILD_FILE% %*

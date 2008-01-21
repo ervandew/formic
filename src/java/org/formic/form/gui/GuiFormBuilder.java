@@ -23,6 +23,7 @@ import java.awt.Insets;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.swing.JCheckBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 
@@ -208,7 +209,9 @@ public class GuiFormBuilder
       throw new IllegalStateException(Installer.getString("builder.form.retrieved"));
     }
 
-    if(component.getClientProperty(GuiComponentFactory.FORM_FIELD) != null){
+    if(component.getClientProperty(GuiComponentFactory.FORM_FIELD) != null &&
+        !(component instanceof JCheckBox))
+    {
       return append(component.getName(), component, colspan, rowspan, insets);
     }
 

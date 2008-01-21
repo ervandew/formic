@@ -413,14 +413,14 @@ extends JPanel
    public void
    cancel()
    {
-      WizardStep activeStep = getModel().getActiveStep();
+      /*WizardStep activeStep = getModel().getActiveStep();
       if (activeStep != null && activeStep.isBusy())
       {
          if (!confirmAbort())
             return;
 
          activeStep.abortBusy();
-      }
+      }*/
 
       canceled = true;
       fireWizardCancelled();

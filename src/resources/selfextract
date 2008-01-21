@@ -56,7 +56,7 @@ EXIT_CODE=$?
 cd $PREV
 
 if [ $EXIT_CODE -gt 0 ]; then
-  echo "Installer failed.  See /tmp/install.log for details."
+  echo "Installer failed or canceled.  See /tmp/install.log for details."
 fi
 exit $EXIT_CODE
 
