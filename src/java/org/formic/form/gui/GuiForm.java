@@ -195,6 +195,16 @@ public class GuiForm
   }
 
   /**
+   * Gets the messagePanel for this instance.
+   *
+   * @return The messagePanel.
+   */
+  public JPanel getMessagePanel ()
+  {
+    return this.messagePanel;
+  }
+
+  /**
    * Creates the message panel.
    */
   private JComponent createMessagePanel ()
