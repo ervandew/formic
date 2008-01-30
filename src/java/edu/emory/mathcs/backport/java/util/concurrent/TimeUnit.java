@@ -1,10 +1,13 @@
 /*
-  * Written by Doug Lea with assistance from members of JCP JSR-166
-  * Expert Group and released to the public domain, as explained at
-  * http://creativecommons.org/licenses/publicdomain
-  */
+ * Written by Doug Lea with assistance from members of JCP JSR-166
+ * Expert Group and released to the public domain, as explained at
+ * http://creativecommons.org/licenses/publicdomain
+ */
 
 package edu.emory.mathcs.backport.java.util.concurrent;
+
+import java.io.InvalidObjectException;
+import java.io.ObjectStreamException;
 
 /**
   * A <tt>TimeUnit</tt> represents time durations at a given unit of
@@ -134,9 +137,28 @@ public abstract class TimeUnit implements java.io.Serializable {
     }
 
     /**
-     * The index of this unit. This value is no longer used in this
-     * version of this class, but is retained for serialization
-     * compatibility with previous version.
+     * Returns the enum constant of this type with the specified name. The
+     * string must match <em>exactly</em> an identifier used to declare an
+     * enum constant in this type. (Extraneous whitespace characters are not
+     * permitted.)
+     *
+     * @param name the name of the enum constant to be returned
+     * @return the enum constant with the specified name
+     * @throws IllegalArgumentException
+     *         if this enum type has no constant with the specified name
+     */
+    public static TimeUnit valueOf(String name) {
+        for (int i = 0; i < values.length; i++) {
+            if (values[i].name.equals(name)) {
+                return values[i];
+            }
+        }
+        throw new IllegalArgumentException("No enum const TimeUnit." + name);
+    }
+
+    /**
+     * The ordinal of this unit. This is useful both for {@link #ordinal()}
+     * and to maintain serialization consistence with earlier versions.
      */
     private final int index;
 
@@ -270,6 +292,47 @@ public abstract class TimeUnit implements java.io.Serializable {
      * @return the number of nanoseconds
      */
     abstract int excessNanos(long d, long m);
+
+    /**
+     * Returns the name of this enum constant, exactly as declared in its enum
+     * declaration. <strong>Most programmers should use the
+     * {@link #toString()} method in preference to this one, as the toString
+     * method may return a more user-friendly name.</strong> This method is
+     * designed primarily for use in specialized situations where correctness
+     * depends on getting the exact name, which will not vary from release to
+     * release.
+     *
+     * @return the name of this enum constant
+     */
+    public String name() {
+        return name;
+    }
+
+    /**
+     * Returns the ordinal of this enumeration constant (its position in its
+     * enum declaration, where the initial constant is assigned an ordinal of
+     * zero). Most programmers will have no use for this method. It is
+     * designed for use by sophisticated enum-based data structures, such as
+     * <code>EnumSet</code> and <code>EnumMap</code>.
+     *
+     * @return the ordinal of this enumeration constant
+     */
+    public int ordinal() {
+        return index;
+    }
+
+    /*
+     * Guarantees that deserialized objects will be referentially equal to the
+     * standard enumeration objects.
+     */
+    protected Object readResolve() throws ObjectStreamException {
+        try {
+            return valueOf(name);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidObjectException(name
+                    + " is not a valid enum for TimeUnit");
+        }
+    }
 
     /**
      * Performs a timed <tt>Object.wait</tt> using this time unit.
