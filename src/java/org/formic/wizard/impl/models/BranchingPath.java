@@ -18,10 +18,8 @@
  */
 package org.formic.wizard.impl.models;
 
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
-
-import org.apache.commons.collections.map.ListOrderedMap;
 
 import org.formic.Log;
 
@@ -43,7 +41,7 @@ import org.pietschy.wizard.models.PathVisitor;
 public class BranchingPath
   extends org.pietschy.wizard.models.BranchingPath
 {
-  private ListOrderedMap paths = new ListOrderedMap();
+  private ArrayList paths = new ArrayList();
   private String name;
 
   /**
@@ -85,11 +83,11 @@ public class BranchingPath
    */
   public Path getNextPath(MultiPathModel model)
   {
-    for (Iterator iter = paths.entrySet().iterator(); iter.hasNext();)
+    for (Iterator iter = paths.iterator(); iter.hasNext();)
     {
-      Map.Entry entry = (Map.Entry) iter.next();
-      Condition condition = (Condition) entry.getKey();
-      Path path = (Path)entry.getValue();
+      PathInfo info = (PathInfo)iter.next();
+      Path path = info.path;
+      Condition condition = info.condition;
       if (condition.evaluate(model)){
         Log.debug("Condition for branch path '" + getPathName(path) +
             "' evaluated to true.");
@@ -108,7 +106,7 @@ public class BranchingPath
    */
   public void addBranch(Path path, Condition condition)
   {
-    paths.put(condition, path);
+    paths.add(new PathInfo(path, condition));
   }
 
   /**
@@ -120,7 +118,7 @@ public class BranchingPath
    */
   public void addBranch(int index, Path path, Condition condition)
   {
-    paths.put(index, condition, path);
+    paths.add(index, new PathInfo(path, condition));
   }
 
   /**
@@ -128,9 +126,9 @@ public class BranchingPath
    */
   public void visitBranches(PathVisitor visitor)
   {
-    for (Iterator iter = paths.values().iterator(); iter.hasNext();){
-      Path path = (Path)iter.next();
-      path.acceptVisitor(visitor);
+    for (Iterator ii = paths.iterator(); ii.hasNext();){
+      PathInfo info = (PathInfo)ii.next();
+      info.path.acceptVisitor(visitor);
     }
   }
 
@@ -171,12 +169,12 @@ public class BranchingPath
     if(paths.size() > 0){
       buffer.append(" Paths: ");
       StringBuffer pathNames = new StringBuffer();
-      for (Iterator ii = paths.values().iterator(); ii.hasNext();){
+      for (Iterator ii = paths.iterator(); ii.hasNext();){
         if(pathNames.length() > 0){
           pathNames.append(", ");
         }
         String pathName = null;
-        Object path = ii.next();
+        Path path = ((PathInfo)ii.next()).path;
         if(path instanceof SimplePath){
           pathName = ((SimplePath)path).getName();
         }else{
@@ -188,5 +186,16 @@ public class BranchingPath
     }
 
     return buffer.toString();
+  }
+
+  private class PathInfo
+  {
+    public Path path;
+    public Condition condition;
+
+    public PathInfo (Path path, Condition condition){
+      this.path = path;
+      this.condition = condition;
+    }
   }
 }
