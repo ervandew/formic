@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -30,6 +31,7 @@ import java.io.Serializable;
  * @author Stephen Colebourne
  * @author Gary Gregory
  * @author Mario Winterer
+ * @author <a href="mailto:david@davidkarlsen.com">David J. M. Karlsen</a>
  * @since 1.0
  * @version $Id$
  */
@@ -62,6 +64,7 @@ public class ObjectUtils {
      * to operate.</p>
      */
     public ObjectUtils() {
+        super();
     }
 
     // Defaulting
@@ -234,6 +237,50 @@ public class ObjectUtils {
         return obj == null ? nullStr : obj.toString();
     }
 
+    // Min/Max
+    //-----------------------------------------------------------------------
+    /**
+     * Null safe comparison of Comparables.
+     * 
+     * @param c1  the first comparable, may be null
+     * @param c2  the second comparable, may be null
+     * @return
+     *  <ul>
+     *   <li>If both objects are non-null and unequal, the lesser object.
+     *   <li>If both objects are non-null and equal, c1.
+     *   <li>If one of the comparables is null, the non-null object.
+     *   <li>If both the comparables are null, null is returned.
+     *  </ul>
+     */
+    public static Object min(Comparable c1, Comparable c2) {
+        if (c1 != null && c2 != null) {
+            return c1.compareTo(c2) < 1 ? c1 : c2;
+        } else {
+            return c1 != null ? c1 : c2;
+        }                              
+    }
+
+    /**
+     * Null safe comparison of Comparables.
+     * 
+     * @param c1  the first comparable, may be null
+     * @param c2  the second comparable, may be null
+     * @return
+     *  <ul>
+     *   <li>If both objects are non-null and unequal, the greater object.
+     *   <li>If both objects are non-null and equal, c1.
+     *   <li>If one of the comparables is null, the non-null object.
+     *   <li>If both the comparables are null, null is returned.
+     *  </ul>
+     */
+    public static Object max(Comparable c1, Comparable c2) {
+        if (c1 != null && c2 != null) {
+            return c1.compareTo(c2) >= 0 ? c1 : c2;
+        } else {
+            return c1 != null ? c1 : c2;
+        }
+    }
+
     // Null
     //-----------------------------------------------------------------------
     /**
@@ -251,13 +298,18 @@ public class ObjectUtils {
      * cannot be stored.</p>
      */
     public static class Null implements Serializable {
-        // declare serialization compatibility with Commons Lang 1.0
+        /**
+         * Required for serialization support. Declare serialization compatibility with Commons Lang 1.0
+         * 
+         * @see java.io.Serializable
+         */
         private static final long serialVersionUID = 7092611880189329093L;
         
         /**
          * Restricted constructor - singleton.
          */
         Null() {
+            super();
         }
         
         /**
@@ -269,5 +321,5 @@ public class ObjectUtils {
             return ObjectUtils.NULL;
         }
     }
-    
+
 }

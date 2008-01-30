@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -38,7 +39,7 @@ import org.apache.commons.lang.ObjectUtils;
  * public class Person {
  *   String name;
  *   int age;
- *   boolean isSmoker;
+ *   boolean smoker;
  * 
  *   ...
  * 
@@ -117,6 +118,8 @@ public class ToStringBuilder {
     /**
      * <p>Forwards to <code>ReflectionToStringBuilder</code>.</p>
      * 
+     * @param object  the Object to be output
+     * @return the String result
      * @see ReflectionToStringBuilder#toString(Object)
      */
     public static String reflectionToString(Object object) {
@@ -126,6 +129,9 @@ public class ToStringBuilder {
     /**
      * <p>Forwards to <code>ReflectionToStringBuilder</code>.</p>
      * 
+     * @param object  the Object to be output
+     * @param style  the style of the <code>toString</code> to create, may be <code>null</code>
+     * @return the String result
      * @see ReflectionToStringBuilder#toString(Object,ToStringStyle)
      */
     public static String reflectionToString(Object object, ToStringStyle style) {
@@ -135,6 +141,10 @@ public class ToStringBuilder {
     /**
      * <p>Forwards to <code>ReflectionToStringBuilder</code>.</p>
      * 
+     * @param object  the Object to be output
+     * @param style  the style of the <code>toString</code> to create, may be <code>null</code>
+     * @param outputTransients  whether to include transient fields
+     * @return the String result
      * @see ReflectionToStringBuilder#toString(Object,ToStringStyle,boolean)
      */
     public static String reflectionToString(Object object, ToStringStyle style, boolean outputTransients) {
@@ -144,6 +154,11 @@ public class ToStringBuilder {
     /**
      * <p>Forwards to <code>ReflectionToStringBuilder</code>.</p>
      * 
+     * @param object  the Object to be output
+     * @param style  the style of the <code>toString</code> to create, may be <code>null</code>
+     * @param outputTransients  whether to include transient fields
+     * @param reflectUpToClass  the superclass to reflect up to (inclusive), may be <code>null</code>
+     * @return the String result
      * @see ReflectionToStringBuilder#toString(Object,ToStringStyle,boolean,boolean,Class)
      * @since 2.0
      */
@@ -442,11 +457,11 @@ public class ToStringBuilder {
      * <p>Append to the <code>toString</code> an <code>Object</code>
      * value.</p>
      *
-     * @param object  the value to add to the <code>toString</code>
+     * @param obj  the value to add to the <code>toString</code>
      * @return this
      */
-    public ToStringBuilder append(Object object) {
-        style.append(buffer, null, object, null);
+    public ToStringBuilder append(Object obj) {
+        style.append(buffer, null, obj, null);
         return this;
     }
 
@@ -818,11 +833,11 @@ public class ToStringBuilder {
      * value.</p>
      *
      * @param fieldName  the field name
-     * @param object  the value to add to the <code>toString</code>
+     * @param obj  the value to add to the <code>toString</code>
      * @return this
      */
-    public ToStringBuilder append(String fieldName, Object object) {
-        style.append(buffer, fieldName, object, null);
+    public ToStringBuilder append(String fieldName, Object obj) {
+        style.append(buffer, fieldName, obj, null);
         return this;
     }
 
@@ -831,13 +846,13 @@ public class ToStringBuilder {
      * value.</p>
      *
      * @param fieldName  the field name
-     * @param object  the value to add to the <code>toString</code>
+     * @param obj  the value to add to the <code>toString</code>
      * @param fullDetail  <code>true</code> for detail,
      *  <code>false</code> for summary info
      * @return this
      */
-    public ToStringBuilder append(String fieldName, Object object, boolean fullDetail) {
-        style.append(buffer, fieldName, object, BooleanUtils.toBooleanObject(fullDetail));
+    public ToStringBuilder append(String fieldName, Object obj, boolean fullDetail) {
+        style.append(buffer, fieldName, obj, BooleanUtils.toBooleanObject(fullDetail));
         return this;
     }
 

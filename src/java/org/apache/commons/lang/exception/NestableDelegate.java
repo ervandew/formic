@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -44,6 +45,13 @@ import java.util.List;
  * @version $Id$
  */
 public class NestableDelegate implements Serializable {
+
+    /**
+     * Required for serialization support.
+     * 
+     * @see java.io.Serializable
+     */
+    private static final long serialVersionUID = 1L;
 
     /**
      * Constructor error message.
@@ -106,68 +114,54 @@ public class NestableDelegate implements Serializable {
     }
 
     /**
-     * Returns the error message of the <code>Throwable</code> in the chain
-     * of <code>Throwable</code>s at the specified index, numbered from 0.
-     *
-     * @param index the index of the <code>Throwable</code> in the chain of
-     * <code>Throwable</code>s
-     * @return the error message, or null if the <code>Throwable</code> at the
-     * specified index in the chain does not contain a message
-     * @throws IndexOutOfBoundsException if the <code>index</code> argument is
-     * negative or not less than the count of <code>Throwable</code>s in the
-     * chain
+     * Returns the error message of the <code>Throwable</code> in the chain of <code>Throwable</code>s at the
+     * specified index, numbered from 0.
+     * 
+     * @param index
+     *            the index of the <code>Throwable</code> in the chain of <code>Throwable</code>s
+     * @return the error message, or null if the <code>Throwable</code> at the specified index in the chain does not
+     *         contain a message
+     * @throws IndexOutOfBoundsException
+     *             if the <code>index</code> argument is negative or not less than the count of <code>Throwable</code>s
+     *             in the chain
      * @since 2.0
      */
     public String getMessage(int index) {
         Throwable t = this.getThrowable(index);
         if (Nestable.class.isInstance(t)) {
             return ((Nestable) t).getMessage(0);
-        } else {
-            return t.getMessage();
         }
+        return t.getMessage();
     }
 
     /**
-     * Returns the full message contained by the <code>Nestable</code>
-     * and any nested <code>Throwable</code>s.
-     *
-     * @param baseMsg the base message to use when creating the full
-     * message. Should be generally be called via
-     * <code>nestableHelper.getMessage(super.getMessage())</code>,
-     * where <code>super</code> is an instance of {@link
-     * java.lang.Throwable}.
-     * @return The concatenated message for this and all nested
-     * <code>Throwable</code>s
+     * Returns the full message contained by the <code>Nestable</code> and any nested <code>Throwable</code>s.
+     * 
+     * @param baseMsg
+     *            the base message to use when creating the full message. Should be generally be called via
+     *            <code>nestableHelper.getMessage(super.getMessage())</code>, where <code>super</code> is an
+     *            instance of {@link java.lang.Throwable}.
+     * @return The concatenated message for this and all nested <code>Throwable</code>s
      * @since 2.0
      */
     public String getMessage(String baseMsg) {
-        StringBuffer msg = new StringBuffer();
-        if (baseMsg != null) {
-            msg.append(baseMsg);
-        }
-
         Throwable nestedCause = ExceptionUtils.getCause(this.nestable);
-        if (nestedCause != null) {
-            String causeMsg = nestedCause.getMessage();
-            if (causeMsg != null) {
-                if (baseMsg != null) {
-                    msg.append(": ");
-                }
-                msg.append(causeMsg);
-            }
-
+        String causeMsg = nestedCause == null ? null : nestedCause.getMessage();
+        if (nestedCause == null || causeMsg == null) {
+            return baseMsg; // may be null, which is a valid result
         }
-        return msg.length() > 0 ? msg.toString() : null;
+        if (baseMsg == null) {
+            return causeMsg;
+        }
+        return baseMsg + ": " + causeMsg;
     }
 
     /**
-     * Returns the error message of this and any nested <code>Throwable</code>s
-     * in an array of Strings, one element for each message. Any
-     * <code>Throwable</code> not containing a message is represented in the
-     * array by a null. This has the effect of cause the length of the returned
-     * array to be equal to the result of the {@link #getThrowableCount()}
-     * operation.
-     *
+     * Returns the error message of this and any nested <code>Throwable</code>s in an array of Strings, one element
+     * for each message. Any <code>Throwable</code> not containing a message is represented in the array by a null.
+     * This has the effect of cause the length of the returned array to be equal to the result of the
+     * {@link #getThrowableCount()} operation.
+     * 
      * @return the error messages
      * @since 2.0
      */

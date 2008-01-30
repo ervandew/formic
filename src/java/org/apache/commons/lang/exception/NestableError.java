@@ -20,19 +20,15 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 
 /**
- * The base class of all runtime exceptions which can contain other
- * exceptions.
+ * The base class of all errors which can contain other exceptions.
  *
+ * @author <a href="mailto:dlr@finemaltcoding.com">Daniel Rall</a>
  * @see org.apache.commons.lang.exception.NestableException
- * @author <a href="mailto:Rafal.Krzewski@e-point.pl">Rafal Krzewski</a>
- * @author <a href="mailto:dlr@collab.net">Daniel Rall</a>
- * @author <a href="mailto:knielsen@apache.org">Kasper Nielsen</a>
- * @author <a href="mailto:steven@caswell.name">Steven Caswell</a>
  * @since 1.0
- * @version $Id$
+ * @version $Id: NestableError.java 491650 2007-01-01 22:00:14Z ggregory $
  */
-public class NestableRuntimeException extends RuntimeException implements Nestable {
-    
+public class NestableError extends Error implements Nestable {
+
     /**
      * Required for serialization support.
      * 
@@ -53,44 +49,44 @@ public class NestableRuntimeException extends RuntimeException implements Nestab
     private Throwable cause = null;
 
     /**
-     * Constructs a new <code>NestableRuntimeException</code> without specified
+     * Constructs a new <code>NestableError</code> without specified
      * detail message.
      */
-    public NestableRuntimeException() {
+    public NestableError() {
         super();
     }
 
     /**
-     * Constructs a new <code>NestableRuntimeException</code> with specified
+     * Constructs a new <code>NestableError</code> with specified
      * detail message.
      *
-     * @param msg the error message
+     * @param msg The error message.
      */
-    public NestableRuntimeException(String msg) {
+    public NestableError(String msg) {
         super(msg);
     }
 
     /**
-     * Constructs a new <code>NestableRuntimeException</code> with specified
+     * Constructs a new <code>NestableError</code> with specified
      * nested <code>Throwable</code>.
      *
      * @param cause the exception or error that caused this exception to be
      * thrown
      */
-    public NestableRuntimeException(Throwable cause) {
+    public NestableError(Throwable cause) {
         super();
         this.cause = cause;
     }
 
     /**
-     * Constructs a new <code>NestableRuntimeException</code> with specified
+     * Constructs a new <code>NestableError</code> with specified
      * detail message and nested <code>Throwable</code>.
      *
      * @param msg    the error message
      * @param cause  the exception or error that caused this exception to be
      * thrown
      */
-    public NestableRuntimeException(String msg, Throwable cause) {
+    public NestableError(String msg, Throwable cause) {
         super(msg);
         this.cause = cause;
     }
@@ -198,5 +194,4 @@ public class NestableRuntimeException extends RuntimeException implements Nestab
     public final void printPartialStackTrace(PrintWriter out) {
         super.printStackTrace(out);
     }
-
 }

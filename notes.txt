@@ -3,7 +3,6 @@ TODO {{{
   Upgrade
     - ant from 1.6.5 to 1.7.0
     - charva from 1.1.2 to 1.1.4
-    - commons-lang from 2.1 to 2.3 (update link in ant/doc.xml)
 
   Panels
     - Proxy setup

@@ -1,9 +1,10 @@
 /*
- * Copyright 2004-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -49,13 +50,32 @@ public class CharUtils {
     private static final String[] CHAR_STRING_ARRAY = new String[128];
     private static final Character[] CHAR_ARRAY = new Character[128];
     
+    /**
+     * <code>\u000a</code> linefeed LF ('\n').
+     * 
+     * @see <a href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089">JLF: Escape Sequences
+     *      for Character and String Literals</a>
+     * @since 2.2
+     */
+    public static final char LF = '\n';
+
+    /**
+     * <code>\u000d</code> carriage return CR ('\r').
+     * 
+     * @see <a href="http://java.sun.com/docs/books/jls/third_edition/html/lexical.html#101089">JLF: Escape Sequences
+     *      for Character and String Literals</a>
+     * @since 2.2
+     */
+    public static final char CR = '\r';
+    
+
     static {
         for (int i = 127; i >= 0; i--) {
             CHAR_STRING_ARRAY[i] = CHAR_STRING.substring(i, i + 1);
             CHAR_ARRAY[i] = new Character((char) i);
         }
     }
-    
+
     /**
      * <p><code>CharUtils</code> instances should NOT be constructed in standard programming.
      * Instead, the class should be used as <code>CharUtils.toString('c');</code>.</p>
@@ -64,6 +84,7 @@ public class CharUtils {
      * to operate.</p>
      */
     public CharUtils() {
+      super();
     }
 
     //-----------------------------------------------------------------------
@@ -84,9 +105,8 @@ public class CharUtils {
     public static Character toCharacterObject(char ch) {
         if (ch < CHAR_ARRAY.length) {
             return CHAR_ARRAY[ch];
-        } else {
-            return new Character(ch);
         }
+        return new Character(ch);
     }
     
     /**
@@ -308,9 +328,8 @@ public class CharUtils {
     public static String toString(char ch) {
         if (ch < 128) {
             return CHAR_STRING_ARRAY[ch];
-        } else {
-            return new String(new char[] {ch});
         }
+        return new String(new char[] {ch});
     }
     
     /**
@@ -333,9 +352,8 @@ public class CharUtils {
     public static String toString(Character ch) {
         if (ch == null) {
             return null;
-        } else {
-            return toString(ch.charValue());
         }
+        return toString(ch.charValue());
     }
     
     //--------------------------------------------------------------------------

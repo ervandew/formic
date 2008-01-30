@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -18,7 +19,9 @@ package org.apache.commons.lang.builder;
 import java.io.Serializable;
 import java.lang.reflect.Array;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.ObjectUtils;
@@ -93,6 +96,78 @@ public abstract class ToStringStyle implements Serializable {
      */
     public static final ToStringStyle SIMPLE_STYLE = new SimpleToStringStyle();
     
+    /**
+     * <p>
+     * A registry of objects used by <code>reflectionToString</code> methods
+     * to detect cyclical object references and avoid infinite loops.
+     * </p>
+     */
+    private static ThreadLocal registry = new ThreadLocal() {
+        protected synchronized Object initialValue() {
+            // The HashSet implementation is not synchronized,
+            // which is just what we need here.
+            return new HashSet();
+        }
+    };
+
+    /**
+     * <p>
+     * Returns the registry of objects being traversed by the <code>reflectionToString</code>
+     * methods in the current thread.
+     * </p>
+     * 
+     * @return Set the registry of objects being traversed
+     */
+    static Set getRegistry() {
+        return (Set) registry.get();
+    }
+
+    /**
+     * <p>
+     * Returns <code>true</code> if the registry contains the given object.
+     * Used by the reflection methods to avoid infinite loops.
+     * </p>
+     * 
+     * @param value
+     *                  The object to lookup in the registry.
+     * @return boolean <code>true</code> if the registry contains the given
+     *             object.
+     */
+    static boolean isRegistered(Object value) {
+        return getRegistry().contains(value);
+    }
+
+    /**
+     * <p>
+     * Registers the given object. Used by the reflection methods to avoid
+     * infinite loops.
+     * </p>
+     * 
+     * @param value
+     *                  The object to register.
+     */
+    static void register(Object value) {
+        if (value != null) {
+            getRegistry().add(value);
+        }
+    }
+
+    /**
+     * <p>
+     * Unregisters the given object.
+     * </p>
+     * 
+     * <p>
+     * Used by the reflection methods to avoid infinite loops.
+     * </p>
+     * 
+     * @param value
+     *                  The object to unregister.
+     */
+    static void unregister(Object value) {
+        getRegistry().remove(value);
+    }
+
     /**
      * Whether to use the field names, the default is <code>true</code>.
      */
@@ -271,6 +346,7 @@ public abstract class ToStringStyle implements Serializable {
             removeLastFieldSeparator(buffer);
         }
         appendContentEnd(buffer);
+        unregister(object);
     }
 
     /**
@@ -342,94 +418,118 @@ public abstract class ToStringStyle implements Serializable {
      * @param detail  output detail or not
      */
     protected void appendInternal(StringBuffer buffer, String fieldName, Object value, boolean detail) {
-        if (ReflectionToStringBuilder.isRegistered(value)
+        if (isRegistered(value)
             && !(value instanceof Number || value instanceof Boolean || value instanceof Character)) {
-            ObjectUtils.appendIdentityToString(buffer, value);
+           appendCyclicObject(buffer, fieldName, value);
+           return;
+        }   
 
-        } else if (value instanceof Collection) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (Collection) value);
-            } else {
-                appendSummarySize(buffer, fieldName, ((Collection) value).size());
-            }
+        register(value);
 
-        } else if (value instanceof Map) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (Map) value);
+        try {
+            if (value instanceof Collection) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (Collection) value);
+                } else {
+                    appendSummarySize(buffer, fieldName, ((Collection) value).size());
+                }
+    
+            } else if (value instanceof Map) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (Map) value);
+                } else {
+                    appendSummarySize(buffer, fieldName, ((Map) value).size());
+                }
+    
+            } else if (value instanceof long[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (long[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (long[]) value);
+                }
+    
+            } else if (value instanceof int[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (int[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (int[]) value);
+                }
+    
+            } else if (value instanceof short[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (short[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (short[]) value);
+                }
+    
+            } else if (value instanceof byte[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (byte[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (byte[]) value);
+                }
+    
+            } else if (value instanceof char[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (char[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (char[]) value);
+                }
+    
+            } else if (value instanceof double[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (double[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (double[]) value);
+                }
+    
+            } else if (value instanceof float[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (float[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (float[]) value);
+                }
+    
+            } else if (value instanceof boolean[]) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (boolean[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (boolean[]) value);
+                }
+    
+            } else if (value.getClass().isArray()) {
+                if (detail) {
+                    appendDetail(buffer, fieldName, (Object[]) value);
+                } else {
+                    appendSummary(buffer, fieldName, (Object[]) value);
+                }
+    
             } else {
-                appendSummarySize(buffer, fieldName, ((Map) value).size());
+                    if (detail) {
+                        appendDetail(buffer, fieldName, value);
+                    } else {
+                        appendSummary(buffer, fieldName, value);
+                    }
             }
-
-        } else if (value instanceof long[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (long[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (long[]) value);
-            }
-
-        } else if (value instanceof int[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (int[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (int[]) value);
-            }
-
-        } else if (value instanceof short[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (short[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (short[]) value);
-            }
-
-        } else if (value instanceof byte[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (byte[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (byte[]) value);
-            }
-
-        } else if (value instanceof char[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (char[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (char[]) value);
-            }
-
-        } else if (value instanceof double[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (double[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (double[]) value);
-            }
-
-        } else if (value instanceof float[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (float[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (float[]) value);
-            }
-
-        } else if (value instanceof boolean[]) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (boolean[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (boolean[]) value);
-            }
-
-        } else if (value.getClass().isArray()) {
-            if (detail) {
-                appendDetail(buffer, fieldName, (Object[]) value);
-            } else {
-                appendSummary(buffer, fieldName, (Object[]) value);
-            }
-
-        } else {
-            if (detail) {
-                appendDetail(buffer, fieldName, value);
-            } else {
-                appendSummary(buffer, fieldName, value);
-            }
+        } finally {
+            unregister(value);
         }
+    }
+    
+    /**
+     * <p>Append to the <code>toString</code> an <code>Object</code>
+     * value that has been detected to participate in a cycle. This
+     * implementation will print the standard string value of the value.</p>
+     * 
+     * @param buffer  the <code>StringBuffer</code> to populate
+     * @param fieldName  the field name, typically not used as already appended
+     * @param value  the value to add to the <code>toString</code>,
+     *  not <code>null</code>
+     *  
+     * @since 2.2
+     */
+    protected void appendCyclicObject(StringBuffer buffer, String fieldName, Object value) {
+       ObjectUtils.appendIdentityToString(buffer, value);
     }
 
     /**
@@ -1300,6 +1400,7 @@ public abstract class ToStringStyle implements Serializable {
      */
     protected void appendClassName(StringBuffer buffer, Object object) {
         if (useClassName && object != null) {
+            register(object);
             if (useShortClassName) {
                 buffer.append(getShortClassName(object.getClass()));
             } else {
@@ -1316,6 +1417,7 @@ public abstract class ToStringStyle implements Serializable {
      */
     protected void appendIdentityHashCode(StringBuffer buffer, Object object) {
         if (this.isUseIdentityHashCode() && object!=null) {
+            register(object);
             buffer.append('@');
             buffer.append(Integer.toHexString(System.identityHashCode(object)));
         }
@@ -1982,11 +2084,18 @@ public abstract class ToStringStyle implements Serializable {
     private static final class DefaultToStringStyle extends ToStringStyle {
 
         /**
+         * Required for serialization support.
+         * 
+         * @see java.io.Serializable
+         */
+        private static final long serialVersionUID = 1L;
+
+        /**
          * <p>Constructor.</p>
          *
          * <p>Use the static constant rather than instantiating.</p>
          */
-        private DefaultToStringStyle() {
+        DefaultToStringStyle() {
             super();
         }
 
@@ -2012,12 +2121,14 @@ public abstract class ToStringStyle implements Serializable {
      */
     private static final class NoFieldNameToStringStyle extends ToStringStyle {
 
+        private static final long serialVersionUID = 1L;
+
         /**
          * <p>Constructor.</p>
          *
          * <p>Use the static constant rather than instantiating.</p>
          */
-        private NoFieldNameToStringStyle() {
+        NoFieldNameToStringStyle() {
             super();
             this.setUseFieldNames(false);
         }
@@ -2044,12 +2155,14 @@ public abstract class ToStringStyle implements Serializable {
      */
     private static final class ShortPrefixToStringStyle extends ToStringStyle {
 
+        private static final long serialVersionUID = 1L;
+
         /**
          * <p>Constructor.</p>
          *
          * <p>Use the static constant rather than instantiating.</p>
          */
-        private ShortPrefixToStringStyle() {
+        ShortPrefixToStringStyle() {
             super();
             this.setUseShortClassName(true);
             this.setUseIdentityHashCode(false);
@@ -2074,12 +2187,14 @@ public abstract class ToStringStyle implements Serializable {
      */
     private static final class SimpleToStringStyle extends ToStringStyle {
 
+        private static final long serialVersionUID = 1L;
+
         /**
          * <p>Constructor.</p>
          *
          * <p>Use the static constant rather than instantiating.</p>
          */
-        private SimpleToStringStyle() {
+        SimpleToStringStyle() {
             super();
             this.setUseClassName(false);
             this.setUseIdentityHashCode(false);
@@ -2108,12 +2223,14 @@ public abstract class ToStringStyle implements Serializable {
      */
     private static final class MultiLineToStringStyle extends ToStringStyle {
 
+        private static final long serialVersionUID = 1L;
+
         /**
          * <p>Constructor.</p>
          *
          * <p>Use the static constant rather than instantiating.</p>
          */
-        private MultiLineToStringStyle() {
+        MultiLineToStringStyle() {
             super();
             this.setContentStart("[");
             this.setFieldSeparator(SystemUtils.LINE_SEPARATOR + "  ");

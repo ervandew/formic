@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -23,7 +24,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * <p>Provides extra functionality for Java Number classes.</p>
  *
- * @author <a href="mailto:bayard@generationjava.com">Henri Yandell</a>
  * @author <a href="mailto:rand_mcneely@yahoo.com">Rand McNeely</a>
  * @author Stephen Colebourne
  * @author <a href="mailto:steve.downey@netfolio.com">Steve Downey</a>
@@ -82,6 +82,7 @@ public class NumberUtils {
      * to operate.</p>
      */
     public NumberUtils() {
+        super();
     }
 
     //-----------------------------------------------------------------------
@@ -450,8 +451,7 @@ public class NumberUtils {
                 case 'L' :
                     if (dec == null
                         && exp == null
-                        && isDigits(numeric.substring(1))
-                        && (numeric.charAt(0) == '-' || Character.isDigit(numeric.charAt(0)))) {
+                        && (numeric.charAt(0) == '-' && isDigits(numeric.substring(1)) || isDigits(numeric))) {
                         try {
                             return createLong(numeric);
                         } catch (NumberFormatException nfe) {
@@ -472,6 +472,7 @@ public class NumberUtils {
                         }
 
                     } catch (NumberFormatException nfe) {
+                        // ignore the bad number
                     }
                     //Fall through
                 case 'd' :
@@ -482,10 +483,12 @@ public class NumberUtils {
                             return d;
                         }
                     } catch (NumberFormatException nfe) {
+                        // ignore the bad number
                     }
                     try {
                         return createBigDecimal(numeric);
                     } catch (NumberFormatException e) {
+                        // ignore the bad number
                     }
                     //Fall through
                 default :
@@ -505,10 +508,12 @@ public class NumberUtils {
                 try {
                     return createInteger(str);
                 } catch (NumberFormatException nfe) {
+                    // ignore the bad number
                 }
                 try {
                     return createLong(str);
                 } catch (NumberFormatException nfe) {
+                    // ignore the bad number
                 }
                 return createBigInteger(str);
 
@@ -521,6 +526,7 @@ public class NumberUtils {
                         return f;
                     }
                 } catch (NumberFormatException nfe) {
+                    // ignore the bad number
                 }
                 try {
                     Double d = createDouble(str);
@@ -528,6 +534,7 @@ public class NumberUtils {
                         return d;
                     }
                 } catch (NumberFormatException nfe) {
+                    // ignore the bad number
                 }
 
                 return createBigDecimal(str);
@@ -742,6 +749,33 @@ public class NumberUtils {
         return min;
     }
 
+    /**
+     * <p>Returns the minimum value in an array.</p>
+     * 
+     * @param array  an array, must not be null or empty
+     * @return the minimum value in the array
+     * @throws IllegalArgumentException if <code>array</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>array</code> is empty
+     */
+    public static byte min(byte[] array) {
+        // Validates input
+        if (array == null) {
+            throw new IllegalArgumentException("The Array must not be null");
+        } else if (array.length == 0) {
+            throw new IllegalArgumentException("Array cannot be empty.");
+        }
+    
+        // Finds and returns min
+        byte min = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] < min) {
+                min = array[i];
+            }
+        }
+    
+        return min;
+    }
+
      /**
      * <p>Returns the minimum value in an array.</p>
      * 
@@ -870,6 +904,33 @@ public class NumberUtils {
     
         // Finds and returns max
         short max = array[0];
+        for (int i = 1; i < array.length; i++) {
+            if (array[i] > max) {
+                max = array[i];
+            }
+        }
+    
+        return max;
+    }
+
+    /**
+     * <p>Returns the maximum value in an array.</p>
+     * 
+     * @param array  an array, must not be null or empty
+     * @return the minimum value in the array
+     * @throws IllegalArgumentException if <code>array</code> is <code>null</code>
+     * @throws IllegalArgumentException if <code>array</code> is empty
+     */
+    public static byte max(byte[] array) {
+        // Validates input
+        if (array == null) {
+            throw new IllegalArgumentException("The Array must not be null");
+        } else if (array.length == 0) {
+            throw new IllegalArgumentException("Array cannot be empty.");
+        }
+    
+        // Finds and returns max
+        byte max = array[0];
         for (int i = 1; i < array.length; i++) {
             if (array[i] > max) {
                 max = array[i];

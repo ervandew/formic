@@ -1,9 +1,10 @@
 /*
- * Copyright 2002-2005 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -695,8 +696,8 @@ public class SystemUtils {
      * @since Java 1.2
      */
     public static final String USER_COUNTRY = 
-        (getSystemProperty("user.country") == null ?
-            getSystemProperty("user.region") : getSystemProperty("user.country"));
+        getSystemProperty("user.country") == null ?
+            getSystemProperty("user.region") : getSystemProperty("user.country");
 
     /**
      * <p>The <code>user.dir</code> System Property. User's current working
@@ -875,6 +876,14 @@ public class SystemUtils {
      * <code>null</code>.</p>
      */
     public static final boolean IS_JAVA_1_5 = getJavaVersionMatches("1.5");
+
+    /**
+     * <p>Is <code>true</code> if this is Java version 1.6 (also 1.6.x versions).</p>
+     *
+     * <p>The field will return <code>false</code> if {@link #JAVA_VERSION} is
+     * <code>null</code>.</p>
+     */
+    public static final boolean IS_JAVA_1_6 = getJavaVersionMatches("1.6");
 
     // Operating system checks
     //-----------------------------------------------------------------------
@@ -1071,7 +1080,7 @@ public class SystemUtils {
      * instance to operate.</p>
      */
     public SystemUtils() {
-        // no init.
+        super();
     }
     
     //-----------------------------------------------------------------------    
@@ -1114,7 +1123,11 @@ public class SystemUtils {
         if (JAVA_VERSION_TRIMMED.length() >= 5) {
             str = str + JAVA_VERSION_TRIMMED.substring(4, 5);
         }
-        return Float.parseFloat(str);
+        try {
+            return Float.parseFloat(str);
+        } catch (Exception ex) {
+            return 0;
+        }
     }
     
     /**
@@ -1142,7 +1155,11 @@ public class SystemUtils {
         } else {
             str = str + "0";
         }
-        return Integer.parseInt(str);
+        try {
+            return Integer.parseInt(str);
+        } catch (Exception ex) {
+            return 0;
+        }
     }
 
     /**
