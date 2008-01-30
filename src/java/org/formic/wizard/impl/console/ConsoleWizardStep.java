@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,7 +26,7 @@ import javax.swing.Icon;
 
 import charva.awt.Component;
 
-import org.formic.wizard.WizardStep;
+import org.formic.wizard.step.ConsoleStep;
 
 import org.pietschy.wizard.InvalidStateException;
 import org.pietschy.wizard.WizardModel;
@@ -40,7 +40,7 @@ import org.pietschy.wizard.WizardModel;
 public class ConsoleWizardStep
   implements org.pietschy.wizard.WizardStep, PropertyChangeListener
 {
-  private WizardStep step;
+  private ConsoleStep step;
   private Component component;
   private boolean complete;
   private boolean busy;
@@ -52,7 +52,7 @@ public class ConsoleWizardStep
    *
    * @param step The step for this instance.
    */
-  public ConsoleWizardStep (WizardStep step)
+  public ConsoleWizardStep (ConsoleStep step)
   {
     this.step = step;
     changeSupport = new PropertyChangeSupport(this);
@@ -65,7 +65,7 @@ public class ConsoleWizardStep
    *
    * @return The step.
    */
-  public WizardStep getStep ()
+  public ConsoleStep getStep ()
   {
     return this.step;
   }
@@ -78,7 +78,7 @@ public class ConsoleWizardStep
   public Component getConsoleView ()
   {
     if(component == null){
-      component = step.initConsole();
+      component = step.init();
     }
     return component;
   }

@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -39,7 +39,7 @@ import org.formic.ant.type.Branch;
 import org.formic.ant.type.Path;
 import org.formic.ant.type.Step;
 
-import org.formic.event.gui.TempPropertyChangeListener;
+import org.formic.util.event.gui.TempPropertyChangeListener;
 
 import org.formic.wizard.impl.console.ConsoleWizard;
 import org.formic.wizard.impl.console.ConsoleWizardStep;
@@ -50,6 +50,9 @@ import org.formic.wizard.impl.gui.GuiWizardStep;
 import org.formic.wizard.impl.models.BranchingPath;
 import org.formic.wizard.impl.models.MultiPathModel;
 import org.formic.wizard.impl.models.SimplePath;
+
+import org.formic.wizard.step.ConsoleStep;
+import org.formic.wizard.step.GuiStep;
 
 import org.pietschy.wizard.WizardModel;
 
@@ -201,21 +204,25 @@ public class WizardBuilder
   private static Object getStep (String _name, Properties _properties)
   {
     try{
-      String classname = steps.getProperty(_name);
+      String name = _name;
+      if(consoleMode){
+        name += ".console";
+      }
+
+      String classname = steps.getProperty(name);
       if(classname == null){
         throw new RuntimeException(
             Installer.getString("step.not.found", _name));
       }
-      Constructor constructor =
-        Class.forName(classname).getConstructor(new Class[]{String.class});
+      Constructor constructor = Class.forName(classname)
+        .getConstructor(new Class[]{String.class, Properties.class});
       WizardStep step = (WizardStep)
-        constructor.newInstance(new Object[]{_name});
-      step.initProperties(_properties);
+        constructor.newInstance(new Object[]{_name, _properties});
 
       if(consoleMode){
-        return new ConsoleWizardStep(step);
+        return new ConsoleWizardStep((ConsoleStep)step);
       }
-      return new GuiWizardStep(step);
+      return new GuiWizardStep((GuiStep)step);
     }catch(InvocationTargetException ite){
       Throwable target = ite.getTargetException();
       if(target instanceof IllegalArgumentException){

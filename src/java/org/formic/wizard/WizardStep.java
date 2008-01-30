@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,10 +19,6 @@
 package org.formic.wizard;
 
 import java.beans.PropertyChangeListener;
-
-import java.util.Properties;
-
-import javax.swing.Icon;
 
 /**
  * Represents a step in the wizard.
@@ -67,34 +63,6 @@ public interface WizardStep
    * @return The step's description.
    */
   public String getDescription ();
-
-  /**
-   * Gets the icon to display for this step (gui only).
-   *
-   * @return The step's icon.
-   */
-  public Icon getIcon ();
-
-  /**
-   * Invoked after a step is first constructed to initialize its properties.
-   *
-   * @param properties The properties.
-   */
-  public void initProperties (Properties properties);
-
-  /**
-   * Invoked the first time this step is to be displayed in gui mode.
-   * <p/>
-   * Used to layout the components for the gui version of the step.
-   */
-  public javax.swing.JComponent initGui ();
-
-  /**
-   * Invoked the first time this step is to be displayed in console mode.
-   * <p/>
-   * Used to layout the components for the console version of the step.
-   */
-  public charva.awt.Component initConsole ();
 
   /**
    * Invoked before this step is displayed.

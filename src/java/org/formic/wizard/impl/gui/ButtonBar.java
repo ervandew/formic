@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,7 @@ package org.formic.wizard.impl.gui;
 
 import javax.swing.JButton;
 
-import org.formic.event.gui.ButtonKeyListener;
+import org.formic.util.event.gui.ButtonKeyListener;
 
 import org.pietschy.wizard.Wizard;
 

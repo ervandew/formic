@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,6 +25,7 @@ import charva.awt.BorderLayout;
 import charva.awt.Component;
 import charva.awt.Dimension;
 import charva.awt.FlowLayout;
+import charva.awt.IllegalComponentStateException;
 import charva.awt.Toolkit;
 
 import charva.awt.event.WindowAdapter;
@@ -47,7 +48,7 @@ import org.apache.commons.lang.WordUtils;
 
 import org.formic.Installer;
 
-import org.formic.dialog.console.ConsoleDialogs;
+import org.formic.util.dialog.console.ConsoleDialogs;
 
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardStep;
@@ -82,6 +83,7 @@ public class ConsoleWizard
 
   private boolean canceled;
 
+  private JPanel mainPanel;
   private JPanel viewPanel;
   private JPanel hiddenPanel;
 
@@ -143,7 +145,7 @@ public class ConsoleWizard
 
     viewPanel = new JPanel(new BorderLayout());
 
-    JPanel mainPanel = new JPanel(new BorderLayout());
+    mainPanel = new JPanel(new BorderLayout());
     mainPanel.add(createInfoPanel(), BorderLayout.NORTH);
     mainPanel.add(createButtonPanel(), BorderLayout.SOUTH);
     if(error == null){
@@ -351,7 +353,12 @@ public class ConsoleWizard
     Component[] components = viewPanel.getComponents();
     for (int ii = 0; ii < components.length; ii++){
       if(components[ii] != view){
-        viewPanel.remove(components[ii]);
+        try{
+          viewPanel.remove(components[ii]);
+        }catch(IllegalComponentStateException icse){
+          mainPanel.getCurrentFocus();
+          viewPanel.remove(components[ii]);
+        }
       }
     }
     viewPanel.validate();

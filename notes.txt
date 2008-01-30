@@ -1,0 +1,82 @@
+TODO {{{
+
+  Upgrade
+    - ant from 1.6.5 to 1.7.0
+    - backport-util-concurrent from 2.2 to 3.0
+    - charva from 1.1.2 to 1.1.4
+    - commons-io from 1.2 to 1.3.2 (update link in ant/doc.xml)
+    - commons-lang from 2.1 to 2.3 (update link in ant/doc.xml)
+
+  Panels
+    - Proxy setup
+    - Feature Tree
+    - Required software discovery / progress
+      - When looking for required software, add link/button for user to specify
+        location in a popup?
+    - Database connection info
+    - File diff
+
+  Enhancements
+    - Add ability to view the log (apps/kate.png,package_editors.png from nuvola icons)
+      - Button on bottom left hand side to open window.
+        1) Read location of "file" appender.
+        2) Load current contents into a JTextArea
+        3) Register an appender for appending content to the JTextArea
+           - appender = new AsyncAppender();
+             appender.addAppender(new WriterAppend(layout, new
+             JTextAreaWriter(textArea)));
+        - downside is possibility of lost or redundent logging info if a lot of
+          messages are being logged when the above steps are executing.
+    - Add support for automated installs.
+
+  Linux
+    - jre / jdk discovery in shell script.
+
+  Windows
+    - Splash screen viewable until installer has started (between intialization
+      progress window + installer window)?
+      - how can installer notify splash screen that it has started.
+
+  Uninstaller
+    - uninstall wizard panels
+      Abstract InstallStep to provided shared functionality.
+    - create exe/sh at installer build time and have install procedure populate
+      an ini or property file that the uninstaller can use for info it needs
+      (install location, product name, service info, etc).
+    - result should be a directory 'uninstall' with an exe/sh and
+      ini/property file.
+      Windows: register uninstaller in registry.
+
+  Forms
+    - Validators
+      - min length
+      - max length
+      - float range
+      - int range
+      - date range
+      - email
+      - date
+      - float
+      - double
+      - short
+      - int
+      - long
+      - byte
+      - integer
+      - regex
+
+}}}
+
+NOTES {{{
+
+  Notes for myself.
+
+    Running formic packager:
+      build/formic/bin/formic -buildfile build/formic/samples/build.xml
+
+    When upgrading ant be sure to modify ant.bat to return an error code on
+    failure.
+
+}}}
+
+// vim:fdm=marker:tw=0

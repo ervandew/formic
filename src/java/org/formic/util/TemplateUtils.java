@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@
 package org.formic.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringWriter;
@@ -63,8 +64,21 @@ public class TemplateUtils
   }
 
   /**
-   * Evaluates the template supplied via the specfied reader into the supplied
-   * writer w/ the specified values.
+   * Evaluates the template supplied w/ the specified values.
+   *
+   * @param template The template.
+   * @param values The template values.
+   * @return The evaluation result.
+   */
+  public static String evaluate (String template, Map values)
+    throws Exception
+  {
+    return evaluate(new ByteArrayInputStream(template.getBytes()), values);
+  }
+
+  /**
+   * Evaluates the template supplied via the specfied reader w/ the specified
+   * values.
    *
    * @param template The template.
    * @param values The template values.

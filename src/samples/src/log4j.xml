@@ -47,7 +47,7 @@
       - Don't use console appender if you plan to let users run installer in
       - console mode, as it will currupt the display.
       -->
-    <appender-ref ref="console"/>
+    <!--appender-ref ref="console"/-->
   </root>
 
 </log4j:configuration>

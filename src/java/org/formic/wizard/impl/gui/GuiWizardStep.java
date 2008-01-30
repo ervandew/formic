@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@
 package org.formic.wizard.impl.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -27,23 +28,24 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import javax.swing.Icon;
-import javax.swing.JComponent;
 
 import net.java.swingfx.waitwithstyle.MGlassPaneContainer;
 import net.java.swingfx.waitwithstyle.SingleComponentInfiniteProgress;
 
 import org.formic.Installer;
 
-import org.formic.dialog.gui.GuiDialogs;
+import org.formic.util.dialog.gui.GuiDialogs;
 
 import org.formic.wizard.WizardStep;
+
+import org.formic.wizard.step.GuiStep;
 
 import org.pietschy.wizard.InvalidStateException;
 import org.pietschy.wizard.PanelWizardStep;
 import org.pietschy.wizard.WizardModel;
 
 /**
- * Wraps {@link WizardStep} implementations for use in the gui wizard framework.
+ * Wraps {@link GuiStep} implementations for use in the gui wizard framework.
  *
  * @author Eric Van Dewoestine (ervandew@yahoo.com)
  * @version $Revision$
@@ -55,15 +57,15 @@ public class GuiWizardStep
   private static SingleComponentInfiniteProgress INFINITE_PROGRESS;
   private static final String BUSY_TEXT = Installer.getString("busy.text");
 
-  private WizardStep step;
-  private JComponent component;
+  private GuiStep step;
+  private Component component;
 
   /**
    * Constructs a new instance.
    *
    * @param step The step for this instance.
    */
-  public GuiWizardStep (WizardStep step)
+  public GuiWizardStep (GuiStep step)
   {
     super(step.getTitle(), step.getDescription());
     this.step = step;
@@ -123,7 +125,7 @@ public class GuiWizardStep
   {
     try{
       if(component == null){
-        component = step.initGui();
+        component = step.init();
 
         setLayout(new BorderLayout());
         add(component, BorderLayout.CENTER);

@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -18,6 +18,7 @@
  */
 package org.formic;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -36,14 +37,16 @@ import javax.swing.UIManager;
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticTheme;
 
+import org.apache.commons.lang.StringUtils;
+
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 
 import org.formic.ant.util.AntUtils;
 
-import org.formic.dialog.gui.GuiDialogs;
-
 import org.formic.util.ResourceBundleAggregate;
+
+import org.formic.util.dialog.gui.GuiDialogs;
 
 import org.formic.wizard.Wizard;
 import org.formic.wizard.WizardBuilder;
@@ -154,6 +157,7 @@ public class Installer
     resourceBundle = new ResourceBundleAggregate();
     resourceBundle.addBundle(bundle);
     resourceBundle.addBundle(ResourceBundle.getBundle("org/formic/messages"));
+    resourceBundle.addBundle(ResourceBundle.getBundle("org/formic/wizard/install"));
   }
 
   /**
@@ -245,6 +249,27 @@ public class Installer
 
     URL url = Installer.class.getResource(path);
     return url != null ? Toolkit.getDefaultToolkit().createImage(url) : null;
+  }
+
+  /**
+   * Gets a color given a resource key.
+   *
+   * @param color The key.
+   * @return The color or null if not found.
+   */
+  public static Color getColor (String color)
+  {
+    String value = getString(color);
+    if(color == null){
+      return null;
+    }
+
+    String[] rgb = StringUtils.split(value, ',');
+    int red = Integer.parseInt(rgb[0]);
+    int green = Integer.parseInt(rgb[1]);
+    int blue = Integer.parseInt(rgb[2]);
+
+    return new Color(red, green, blue);
   }
 
   /**

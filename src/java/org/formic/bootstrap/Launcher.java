@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2006  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2008  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -41,9 +41,9 @@ import javax.swing.WindowConstants;
 
 import org.formic.bootstrap.util.Extractor;
 
-import org.formic.dialog.gui.GuiDialogs;
-
 import org.formic.util.CommandExecutor;
+
+import org.formic.util.dialog.gui.GuiDialogs;
 
 /**
  * Class responsible for extracting embedded archive and kicking off the ant

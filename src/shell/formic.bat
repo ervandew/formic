@@ -1,6 +1,6 @@
 @echo off
 rem Formic installer framework.
-rem Copyright (C) 2004 - 2006  Eric Van Dewoestine
+rem Copyright (C) 2004 - 2008  Eric Van Dewoestine
 rem
 rem This library is free software; you can redistribute it and/or
 rem modify it under the terms of the GNU Lesser General Public

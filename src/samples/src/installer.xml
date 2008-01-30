@@ -22,17 +22,17 @@
 
         <formic:step name="license"/>
 
-        <!--formic:step name="test"/-->
+        <!--formic:step name="test"/>
 
         <formic:step name="installLocation">
-          <property name="discoverer" value="TestDiscoverer"/>
+          <property name="discoverer" value="org.sample.TestDiscoverer"/>
         </formic:step>
 
         <formic:step name="featureList">
-          <property name="provider" value="TestFeatureProvider"/>
+          <property name="provider" value="org.sample.TestFeatureProvider"/>
         </formic:step>
 
-        <!-- Go to requirements branch 1 if feature == "branch" -->
+        <!- - Go to requirements branch 1 if feature == "branch" - ->
         <formic:branch path="branch_requirements">
           <or>
             <istrue value="featureList.feature.three"/>
@@ -41,7 +41,7 @@
           </or>
         </formic:branch>
 
-        <formic:step name="summary"/>
+        <formic:step name="summary"/!-->
         <formic:step name="install"/>
         <formic:step name="finished"/>
       </formic:path>
@@ -49,7 +49,7 @@
       <!-- requirments branch -->
       <formic:path name="branch_requirements">
         <formic:step name="requirements">
-          <property name="provider" value="TestRequirementProvider"/>
+          <property name="provider" value="org.sample.TestRequirementProvider"/>
         </formic:step>
       </formic:path>
 

@@ -6,3 +6,5 @@ Features:
   $installer.getString("${feature}")
   #end
 #end
+
+Test: $installer.context.getValue("test.name")
