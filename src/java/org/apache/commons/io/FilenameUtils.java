@@ -1,12 +1,13 @@
 /*
- * Copyright 2001-2005 The Apache Software Foundation.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ * 
  *      http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -93,8 +94,15 @@ public class FilenameUtils {
 
     /**
      * The extension separator character.
+     * @since Commons IO 1.4
      */
-    private static final char EXTENSION_SEPARATOR = '.';
+    public static final char EXTENSION_SEPARATOR = '.';
+
+    /**
+     * The extension separator String.
+     * @since Commons IO 1.4
+     */
+    public static final String EXTENSION_SEPARATOR_STR = (new Character(EXTENSION_SEPARATOR)).toString();
 
     /**
      * The Unix separator character.
@@ -116,7 +124,7 @@ public class FilenameUtils {
      */
     private static final char OTHER_SEPARATOR;
     static {
-        if (SYSTEM_SEPARATOR == WINDOWS_SEPARATOR) {
+        if (isSystemWindows()) {
             OTHER_SEPARATOR = UNIX_SEPARATOR;
         } else {
             OTHER_SEPARATOR = WINDOWS_SEPARATOR;
@@ -128,6 +136,16 @@ public class FilenameUtils {
      */
     public FilenameUtils() {
         super();
+    }
+
+    //-----------------------------------------------------------------------
+    /**
+     * Determines if Windows file system is in use.
+     * 
+     * @return true if the system is Windows
+     */
+    static boolean isSystemWindows() {
+        return SYSTEM_SEPARATOR == WINDOWS_SEPARATOR;
     }
 
     //-----------------------------------------------------------------------
@@ -432,7 +450,7 @@ public class FilenameUtils {
         if (path == null) {
             return null;
         }
-        if (SYSTEM_SEPARATOR == WINDOWS_SEPARATOR) {
+        if (isSystemWindows()) {
             return separatorsToWindows(path);
         } else {
             return separatorsToUnix(path);
@@ -891,9 +909,10 @@ public class FilenameUtils {
      * @param filename1  the first filename to query, may be null
      * @param filename2  the second filename to query, may be null
      * @return true if the filenames are equal, null equals null
+     * @see IOCase#SENSITIVE
      */
     public static boolean equals(String filename1, String filename2) {
-        return equals(filename1, filename2, false, false);
+        return equals(filename1, filename2, false, IOCase.SENSITIVE);
     }
 
     /**
@@ -905,9 +924,10 @@ public class FilenameUtils {
      * @param filename1  the first filename to query, may be null
      * @param filename2  the second filename to query, may be null
      * @return true if the filenames are equal, null equals null
+     * @see IOCase#SYSTEM
      */
     public static boolean equalsOnSystem(String filename1, String filename2) {
-        return equals(filename1, filename2, true, false);
+        return equals(filename1, filename2, false, IOCase.SYSTEM);
     }
 
     //-----------------------------------------------------------------------
@@ -920,9 +940,10 @@ public class FilenameUtils {
      * @param filename1  the first filename to query, may be null
      * @param filename2  the second filename to query, may be null
      * @return true if the filenames are equal, null equals null
+     * @see IOCase#SENSITIVE
      */
     public static boolean equalsNormalized(String filename1, String filename2) {
-        return equals(filename1, filename2, false, true);
+        return equals(filename1, filename2, true, IOCase.SENSITIVE);
     }
 
     /**
@@ -936,41 +957,42 @@ public class FilenameUtils {
      * @param filename1  the first filename to query, may be null
      * @param filename2  the second filename to query, may be null
      * @return true if the filenames are equal, null equals null
+     * @see IOCase#SYSTEM
      */
     public static boolean equalsNormalizedOnSystem(String filename1, String filename2) {
-        return equals(filename1, filename2, true, true);
+        return equals(filename1, filename2, true, IOCase.SYSTEM);
     }
 
     /**
-     * Checks whether two filenames are equal after both have been normalized
-     * and optionally using the case rules of the system.
-     * <p>
-     * Both filenames are first passed to {@link #normalize(String)}.
+     * Checks whether two filenames are equal, optionally normalizing and providing
+     * control over the case-sensitivity.
      *
      * @param filename1  the first filename to query, may be null
      * @param filename2  the second filename to query, may be null
-     * @param system  whether to use the system (windows or unix)
      * @param normalized  whether to normalize the filenames
+     * @param caseSensitivity  what case sensitivity rule to use, null means case-sensitive
      * @return true if the filenames are equal, null equals null
+     * @since Commons IO 1.3
      */
-    private static boolean equals(
+    public static boolean equals(
             String filename1, String filename2,
-            boolean system, boolean normalized) {
-        if (filename1 == filename2) {
-            return true;
-        }
+            boolean normalized, IOCase caseSensitivity) {
+        
         if (filename1 == null || filename2 == null) {
-            return false;
+            return filename1 == filename2;
         }
         if (normalized) {
             filename1 = normalize(filename1);
             filename2 = normalize(filename2);
+            if (filename1 == null || filename2 == null) {
+                throw new NullPointerException(
+                    "Error normalizing one or both of the file names");
+            }
         }
-        if (system && (SYSTEM_SEPARATOR == WINDOWS_SEPARATOR)) {
-            return filename1.equalsIgnoreCase(filename2);
-        } else {
-            return filename1.equals(filename2);
+        if (caseSensitivity == null) {
+            caseSensitivity = IOCase.SENSITIVE;
         }
+        return caseSensitivity.checkEquals(filename1, filename2);
     }
 
     //-----------------------------------------------------------------------
@@ -1058,7 +1080,7 @@ public class FilenameUtils {
      * The wildcard matcher uses the characters '?' and '*' to represent a
      * single or multiple wildcard characters.
      * This is the same as often found on Dos/Unix command lines.
-     * The extension check is case-sensitive.
+     * The check is case-sensitive always.
      * <pre>
      * wildcardMatch("c.txt", "*.txt")      --> true
      * wildcardMatch("c.txt", "*.jpg")      --> false
@@ -1070,9 +1092,10 @@ public class FilenameUtils {
      * @param filename  the filename to match on
      * @param wildcardMatcher  the wildcard string to match against
      * @return true if the filename matches the wilcard string
+     * @see IOCase#SENSITIVE
      */
     public static boolean wildcardMatch(String filename, String wildcardMatcher) {
-        return wildcardMatch(filename, wildcardMatcher, false);
+        return wildcardMatch(filename, wildcardMatcher, IOCase.SENSITIVE);
     }
 
     /**
@@ -1094,33 +1117,37 @@ public class FilenameUtils {
      * @param filename  the filename to match on
      * @param wildcardMatcher  the wildcard string to match against
      * @return true if the filename matches the wilcard string
+     * @see IOCase#SYSTEM
      */
     public static boolean wildcardMatchOnSystem(String filename, String wildcardMatcher) {
-        return wildcardMatch(filename, wildcardMatcher, true);
+        return wildcardMatch(filename, wildcardMatcher, IOCase.SYSTEM);
     }
 
     /**
-     * Checks a filename to see if it matches the specified wildcard matcher.
+     * Checks a filename to see if it matches the specified wildcard matcher
+     * allowing control over case-sensitivity.
      * <p>
      * The wildcard matcher uses the characters '?' and '*' to represent a
      * single or multiple wildcard characters.
      * 
      * @param filename  the filename to match on
      * @param wildcardMatcher  the wildcard string to match against
-     * @param system  whether to use the system (windows or unix)
+     * @param caseSensitivity  what case sensitivity rule to use, null means case-sensitive
      * @return true if the filename matches the wilcard string
+     * @since Commons IO 1.3
      */
-    private static boolean wildcardMatch(String filename, String wildcardMatcher, boolean system) {
+    public static boolean wildcardMatch(String filename, String wildcardMatcher, IOCase caseSensitivity) {
         if (filename == null && wildcardMatcher == null) {
             return true;
         }
         if (filename == null || wildcardMatcher == null) {
             return false;
         }
-        if (system && (SYSTEM_SEPARATOR == WINDOWS_SEPARATOR)) {
-            filename = filename.toLowerCase();
-            wildcardMatcher = wildcardMatcher.toLowerCase();
+        if (caseSensitivity == null) {
+            caseSensitivity = IOCase.SENSITIVE;
         }
+        filename = caseSensitivity.convertCase(filename);
+        wildcardMatcher = caseSensitivity.convertCase(wildcardMatcher);
         String[] wcs = splitOnTokens(wildcardMatcher);
         boolean anyChars = false;
         int textIdx = 0;
@@ -1227,7 +1254,7 @@ public class FilenameUtils {
             list.add(buffer.toString());
         }
 
-        return (String[]) list.toArray(new String[0]);
+        return (String[]) list.toArray( new String[ list.size() ] );
     }
 
 }

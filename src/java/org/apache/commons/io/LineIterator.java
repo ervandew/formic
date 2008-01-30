@@ -1,9 +1,10 @@
 /*
- * Copyright 2006 The Apache Software Foundation.
- * 
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
  * 
  *      http://www.apache.org/licenses/LICENSE-2.0
  * 
@@ -18,6 +19,7 @@ package org.apache.commons.io;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
@@ -48,7 +50,7 @@ import java.util.NoSuchElementException;
  * @version $Id$
  * @since Commons IO 1.2
  */
-public class LineIterator {
+public class LineIterator implements Iterator {
 
     /** The reader that is being read. */
     private final BufferedReader bufferedReader;
