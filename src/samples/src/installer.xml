@@ -39,9 +39,9 @@
             <istrue value="featureList.feature.four"/>
             <istrue value="featureList.feature.five"/>
           </or>
-        </formic:branch>
+        </formic:branch-->
 
-        <formic:step name="summary"/!-->
+        <formic:step name="summary"/>
         <formic:step name="install"/>
         <formic:step name="finished"/>
       </formic:path>

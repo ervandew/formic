@@ -2,7 +2,6 @@ TODO {{{
 
   Upgrade
     - ant from 1.6.5 to 1.7.0
-    - charva from 1.1.2 to 1.1.4
 
   Panels
     - Proxy setup

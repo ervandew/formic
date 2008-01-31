@@ -46,7 +46,7 @@ public abstract class JTextComponent
         _document = document_;
     }
 
-    public String getText() {
+    public synchronized String getText() {
         try{
             return _document.getText(0, _document.getLength());
         }catch(BadLocationException e){
@@ -54,7 +54,7 @@ public abstract class JTextComponent
         }
     }
 
-    public void setText(String text_) {
+    public synchronized void setText(String text_) {
         try{
             if(_document instanceof AbstractDocument){
                 ((AbstractDocument)_document)

@@ -50,10 +50,16 @@ import java.util.Vector;
 
 import charva.awt.event.*;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 /**
  * Component is the abstract superclass of all the other CHARVA widgets.
  */
 public abstract class Component {
+
+    private static final Log LOG = LogFactory.getLog(Component.class);
+
     /**
      * Constructor
      */
@@ -78,7 +84,7 @@ public abstract class Component {
     public void show() {
         if (!_visible) {
             _visible = true;
-            repaint();  // post a PaintEvent
+            repaint();	// post a PaintEvent
         }
     }
 
@@ -103,7 +109,7 @@ public abstract class Component {
                 }
             }
 
-            repaint();  // post a PaintEvent
+            repaint();	// post a PaintEvent
         }
     }
 
@@ -284,8 +290,8 @@ public abstract class Component {
         else if (evt_ instanceof MouseEvent) {
 
             MouseEvent e = (MouseEvent) evt_;
-//      if (e.getModifiers() != MouseEvent.MOUSE_PRESSED)
-//    return;
+//	    if (e.getModifiers() != MouseEvent.MOUSE_PRESSED)
+//		return;
 
             processMouseEvent(e);
         }
@@ -333,7 +339,7 @@ public abstract class Component {
      * for this component.
      */
     public void processFocusEvent(FocusEvent fe_) {
-        //System.err.println( "procFocusEvent:" + this.toString() + " ev:" + fe_.toString() );
+        LOG.debug( "processFocusEvent:" + this.toString() + " ev:" + fe_.toString() );
         if (_focusListeners != null) {
             for (Enumeration e = _focusListeners.elements();
                  e.hasMoreElements();) {
@@ -385,8 +391,8 @@ public abstract class Component {
         Window sourcewin = Toolkit.getDefaultToolkit().getTopWindow();
         Component currentFocusX = sourcewin.getCurrentFocus();
      /*
-        System.err.println( "requestFocus1: " + toString() );
-        System.err.println( "currentFocus2: " + currentFocusX.toString() );
+        LOG.debug( "requestFocus1: " + toString() );
+        LOG.debug( "currentFocus2: " + currentFocusX.toString() );
       */
         if (currentFocus != this ||
             ( currentFocusX == this && ! _hadFocus )) {
@@ -419,10 +425,10 @@ public abstract class Component {
             evtQueue.postEvent(evt);
             //System.err.println( "DisparoFocusGained: " + this.toString() + " Window:" + ancestor.toString() );
 
-//      if (getParent() != null)
+//	    if (getParent() != null)
             getParent().setFocus(this);
 
-//      requestSync();
+//	    requestSync();
             repaint();
         }
     }
@@ -818,4 +824,5 @@ public abstract class Component {
     public static final float BOTTOM_ALIGNMENT = (float) 1.0;
     public static final float LEFT_ALIGNMENT = (float) 0.0;
     public static final float RIGHT_ALIGNMENT = (float) 1.0;
+
 }

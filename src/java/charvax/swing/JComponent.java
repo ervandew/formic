@@ -62,7 +62,7 @@ public abstract class JComponent
     public void draw() {
         Point origin = getLocationOnScreen();
 
-//  int colorpair = getCursesColor();
+//	int colorpair = getCursesColor();
 
         /* Blank out the area of this component, but only if this
          * component's color-pair is different than that of the

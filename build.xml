@@ -122,8 +122,8 @@
     </jar>
 
     <!-- patched charva jar -->
-    <copy todir="build/dist" file="lib/charva-1.1.2.jar"/>
-    <jar jarfile="build/dist/charva-1.1.2.jar" update="true">
+    <copy todir="build/dist" file="lib/charva-1.1.4.jar"/>
+    <jar jarfile="build/dist/charva-1.1.4.jar" update="true">
       <fileset dir="build/classes">
         <include name="charva/**/*.class"/>
         <include name="charvax/**/*.class"/>
@@ -158,7 +158,7 @@
       <fileset dir="lib" includes="native/**/*"/>
     </copy>
     <!-- copy update charva jar -->
-    <copy todir="build/formic/ant/lib" file="build/dist/charva-1.1.2.jar"
+    <copy todir="build/formic/ant/lib" file="build/dist/charva-1.1.4.jar"
         overwrite="true"/>
 
     <!-- copy over resource files -->
