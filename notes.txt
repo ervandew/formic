@@ -1,8 +1,5 @@
 TODO {{{
 
-  Upgrade
-    - ant from 1.6.5 to 1.7.0
-
   Panels
     - Proxy setup
     - Feature Tree
@@ -35,7 +32,7 @@ TODO {{{
 
   Uninstaller
     - uninstall wizard panels
-      Abstract InstallStep to provided shared functionality.
+      Abstract InstallStep to provide shared functionality.
     - create exe/sh at installer build time and have install procedure populate
       an ini or property file that the uninstaller can use for info it needs
       (install location, product name, service info, etc).

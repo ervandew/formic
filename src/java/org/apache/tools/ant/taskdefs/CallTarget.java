@@ -1,9 +1,10 @@
 /*
- * Copyright  2000-2004 The Apache Software Foundation
- *
- *  Licensed under the Apache License, Version 2.0 (the "License");
- *  you may not use this file except in compliance with the License.
- *  You may obtain a copy of the License at
+ *  Licensed to the Apache Software Foundation (ASF) under one or more
+ *  contributor license agreements.  See the NOTICE file distributed with
+ *  this work for additional information regarding copyright ownership.
+ *  The ASF licenses this file to You under the Apache License, Version 2.0
+ *  (the "License"); you may not use this file except in compliance with
+ *  the License.  You may obtain a copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -82,10 +83,7 @@ public class CallTarget extends Task {
      * configuring it by calling its own init method.
      */
     public void init() {
-        callee = (Ant) getProject().createTask("ant");
-        callee.setOwningTarget(getOwningTarget());
-        callee.setTaskName(getTaskName());
-        callee.setLocation(getLocation());
+        callee = new Ant(this);
         callee.init();
 // CHANGE
         callee.setAntfile(getProject().getProperty("ant.file"));
@@ -201,8 +199,11 @@ public class CallTarget extends Task {
 // END CHANGE
 
     /**
+     * Handles output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param output The string output to output.
      * @see Task#handleOutput(String)
-     *
      * @since Ant 1.5
      */
     public void handleOutput(String output) {
@@ -214,22 +215,33 @@ public class CallTarget extends Task {
     }
 
     /**
-     * @see Task#handleInput(byte[], int, int)
+     * Handles input.
+     * Deleate to the created project, if present, otherwise
+     * call the super class.
+     * @param buffer the buffer into which data is to be read.
+     * @param offset the offset into the buffer at which data is stored.
+     * @param length the amount of data to read.
      *
+     * @return the number of bytes read.
+     *
+     * @exception IOException if the data cannot be read.
+     * @see Task#handleInput(byte[], int, int)
      * @since Ant 1.6
      */
     public int handleInput(byte[] buffer, int offset, int length)
         throws IOException {
         if (callee != null) {
             return callee.handleInput(buffer, offset, length);
-        } else {
-            return super.handleInput(buffer, offset, length);
         }
+        return super.handleInput(buffer, offset, length);
     }
 
     /**
+     * Handles output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param output The string to output.
      * @see Task#handleFlush(String)
-     *
      * @since Ant 1.5.2
      */
     public void handleFlush(String output) {
@@ -241,8 +253,12 @@ public class CallTarget extends Task {
     }
 
     /**
-     * @see Task#handleErrorOutput(String)
+     * Handle error output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param output The string to output.
      *
+     * @see Task#handleErrorOutput(String)
      * @since Ant 1.5
      */
     public void handleErrorOutput(String output) {
@@ -254,8 +270,11 @@ public class CallTarget extends Task {
     }
 
     /**
+     * Handle error output.
+     * Send it the the new project if is present, otherwise
+     * call the super class.
+     * @param output The string to output.
      * @see Task#handleErrorFlush(String)
-     *
      * @since Ant 1.5.2
      */
     public void handleErrorFlush(String output) {

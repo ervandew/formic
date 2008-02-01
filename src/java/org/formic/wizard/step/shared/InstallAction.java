@@ -30,6 +30,7 @@ import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
 import org.apache.tools.ant.Task;
+import org.apache.tools.ant.UnknownElement;
 
 import org.apache.tools.ant.taskdefs.Ant;
 import org.apache.tools.ant.taskdefs.CallTarget;
@@ -119,14 +120,13 @@ public class InstallAction
     for (int ii = 0; ii < tasks.length; ii++){
       Task task = tasks[ii];
 
-/* Breaks ant property scope for some reason.
+      this.tasks.add(task);
+
       if(task instanceof UnknownElement){
         UnknownElement ue = (UnknownElement)task;
         ue.maybeConfigure();
         task = ((UnknownElement)task).getTask();
       }
-*/
-      this.tasks.add(task);
 
       if (task instanceof Ant ||
           task instanceof CallTarget)

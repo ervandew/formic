@@ -99,14 +99,14 @@ public class WindowsPackager
   }
 
   /**
-   * Constructs a boostrap jar file for the windows installer.
+   * Constructs a bootstrap jar file for the windows installer.
    *
    * @param archive The archive containing the installer files.
    * @return The bootstrap file.
    */
   private File constructBoostrapJar (File archive)
   {
-    File bootstrap = new File(getBuildDir() + "/formic-boostrap.jar");
+    File bootstrap = new File(getBuildDir() + "/formic-bootstrap.jar");
 
     AntUtils.copy(getProject(), getTaskName(),
         new File(getFormicHome() + "/ant/resources/formic-bootstrap.jar"),

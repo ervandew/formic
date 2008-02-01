@@ -143,6 +143,7 @@ public class PackageTask
   {
     if(tar == null){
       tar = new Tar();
+      tar.setProject(getProject());
     }
     return tar;
   }

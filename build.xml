@@ -61,7 +61,7 @@
       </fileset>
     </jar>
 
-    <!-- formic windows installer boostrap jar -->
+    <!-- formic windows installer bootstrap jar -->
     <jar jarfile="build/dist/formic-bootstrap.jar">
       <manifest>
         <attribute name="Main-Class"
@@ -70,7 +70,7 @@
       <fileset dir="build/classes">
         <include name="org/formic/bootstrap/**/*.class"/>
         <include name="org/formic/util/CommandExecutor*.class"/>
-        <include name="org/formic/dialog/gui/*.class"/>
+        <include name="org/formic/util/dialog/gui/*.class"/>
       </fileset>
       <fileset dir="src/java">
         <include name="org/formic/messages.properties*"/>
