@@ -131,7 +131,10 @@ public class InstallAction
         UnknownElement ue = (UnknownElement)task;
         if(CALL_TASKS.indexOf(ue.getTag()) != -1){
           ue.maybeConfigure();
-          task = ((UnknownElement)task).getTask();
+          task = ue.getTask();
+          // set back to unconfigured state to ensure that ant will configure it
+          // again when it will pick up proper environment.
+          ue.setRealThing(null);
         }
       }
 

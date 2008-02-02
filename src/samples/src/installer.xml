@@ -62,6 +62,7 @@
     - Note: Must be named "install".
     -->
   <target name="install">
+    <property name="test.property" value="Worked!!"/>
     <echo>Start ...</echo>
     <sleep seconds="1"/>
     <echo>${installLocation.location}</echo>
@@ -78,6 +79,7 @@
     - Target name can be any name that ant supports.
     -->
   <target name="install.child">
+    <echo>$${test.property}: ${test.property}</echo>
     <sleep seconds="1"/>
     <echo>2 ...</echo>
     <sleep seconds="1"/>
