@@ -12,7 +12,7 @@ Third Party Open Source Code in Formic CVS
     - io: 1.4
     - lang: 2.3
 
-  - apache ant: 1.6.5
+  - apache ant: 1.7.0
     - To facilitate proper feedback of the progress of certain ant tasks during
       an install, several parts of the code have been patched to facilitate the
       required monitoring.
