@@ -52,6 +52,11 @@ public class InstallAction
   private static final String INSTALL_TARGET = "install";
   private static final Pattern STACK_ELEMENT =
     Pattern.compile("^\\s+at .*(.*)$");
+  private static ArrayList CALL_TASKS = new ArrayList();
+  static{
+    CALL_TASKS.add("ant");
+    CALL_TASKS.add("antcall");
+  }
 
   private Target target;
   private ArrayList tasks = new ArrayList();
@@ -124,8 +129,10 @@ public class InstallAction
 
       if(task instanceof UnknownElement){
         UnknownElement ue = (UnknownElement)task;
-        ue.maybeConfigure();
-        task = ((UnknownElement)task).getTask();
+        if(CALL_TASKS.indexOf(ue.getTag()) != -1){
+          ue.maybeConfigure();
+          task = ((UnknownElement)task).getTask();
+        }
       }
 
       if (task instanceof Ant ||
