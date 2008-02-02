@@ -26,6 +26,7 @@ import java.util.Properties;
 import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import org.apache.commons.lang.StringUtils;
@@ -109,13 +110,14 @@ public class TemplateStep
       editor.setBorder(null);
       editor.setFocusable(false);
       content = editor;
-      panel.add(editor, BorderLayout.CENTER);
     }else{
       JTextArea area = new JTextArea();
       area.setEditable(false);
       content = area;
-      panel.add(area, BorderLayout.CENTER);
     }
+    JScrollPane scroll = new JScrollPane(content);
+    scroll.setBorder(null);
+    panel.add(scroll, BorderLayout.CENTER);
 
     return panel;
   }
@@ -127,9 +129,13 @@ public class TemplateStep
   public void displayed ()
   {
     if(content instanceof JEditorPane){
-      ((JEditorPane)content).setText(action.processTemplate(html));
+      JEditorPane editor = (JEditorPane)content;
+      editor.setText(action.processTemplate(html));
+      editor.setCaretPosition(0);
     }else{
-      ((JTextArea)content).setText(action.processTemplate(text));
+      JTextArea area = (JTextArea)content;
+      area.setText(action.processTemplate(text));
+      area.setCaretPosition(0);
     }
   }
 }

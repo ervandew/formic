@@ -8,3 +8,21 @@ Features:
 #end
 
 Test: $installer.context.getValue("test.name")
+
+Horizontal Scroll Test: /a/really/long/path/name/that/will/not/wrap/and/serve/as/an/exmple/of/horizontal/scrolling/on/the/template/step/
+
+More text
+
+that will cause
+
+this step to scroll
+
+vertically
+
+to serve
+
+as an example of
+
+vertical scrolling support
+
+on the template step.

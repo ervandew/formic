@@ -24,8 +24,10 @@ import charva.awt.BorderLayout;
 import charva.awt.Component;
 
 import charvax.swing.JPanel;
+import charvax.swing.JScrollPane;
 import charvax.swing.JTextArea;
-import charvax.swing.SwingUtilities;
+
+import charvax.swing.border.EmptyBorder;
 
 import org.formic.Installer;
 
@@ -88,9 +90,14 @@ public class TemplateStep
 
     area = new JTextArea();
     area.setColumns(ConsoleWizard.getFrame().getSize().width - 20);
+    area.setRows(ConsoleWizard.getFrame().getSize().height - 10);
     area.setEditable(false);
     area.setText(action.processTemplate(text));
-    panel.add(area, charva.awt.BorderLayout.CENTER);
+
+    JScrollPane scroll = new JScrollPane();
+    scroll.setViewportView(area);
+    panel.add(scroll, BorderLayout.CENTER);
+    panel.setBorder(new EmptyBorder(1, 1, 1, 1));
 
     return panel;
   }
@@ -102,5 +109,6 @@ public class TemplateStep
   public void displayed ()
   {
     area.setText(action.processTemplate(text));
+    area.setCaretPosition(0);
   }
 }
