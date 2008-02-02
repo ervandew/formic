@@ -18,14 +18,18 @@
  */
 package org.formic.wizard.form.gui.binding;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 import javax.swing.text.Document;
 import javax.swing.text.JTextComponent;
 
-import foxtrot.Task;
-import foxtrot.Worker;
+import org.apache.tools.ant.Project;
+
+import org.formic.Installer;
 
 import org.formic.wizard.form.Form;
 import org.formic.wizard.form.FormField;
@@ -43,6 +47,7 @@ public class TextComponentBinding
 {
   private JTextComponent component;
   private Form form;
+  private Timer timer;
 
   /**
    * Constructs a new instance.
@@ -92,18 +97,23 @@ public class TextComponentBinding
 
   private void textUpdated (final DocumentEvent e)
   {
-    try{
-      Worker.post(new Task(){
-        public Object run () throws Exception {
+    if(timer != null){
+      timer.cancel();
+    }
+    timer = new Timer();
+    timer.schedule(new TimerTask(){
+      public void run () {
+        try{
           Document document = e.getDocument();
           String value = document.getText(0, document.getLength());
           boolean valid = ValidationUtils.validate(component, value);
           form.setValue(TextComponentBinding.this, component, value, valid);
-          return null;
+          timer.cancel();
+        }catch(Exception ex){
+          Installer.getProject().log(
+            "Error on text update", ex, Project.MSG_DEBUG);
         }
-      });
-    }catch(Exception ex){
-      throw new RuntimeException(ex);
-    }
+      }
+    }, 200);
   }
 }
