@@ -35,6 +35,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
+import javax.swing.SwingUtilities;
 
 import foxtrot.Worker;
 
@@ -155,10 +156,14 @@ public class InstallStep
         }
       });
 
-      overallProgress.setValue(overallProgress.getMaximum());
-      overallLabel.setText(Installer.getString("install.done"));
-      taskProgress.setValue(taskProgress.getMaximum());
-      taskLabel.setText(Installer.getString("install.done"));
+      SwingUtilities.invokeLater(new Runnable(){
+        public void run (){
+          overallProgress.setValue(overallProgress.getMaximum());
+          overallLabel.setText(Installer.getString("install.done"));
+          taskProgress.setValue(taskProgress.getMaximum());
+          taskLabel.setText(Installer.getString("install.done"));
+        }
+      });
 
       setValid(true);
       setCancelEnabled(false);
