@@ -1,11 +1,8 @@
 TODO {{{
 
-  Panels
+  Steps
     - Proxy setup
     - Feature Tree
-    - Required software discovery / progress
-      - When looking for required software, add link/button for user to specify
-        location in a popup?
     - Database connection info
     - File diff
 
