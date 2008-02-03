@@ -8,6 +8,8 @@ import org.formic.wizard.step.gui.RequirementsValidationStep.Requirement;
 public class TestRequirementProvider
   implements RequirementsValidationStep.RequirementProvider
 {
+  private int tries = 0;
+
   public Requirement[] getRequirements ()
   {
     Requirement[] requirements = new Requirement[3];
@@ -30,7 +32,8 @@ public class TestRequirementProvider
       Thread.sleep(2000);
     }catch(Exception ignore){
     }
-    if("requirement.fail".equals(requirement.getKey())){
+    if(tries == 0 && "requirement.fail".equals(requirement.getKey())){
+      tries++;
       return new Status(FAIL, "A test failure message.");
     }
     return OK_STATUS;

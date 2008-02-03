@@ -20,11 +20,14 @@ package org.formic.wizard.step.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
-import java.awt.Dimension;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import java.util.Properties;
 
 import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JEditorPane;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -41,6 +44,8 @@ import javax.swing.table.TableModel;
 
 import foxtrot.Task;
 import foxtrot.Worker;
+
+import net.miginfocom.swing.MigLayout;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -89,6 +94,7 @@ public class RequirementsValidationStep
   private GuiForm form;
   private JEditorPane requirementInfo;
   private JTable table;
+  private JButton retryButton;
 
   private ImageIcon busyIcon;
   private ImageIcon okIcon;
@@ -158,20 +164,26 @@ public class RequirementsValidationStep
 
     table.setRowSelectionInterval(0, 0);
 
-    JPanel container = new JPanel(new BorderLayout());
-    container.add(table, BorderLayout.CENTER);
-    JScrollPane infoScroll = new JScrollPane(requirementInfo);
-    infoScroll.setMinimumSize(new Dimension(30, 50));
-    infoScroll.setMaximumSize(new Dimension(30, 50));
-    infoScroll.setPreferredSize(new Dimension(30, 50));
+    retryButton = new JButton(Installer.getString("requirements.retry"));
+    retryButton.setVisible(false);
+    retryButton.addActionListener(new ActionListener(){
+      public void actionPerformed (ActionEvent e){
+        displayed();
+      }
+    });
 
     form = createForm();
 
-    JPanel panel = new JPanel();
-    panel.setLayout(new BorderLayout());
-    panel.add(form.createMessagePanel(), BorderLayout.NORTH);
-    panel.add(new JScrollPane(container), BorderLayout.CENTER);
-    panel.add(infoScroll, BorderLayout.SOUTH);
+    JPanel container = new JPanel(new BorderLayout());
+    container.add(table, BorderLayout.CENTER);
+    JScrollPane infoScroll = new JScrollPane(requirementInfo);
+
+    JPanel panel = new JPanel(new MigLayout(
+          "wrap 1", "[fill]", "[] [fill, grow] [fill] []"));
+    panel.add(form.createMessagePanel());
+    panel.add(new JScrollPane(container), "grow");
+    panel.add(infoScroll, "height 50!");
+    panel.add(retryButton, "right, width pref!");
 
     return panel;
   }
@@ -206,6 +218,7 @@ public class RequirementsValidationStep
   {
     form.showInfoMessage(null);
     requirementInfo.setText(null);
+    retryButton.setEnabled(false);
 
     setBusy(true);
     try{
@@ -266,7 +279,10 @@ public class RequirementsValidationStep
       }else{
         form.showInfoMessage(Installer.getString("requirements.message.ok"));
       }
-      setValid(!result.equals(FAIL));
+      boolean valid = !result.equals(FAIL);
+      setValid(valid);
+      retryButton.setVisible(retryButton.isVisible() || !valid);
+      retryButton.setEnabled(!valid);
     }catch(Exception e){
       GuiDialogs.showError(e);
       setValid(false);
