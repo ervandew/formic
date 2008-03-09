@@ -2,11 +2,23 @@
   <body>
     <b>Install Folder:</b> $installer.context.getValue("installLocation.location")
     <p>
-    <b>Features:</b>
+    <b>Install Features:</b>
     #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
       #if($installer.context.getValue("${feature}"))
         <br>&nbsp;&nbsp;$installer.getString("${feature}")
       #end
+    #end
+    <p>
+    <b>Don't Install Features:</b>
+    #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
+      #if(!$installer.context.getValue("${feature}"))
+        <br>&nbsp;&nbsp;$installer.getString("${feature}")
+      #end
+    #end
+    <p>
+    <b>Features:</b>
+    #foreach($feature in $installer.context.getKeysByPrefix("featureList.feature"))
+      <br>&nbsp;&nbsp;$installer.getString("${feature}"): $installer.context.getValue("${feature}")
     #end
     <p>
     <b>Test:</b> $installer.context.getValue("test.name")
