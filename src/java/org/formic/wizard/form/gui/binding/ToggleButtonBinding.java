@@ -25,6 +25,7 @@ import javax.swing.event.ChangeListener;
 
 import org.formic.wizard.form.Form;
 import org.formic.wizard.form.FormField;
+import org.formic.wizard.form.ValidationUtils;
 
 /**
  * Class for binding JToggleButton to a Form.
@@ -49,6 +50,8 @@ public class ToggleButtonBinding
   {
     this.component = component;
     this.form = form;
+    boolean valid = ValidationUtils.validate(component, Boolean.FALSE.toString());
+    this.form.setValue(this, component, Boolean.FALSE, valid);
   }
 
   public static FormField bind (JToggleButton component, Form form)
@@ -64,7 +67,8 @@ public class ToggleButtonBinding
    */
   public void stateChanged (ChangeEvent e)
   {
-    form.setValue(this, component,
-        component.isSelected() ? Boolean.TRUE : Boolean.FALSE, true);
+    Boolean value = component.isSelected() ? Boolean.TRUE : Boolean.FALSE;
+    boolean valid = ValidationUtils.validate(component, value.toString());
+    form.setValue(this, component, value, valid);
   }
 }
