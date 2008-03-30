@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <launch4jConfig>
-  <headerType>0</headerType>
+  <headerType>gui</headerType>
   <icon>icon.ico</icon>
   <!--outfile>${launch4j.outfile}</outfile-->
   <!--jar>${launch4j.jar}</jar-->
-  <jarArgs>${formic.action}</jarArgs>
+  <cmdLine>${formic.action}</cmdLine>
   <jre>
     <!-- x.x.x[_xx] -->
     <minVersion>1.4.0</minVersion>
