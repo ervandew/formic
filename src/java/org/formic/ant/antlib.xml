@@ -11,4 +11,8 @@
   <typedef name="libset" classname="org.formic.ant.type.LibSet"/>
   <typedef name="path" classname="org.formic.ant.type.Path"/>
   <typedef name="step" classname="org.formic.ant.type.Step"/>
+
+  <typedef name="istrue"  onerror="ignore" classname="org.formic.ant.condition.IsTrue"/>
+  <typedef name="isfalse"  onerror="ignore" classname="org.formic.ant.condition.IsFalse"/>
+  <typedef name="contains"  onerror="ignore" classname="org.formic.ant.condition.Contains"/>
 </antlib>

@@ -47,9 +47,9 @@
         <!-- Go to requirements branch 1 if feature == "branch" -->
         <formic:branch path="branch_requirements">
           <or>
-            <istrue value="featureList.feature.three"/>
-            <istrue value="featureList.feature.four"/>
-            <istrue value="featureList.feature.five"/>
+            <formic:istrue value="featureList.feature.three"/>
+            <formic:istrue value="featureList.feature.four"/>
+            <formic:istrue value="featureList.feature.five"/>
           </or>
         </formic:branch>
 
