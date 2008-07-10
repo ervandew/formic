@@ -76,6 +76,10 @@ public class Contains
 
     String _string = getProject().getProperty(string);
     String _subString = getProject().getProperty(subString);
+    if (_string == null || _subString == null){
+      return false;
+    }
+
     return caseSensitive
       ? _string.indexOf(_subString) > -1
       : _string.toLowerCase().indexOf(_subString.toLowerCase()) > -1;
