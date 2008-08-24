@@ -220,7 +220,7 @@ public class FeatureListStep
         JTable table = (JTable)e.getSource();
         int row = table.rowAtPoint(e.getPoint());
         int col = table.columnAtPoint(e.getPoint());
-        if(col == 0){
+        if(col == 0 && row > -1){
           JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
           Feature feature = (Feature)table.getModel().getValueAt(row, 1);
           box.doClick();
