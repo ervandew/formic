@@ -38,8 +38,9 @@
     - Initialize the build.
     -->
   <target name="init">
-    <mkdir dir="build/classes"/>
-    <mkdir dir="build/dist"/>
+    <mkdir dir="build/temp"/>
+    <mkdir dir="build/temp/classes"/>
+    <mkdir dir="build/temp/jars"/>
   </target>
 
   <!--
@@ -49,7 +50,7 @@
       description="Compiles the src and builds the jar file.">
 
     <property name="deprecation" value="false"/>
-    <javac destdir="build/classes" debug="on" optimize="false"
+    <javac destdir="build/temp/classes" debug="on" optimize="false"
         target="${javac.target}" source="${javac.target}"
         deprecation="${deprecation}">
       <src path="src/java"/>
@@ -58,8 +59,8 @@
     </javac>
 
     <!-- build formic jar file -->
-    <jar jarfile="build/dist/formic.jar">
-      <fileset dir="build/classes">
+    <jar jarfile="build/temp/jars/formic.jar">
+      <fileset dir="build/temp/classes">
         <include name="net/java/swingfx/**/*.class"/>
         <include name="org/formic/**/*.class"/>
         <exclude name="org/formic/bootstrap/**/*"/>
@@ -77,12 +78,12 @@
     </jar>
 
     <!-- formic windows installer bootstrap jar -->
-    <jar jarfile="build/dist/formic-bootstrap.jar">
+    <jar jarfile="build/temp/jars/formic-bootstrap.jar">
       <manifest>
         <attribute name="Main-Class"
             value="org.formic.bootstrap.Launcher"/>
       </manifest>
-      <fileset dir="build/classes">
+      <fileset dir="build/temp/classes">
         <include name="org/formic/bootstrap/**/*.class"/>
         <include name="org/formic/util/CommandExecutor*.class"/>
         <include name="org/formic/util/dialog/gui/*.class"/>
@@ -105,9 +106,9 @@
     </jar>
 
     <!-- patched ant jar file -->
-    <copy todir="build/dist" file="ant/lib/ant.jar"/>
-    <jar jarfile="build/dist/ant.jar" update="true">
-      <fileset dir="build/classes">
+    <copy todir="build/temp/jars" file="ant/lib/ant.jar"/>
+    <jar jarfile="build/temp/jars/ant.jar" update="true">
+      <fileset dir="build/temp/classes">
         <include name="org/apache/tools/**/*.class"/>
       </fileset>
       <fileset dir="src/java">
@@ -118,8 +119,8 @@
     </jar>
 
     <!-- apache commons minimal jar -->
-    <jar jarfile="build/dist/apache-commons-minimal.jar">
-      <fileset dir="build/classes">
+    <jar jarfile="build/temp/jars/apache-commons-minimal.jar">
+      <fileset dir="build/temp/classes">
         <include name="org/apache/commons/**/*.class"/>
       </fileset>
       <fileset dir="src/java">
@@ -130,65 +131,65 @@
     </jar>
 
     <!-- java.util.concurrent backport jar -->
-    <jar jarfile="build/dist/backport-util-concurrent.jar">
-      <fileset dir="build/classes">
+    <jar jarfile="build/temp/jars/backport-util-concurrent.jar">
+      <fileset dir="build/temp/classes">
         <include name="edu/**/*.class"/>
       </fileset>
     </jar>
 
     <!-- patched charva jar -->
-    <copy todir="build/dist" file="lib/charva-1.1.4.jar"/>
-    <jar jarfile="build/dist/charva-1.1.4.jar" update="true">
-      <fileset dir="build/classes">
+    <copy todir="build/temp/jars" file="lib/charva-1.1.4.jar"/>
+    <jar jarfile="build/temp/jars/charva-1.1.4.jar" update="true">
+      <fileset dir="build/temp/classes">
         <include name="charva/**/*.class"/>
         <include name="charvax/**/*.class"/>
       </fileset>
     </jar>
 
     <!-- patched wizard jar -->
-    <copy todir="build/dist" file="lib/wizard-0.1.12.jar"/>
-    <jar jarfile="build/dist/wizard-0.1.12.jar" update="true">
-      <fileset dir="build/classes">
+    <copy todir="build/temp/jars" file="lib/wizard-0.1.12.jar"/>
+    <jar jarfile="build/temp/jars/wizard-0.1.12.jar" update="true">
+      <fileset dir="build/temp/classes">
         <include name="org/pietschy/**/*.class"/>
       </fileset>
     </jar>
 
     <!-- copy ant and formic scripts over to build dir -->
-    <copy todir="build/formic">
+    <copy todir="build/temp/formic">
       <fileset dir="." includes="LICENSE*.txt,NOTICE"/>
       <fileset dir="." includes="ant/**/*"/>
       <fileset dir="lib" includes="license/*.license"/>
       <fileset dir="src" includes="samples/**/*"/>
-      <fileset dir="build/dist" includes="formic.jar"/>
+      <fileset dir="build/temp/jars" includes="formic.jar"/>
     </copy>
-    <copy todir="build/formic/bin">
+    <copy todir="build/temp/formic/bin">
       <fileset dir="src/shell" includes="**/*"/>
     </copy>
 
     <!-- copy formic jar(s) to ant -->
-    <copy todir="build/formic/ant/lib" overwrite="true">
-      <fileset dir="build/dist"
+    <copy todir="build/temp/formic/ant/lib" overwrite="true">
+      <fileset dir="build/temp/jars"
           includes="*.jar" excludes="formic-bootstrap.jar"/>
       <fileset dir="lib" includes="**/*.jar"/>
       <fileset dir="lib" includes="native/**/*"/>
     </copy>
     <!-- copy update charva jar -->
-    <copy todir="build/formic/ant/lib" file="build/dist/charva-1.1.4.jar"
+    <copy todir="build/temp/formic/ant/lib" file="build/temp/jars/charva-1.1.4.jar"
         overwrite="true"/>
 
     <!-- copy over resource files -->
-    <copy todir="build/formic/ant/resources">
+    <copy todir="build/temp/formic/ant/resources">
       <fileset dir="src/resources" includes="**/*" excludes="launch4j.tar.gz"/>
-      <fileset dir="build/dist" includes="formic-bootstrap.jar"/>
+      <fileset dir="build/temp/jars" includes="formic-bootstrap.jar"/>
     </copy>
 
     <!-- extract launch4j archive -->
     <untar src="src/resources/launch4j.tar.gz" compression="gzip"
-        dest="build/formic/ant/resources"/>
+        dest="build/temp/formic/ant/resources"/>
 
     <!-- set permissions on scripts -->
     <chmod perm="755">
-      <fileset dir="build/formic/">
+      <fileset dir="build/temp/formic/">
         <include name="ant/bin/**/*"/>
         <include name="bin/formic"/>
         <include name="ant/resources/launch4j/bin/ld"/>
@@ -202,7 +203,6 @@
     -->
   <target name="clean" description="Deletes the build directory.">
     <delete dir="build"/>
-    <delete dir="dist"/>
   </target>
 
   <!--
@@ -210,32 +210,32 @@
     -->
   <target name="dist" depends="clean,build,javadoc,docs"
       description="Creates the distributable jars.">
-    <mkdir dir="dist"/>
-    <move todir="build/formic/doc">
+    <mkdir dir="build/dist"/>
+    <move todir="build/temp/formic/doc">
       <fileset dir="build" includes="site/**/*"/>
     </move>
 
-    <zip destfile="dist/formic-${formic.version}.zip">
+    <zip destfile="build/dist/formic-${formic.version}.zip">
       <zipfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
       </zipfileset>
-      <zipfileset prefix="formic-${formic.version}/" dir="build/formic">
+      <zipfileset prefix="formic-${formic.version}/" dir="build/temp/formic">
         <include name="**/*"/>
       </zipfileset>
     </zip>
 
-    <tar destfile="dist/formic-${formic.version}.tar.gz" compression="gzip">
+    <tar destfile="build/dist/formic-${formic.version}.tar.gz" compression="gzip">
       <tarfileset prefix="formic-${formic.version}/" dir=".">
         <include name="src/java/**/*"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/" dir="build/formic">
+      <tarfileset prefix="formic-${formic.version}/" dir="build/temp/formic">
         <include name="**/*"/>
         <exclude name="ant/bin/ant"/>
         <exclude name="ant/resources/launch4j/bin/ld"/>
         <exclude name="ant/resources/launch4j/bin/windres"/>
         <exclude name="bin/formic"/>
       </tarfileset>
-      <tarfileset prefix="formic-${formic.version}/" dir="build/formic" mode="755">
+      <tarfileset prefix="formic-${formic.version}/" dir="build/temp/formic" mode="755">
         <include name="ant/bin/ant"/>
         <include name="ant/resources/launch4j/bin/ld"/>
         <include name="ant/resources/launch4j/bin/windres"/>
