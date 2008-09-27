@@ -83,6 +83,17 @@ public class ValidatorBuilder
   }
 
   /**
+   * Adds IsWritableValidator to the aggregate validator.
+   *
+   * @return This ValidatorBuilder instance for method chaining.
+   */
+  public ValidatorBuilder isWritable ()
+  {
+    validator(IsWritableValidator.INSTANCE);
+    return this;
+  }
+
+  /**
    * Adds the supplied validator to the aggregate validator.
    *
    * @param validator The validator to add.
