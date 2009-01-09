@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src/java"/>
+	<classpathentry kind="src" path="src/samples/src/java"/>
 	<classpathentry kind="lib" path="ant/lib/ant-contrib.jar"/>
 	<classpathentry kind="lib" path="ant/lib/ant.jar"/>
 	<classpathentry kind="lib" path="lib/charva-1.1.4.jar"/>
@@ -13,6 +15,4 @@
 	<classpathentry kind="lib" path="lib/velocity-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/wizard-0.1.12.jar"/>
 	<classpathentry kind="output" path="bin"/>
-	<classpathentry kind="src" path="src/java"/>
-  <classpathentry kind="src" path="src/samples/src/java"/>
 </classpath>
