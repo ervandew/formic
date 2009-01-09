@@ -59,6 +59,7 @@ public abstract class AbstractStep
   private String description;
   private Properties properties;
   private boolean cancel = true;
+  private boolean previous = true;
   private boolean valid = true;
   private boolean busy;
 
@@ -169,6 +170,14 @@ public abstract class AbstractStep
   }
 
   /**
+   * Sets whether the previous button is enabled.
+   */
+  public void setPreviousEnabled (boolean _previous)
+  {
+    changeSupport.firePropertyChange(PREVIOUS, previous, previous = _previous);
+  }
+
+  /**
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isValid()
    */
@@ -219,7 +228,7 @@ public abstract class AbstractStep
    */
   public boolean isPreviousEnabled ()
   {
-    return true;
+    return previous;
   }
 
   /**

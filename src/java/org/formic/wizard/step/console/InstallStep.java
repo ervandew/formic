@@ -134,20 +134,12 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.WizardStep#isPreviousEnabled()
-   */
-  public boolean isPreviousEnabled ()
-  {
-    return false;
-  }
-
-  /**
-   * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
   public void displayed ()
   {
     setBusy(true);
+    setPreviousEnabled(false);
     new Thread(){
       public void run ()
       {

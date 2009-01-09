@@ -221,7 +221,9 @@ public class GuiWizard
         MultiPathModel model = (MultiPathModel)getModel();
         org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
-        if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
+        String property = evt.getPropertyName();
+
+        if (property.equals(Wizard.ACTIVE_STEP)){
           // update step listening.
           if (activeStep != null){
              activeStep.removePropertyChangeListener(GuiWizard.this);
@@ -244,17 +246,19 @@ public class GuiWizard
             updateDefaultButton();
           }
         }else{
-          if(step != null){
-            WizardStep ws = ((GuiWizardStep)step).getStep();
-            updateButtonStatus(model, ws, step);
-          }
-
-          if (evt.getPropertyName().equals(WizardStep.CANCEL)){
+          if (property.equals(WizardStep.CANCEL)){
             boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
             getCancelAction().setEnabled(cancelEnabled);
-          }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
-              evt.getPropertyName().equals(WizardStep.BUSY))
+          }else if (property.equals(WizardStep.PREVIOUS)){
+            boolean previousEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+            getPreviousAction().setEnabled(previousEnabled);
+          }else if (property.equals(WizardStep.VALID) ||
+              property.equals(WizardStep.BUSY))
           {
+            if(step != null){
+              WizardStep ws = ((GuiWizardStep)step).getStep();
+              updateButtonStatus(model, ws, step);
+            }
             updateDefaultButton();
           }
         }
@@ -277,7 +281,7 @@ public class GuiWizard
       !model.isLastStep(step) &&
       ws.isPreviousEnabled();
     getPreviousAction().setEnabled(previousAvailable);
-    model.setPreviousAvailable(previousAvailable);
+    //model.setPreviousAvailable(previousAvailable);
 
     // set whether cancel step is enabled or not.
     boolean cancelAvailable =

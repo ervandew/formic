@@ -314,6 +314,9 @@ public class ConsoleWizard
     }else if (evt.getPropertyName().equals(WizardStep.CANCEL)){
       boolean cancelEnabled = ((Boolean)evt.getNewValue()).booleanValue();
       cancelButton.setEnabled(cancelEnabled);
+    }else if (evt.getPropertyName().equals(WizardStep.PREVIOUS)){
+      boolean previousEnabled = ((Boolean)evt.getNewValue()).booleanValue();
+      previousButton.setEnabled(previousEnabled);
     }else if (evt.getPropertyName().equals(WizardStep.VALID) ||
         evt.getPropertyName().equals(WizardStep.BUSY))
     {

@@ -34,6 +34,11 @@ public interface WizardStep
   public static final String CANCEL = "cancel";
 
   /**
+   * Property name used for property changed events to isPreviousEnabled.
+   */
+  public static final String PREVIOUS = "previous";
+
+  /**
    * Property name used for property changed events to isValid.
    */
   public static final String VALID = "valid";
