@@ -19,6 +19,7 @@
 package org.formic;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -42,7 +43,7 @@ public class InstallContext
    * @param key The key.
    * @return true if contains the key, false otherwise.
    */
-  public boolean containsKey (Object key)
+  public boolean containsKey(Object key)
   {
     return values.containsKey(key);
   }
@@ -53,7 +54,7 @@ public class InstallContext
    * @param key The key the value is stored under.
    * @return The value or null if not found.
    */
-  public Object getValue (Object key)
+  public Object getValue(Object key)
   {
     return values.get(key);
   }
@@ -64,7 +65,18 @@ public class InstallContext
    * @param keyPrefix The prefix.
    * @return array of keys.
    */
-  public String[] getKeysByPrefix (String keyPrefix)
+  public String[] getKeysByPrefix(String keyPrefix)
+  {
+    return getKeysByPrefix(keyPrefix, false);
+  }
+
+  /**
+   * Gets all keys that have the specified prefix.
+   *
+   * @param keyPrefix The prefix.
+   * @return array of keys.
+   */
+  public String[] getKeysByPrefix(String keyPrefix, boolean sort)
   {
     ArrayList results = new ArrayList();
     for (Iterator ii = values.keySet().iterator(); ii.hasNext();){
@@ -72,6 +84,10 @@ public class InstallContext
       if(key.startsWith(keyPrefix)){
         results.add(key);
       }
+    }
+
+    if (sort){
+      Collections.sort(results);
     }
 
     return (String[])results.toArray(new String[results.size()]);
@@ -83,7 +99,7 @@ public class InstallContext
    * @param key The key to store the value under.
    * @param value The value to store.
    */
-  public void setValue (Object key, Object value)
+  public void setValue(Object key, Object value)
   {
     values.put(key, value);
     Installer.getProject().setProperty(
@@ -96,7 +112,7 @@ public class InstallContext
    * @param key The key.
    * @return The value removed or null if none.
    */
-  public Object removeValue (Object key)
+  public Object removeValue(Object key)
   {
     return values.remove(key);
   }
@@ -106,7 +122,7 @@ public class InstallContext
    *
    * @return Iterator of available keys.
    */
-  public Iterator keys ()
+  public Iterator keys()
   {
     return values.keySet().iterator();
   }
@@ -116,7 +132,7 @@ public class InstallContext
    *
    * @return The ant project.
    */
-  public Project getProject ()
+  public Project getProject()
   {
     return Installer.getProject();
   }
