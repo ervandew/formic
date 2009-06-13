@@ -138,7 +138,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#proceed()
    */
-  public void proceed ()
+  public boolean proceed ()
   {
     if(form != null){
       InstallContext context = Installer.getContext();
@@ -151,6 +151,7 @@ public abstract class AbstractStep
         }
       }
     }
+    return true;
   }
 
   /**

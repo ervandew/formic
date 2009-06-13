@@ -144,7 +144,9 @@ public class GuiWizardStep
   public void applyState ()
     throws InvalidStateException
   {
-    step.proceed();
+    if (!step.proceed()){
+      throw new InvalidStateException("", false);
+    }
   }
 
   /**

@@ -85,8 +85,10 @@ public interface WizardStep
 
   /**
    * Invoked prior to proceeding to the next step.
+   *
+   * @return True if the wizard can proceed to the next step, false otherwise.
    */
-  public void proceed ();
+  public boolean proceed ();
 
   /**
    * Invoked to abort any processing taking place by this step.
