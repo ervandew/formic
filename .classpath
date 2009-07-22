@@ -14,5 +14,5 @@
 	<classpathentry kind="lib" path="lib/nlog4j-1.2.25.jar"/>
 	<classpathentry kind="lib" path="lib/velocity-1.4.jar"/>
 	<classpathentry kind="lib" path="lib/wizard-0.1.12.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="output" path="build/bin"/>
 </classpath>
