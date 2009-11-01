@@ -24,7 +24,7 @@
     -->
   <target name="javadoc" depends="init"
       description="Generates the javadocs from the src.">
-    <mkdir dir="build/formic/doc/api"/>
+    <mkdir dir="build/doc/api"/>
 
     <javadoc packagenames="org.formic" destdir="build/formic/doc/api"
         stylesheetfile="src/ant/javadoc_stylesheet.css">
@@ -38,16 +38,17 @@
   </target>
 
   <!--
-    - Runs forrest to generate the docs.
+    - Build html docs.
     -->
   <target name="docs" depends="init" description="Builds the documentation.">
-    <!--exec executable="${forrest.home}/bin/forrest" failonerror="true" dir=".">
-      <arg line="site"/>
+  </target>
+
+  <target name="readme" depends="init" description="Convert readme to html.">
+    <mkdir dir="build/doc"/>
+    <exec executable="rst2html" dir="build/doc">
+      <arg value="${basedir}/README.rst"/>
+      <arg value="README.html"/>
     </exec>
-    <xslt in="src/forrest/content/xdocs/site.xml"
-        out="build/sitemap.xml"
-        style="src/ant/xsl/forrest_site-google_sitemap.xsl"/>
-    <gzip src="build/sitemap.xml" destfile="build/site/sitemap.xml.gz"/-->
   </target>
 
 </project>

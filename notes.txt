@@ -5,6 +5,10 @@ TODO {{{
     - Feature Tree
     - Database connection info
     - File diff
+      - http://www.darwinsys.com/freeware/Diff.java
+      - http://www.bmsi.com/java/#diff
+      - http://www.cs.princeton.edu/introcs/96optimization/Diff.java.html
+      - http://www.incava.org/projects/java-diff/
 
   Enhancements
     - Add ability to view the log (apps/kate.png,package_editors.png from nuvola icons)
@@ -18,6 +22,8 @@ TODO {{{
         - downside is possibility of lost or redundent logging info if a lot of
           messages are being logged when the above steps are executing.
     - Add support for automated installs.
+    - graphical form building:
+      https://abeille.dev.java.net
 
   Linux
     - jre / jdk discovery in shell script.
@@ -26,6 +32,9 @@ TODO {{{
     - Splash screen viewable until installer has started (between intialization
       progress window + installer window)?
       - how can installer notify splash screen that it has started.
+    - Support Windows services
+      - http://www.sw4me.com/wiki/Winserv
+      - http://wrapper.tanukisoftware.org/doc/english/introduction.html
 
   Uninstaller
     - uninstall wizard panels
@@ -36,6 +45,9 @@ TODO {{{
     - result should be a directory 'uninstall' with an exe/sh and
       ini/property file.
       Windows: register uninstaller in registry.
+    - add un-installer registry keys on windows:
+      - http://nsis.sourceforge.net/Add_uninstall_information_to_Add/Remove_Programs
+      - https://sourceforge.net/projects/jregistrykey/
 
   Forms
     - Validators
