@@ -32,7 +32,8 @@ import org.pietschy.wizard.InvalidStateException;
 import org.pietschy.wizard.WizardModel;
 
 /**
- * Wraps {@link WizardStep} implementations for use in the console wizard framework.
+ * Wraps {@link org.pietschy.wizard.WizardStep} implementations for use in the
+ * console wizard framework.
  *
  * @author Eric Van Dewoestine
  */

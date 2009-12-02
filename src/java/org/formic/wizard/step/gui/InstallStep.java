@@ -46,6 +46,7 @@ import org.formic.util.dialog.gui.GuiDialogs;
 import org.formic.wizard.step.AbstractGuiStep;
 
 import org.formic.wizard.step.shared.InstallAction;
+import org.formic.wizard.step.shared.InstallAction.InstallListener;
 
 /**
  * Step that runs the background install process and displays the progress for
@@ -55,7 +56,7 @@ import org.formic.wizard.step.shared.InstallAction;
  */
 public class InstallStep
   extends AbstractGuiStep
-  implements InstallAction.InstallListener
+  implements InstallListener
 {
   protected JProgressBar overallProgress;
   protected JProgressBar taskProgress;
@@ -183,7 +184,7 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
-   * @see InstallAction.InstallListener#installStarted(int)
+   * @see InstallListener#installStarted(int)
    */
   public void installStarted(int tasks)
   {
@@ -193,7 +194,7 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
-   * @see InstallAction.InstallListener#taskStarted(String)
+   * @see InstallListener#taskStarted(String)
    */
   public void taskStarted(String info)
   {
@@ -202,7 +203,7 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
-   * @see InstallAction.InstallListener#taskFinished(int)
+   * @see InstallListener#taskFinished(int)
    */
   public void taskFinished(int index)
   {
@@ -211,7 +212,7 @@ public class InstallStep
 
   /**
    * {@inheritDoc}
-   * @see InstallAction.InstallListener#messageLogged(String)
+   * @see InstallListener#messageLogged(String)
    */
   public void messageLogged(String message)
   {

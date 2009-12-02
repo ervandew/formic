@@ -32,8 +32,7 @@ public abstract class AbstractConsoleStep
   implements ConsoleStep
 {
   /**
-   * {@inheritDoc}
-   * @see AbstractStep#AbstractConsoleStep(String,Properties)
+   * @see AbstractStep#AbstractStep(String,Properties)
    */
   public AbstractConsoleStep(String name, Properties properties)
   {

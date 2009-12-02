@@ -70,7 +70,7 @@ import org.formic.wizard.step.shared.FeatureProvider;
  *   </tr>
  *   <tr>
  *     <td>provider</td>
- *     <td>Implementation of {@link #FeatureProvider}.</td>
+ *     <td>Implementation of {@link FeatureProvider}.</td>
  *     <td>true</td><td>&nbsp;</td><td>none</td>
  *   </tr>
  * </table>
@@ -114,7 +114,7 @@ public class FeatureListStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.GuiStep#init()
+   * @see org.formic.wizard.step.GuiStep#init()
    */
   public Component init()
   {

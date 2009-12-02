@@ -42,8 +42,7 @@ public abstract class AbstractGuiStep
   private String iconPath;
 
   /**
-   * {@inheritDoc}
-   * @see AbstractStep#AbstractGuiStep(String,Properties)
+   * @see AbstractStep#AbstractStep(String,Properties)
    */
   public AbstractGuiStep(String name, Properties properties)
   {

@@ -40,6 +40,7 @@ import javax.swing.JProgressBar;
 import javax.swing.WindowConstants;
 
 import org.formic.bootstrap.util.Extractor;
+import org.formic.bootstrap.util.Extractor.ArchiveExtractionListener;
 
 import org.formic.util.CommandExecutor;
 
@@ -53,7 +54,7 @@ import org.formic.util.dialog.gui.GuiDialogs;
  */
 public class Launcher
   extends Thread
-  implements Extractor.ArchiveExtractionListener
+  implements ArchiveExtractionListener
 {
   private static final String TITLE = "Initializing";
 
@@ -263,7 +264,7 @@ public class Launcher
 
   /**
    * {@inheritDoc}
-   * @see Extractor.ArchiveExtractionListener#startExtraction(int)
+   * @see ArchiveExtractionListener#startExtraction(int)
    */
   public void startExtraction(int count)
   {
@@ -274,7 +275,7 @@ public class Launcher
 
   /**
    * {@inheritDoc}
-   * @see Extractor.ArchiveExtractionListener#finishExtraction()
+   * @see ArchiveExtractionListener#finishExtraction()
    */
   public void finishExtraction()
   {
@@ -283,7 +284,7 @@ public class Launcher
 
   /**
    * {@inheritDoc}
-   * @see Extractor.ArchiveExtractionListener#startExtractingFile(int,String)
+   * @see ArchiveExtractionListener#startExtractingFile(int,String)
    */
   public void startExtractingFile(int index, String file)
   {
@@ -292,7 +293,7 @@ public class Launcher
 
   /**
    * {@inheritDoc}
-   * @see Extractor.ArchiveExtractionListener#finishExtractingFile(int,String)
+   * @see ArchiveExtractionListener#finishExtractingFile(int,String)
    */
   public void finishExtractingFile(int index, String file)
   {

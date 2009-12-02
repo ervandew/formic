@@ -60,7 +60,6 @@ public class InstallLocationStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.step.GuiForm#init()
    */
   public Component init()
   {

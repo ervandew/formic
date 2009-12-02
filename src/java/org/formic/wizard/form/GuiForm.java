@@ -69,7 +69,7 @@ public class GuiForm
 
   /**
    * {@inheritDoc}
-   * @see Form#setValue(FormField,JComponent,String,boolean)
+   * @see Form#setValue(FormField,JComponent,Object,boolean)
    */
   public void setValue(
       FormField field, JComponent component, Object value, boolean valid)

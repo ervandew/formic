@@ -72,7 +72,7 @@ import org.formic.wizard.step.AbstractGuiStep;
  *   </tr>
  *   <tr>
  *     <td>provider</td>
- *     <td>Implementation of {@link #RequirementProvider}.</td>
+ *     <td>Implementation of {@link RequirementProvider}.</td>
  *     <td>true</td><td>&nbsp;</td><td>none</td>
  *   </tr>
  * </table>
@@ -128,7 +128,7 @@ public class RequirementsValidationStep
 
   /**
    * {@inheritDoc}
-   * @see org.formic.wizard.GuiStep#init()
+   * @see org.formic.wizard.step.GuiStep#init()
    */
   public Component init()
   {
@@ -447,7 +447,7 @@ public class RequirementsValidationStep
 
     /**
      * Validates the supplied Requirement returning a status with a code of
-     * either {@link #OK}, {@link #WARN}, or {@link FAIL} depending on whether
+     * either {@link #OK}, {@link #WARN}, or {@link #FAIL} depending on whether
      * the requirement was satisfied, not satisfied but can be ignores, or not
      * satisified and installer must not proceed.
      *
