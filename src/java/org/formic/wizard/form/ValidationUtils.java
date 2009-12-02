@@ -32,7 +32,6 @@ import org.formic.wizard.form.validator.RequiredValidator;
  * Utilities for decorating components based on their validator and state.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class ValidationUtils
 {
@@ -53,7 +52,7 @@ public class ValidationUtils
    * @param component The component to decorate.
    * @param validator The validator for the component.
    */
-  public static void decorate (JComponent component, Validator validator)
+  public static void decorate(JComponent component, Validator validator)
   {
     if(validator != null){
       component.putClientProperty(VALIDATOR, validator);
@@ -75,7 +74,7 @@ public class ValidationUtils
    * @param value The component's value.
    * @return true if the field value is valid, false otherwise.
    */
-  public static boolean validate (JComponent component, String value)
+  public static boolean validate(JComponent component, String value)
   {
     Validator validator = (Validator)component.getClientProperty(VALIDATOR);
     if(validator != null){
@@ -98,7 +97,7 @@ public class ValidationUtils
    * @param component The component.
    * @return true if required, false otherwise.
    */
-  public static boolean isRequired (JComponent component)
+  public static boolean isRequired(JComponent component)
   {
     Boolean bool = (Boolean)component.getClientProperty(REQUIRED);
     return bool != null ? bool.booleanValue() : false;
@@ -110,7 +109,7 @@ public class ValidationUtils
    * @param component The component.
    * @return The error message or null if none.
    */
-  public static String getValidationError (JComponent component)
+  public static String getValidationError(JComponent component)
   {
     return (String)component.getClientProperty(VALIDATION_ERROR);
   }

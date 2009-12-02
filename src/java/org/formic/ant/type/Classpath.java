@@ -31,16 +31,12 @@ import org.formic.ant.util.AntUtils;
  * Extension to ant classpath element that represents the necessary jars for
  * formic.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Classpath
   extends Path
 {
-  /**
-   * @see Path#Path(Project)
-   */
-  public Classpath (Project project)
+  public Classpath(Project project)
   {
     super(project);
 

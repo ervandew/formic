@@ -23,8 +23,7 @@ import org.apache.tools.ant.types.FileSet;
 /**
  * FileSet implementation for library files (jars).
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class LibSet
   extends FileSet
@@ -34,7 +33,7 @@ public class LibSet
     super();
   }
 
-  protected LibSet (LibSet libset)
+  protected LibSet(LibSet libset)
   {
     super(libset);
   }

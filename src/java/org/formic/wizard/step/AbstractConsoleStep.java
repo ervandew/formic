@@ -26,7 +26,6 @@ import org.formic.wizard.form.ConsoleForm;
  * Abstract super class for console wizard steps.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public abstract class AbstractConsoleStep
   extends AbstractStep
@@ -36,7 +35,7 @@ public abstract class AbstractConsoleStep
    * {@inheritDoc}
    * @see AbstractStep#AbstractConsoleStep(String,Properties)
    */
-  public AbstractConsoleStep (String name, Properties properties)
+  public AbstractConsoleStep(String name, Properties properties)
   {
     super(name, properties);
   }
@@ -46,7 +45,7 @@ public abstract class AbstractConsoleStep
    *
    * @return The new ConsoleForm.
    */
-  protected ConsoleForm createForm ()
+  protected ConsoleForm createForm()
   {
     ConsoleForm form = new ConsoleForm();
     form.addPropertyChangeListener(this);

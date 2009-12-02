@@ -29,8 +29,7 @@ import org.formic.wizard.form.Validator;
  * Implementation of {@link Validator} that validates that the value is not null
  * or empty.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class RequiredValidator
   implements Validator
@@ -42,7 +41,7 @@ public class RequiredValidator
   /**
    * Prevent construction.
    */
-  private RequiredValidator ()
+  private RequiredValidator()
   {
   }
 
@@ -50,7 +49,7 @@ public class RequiredValidator
    * {@inheritDoc}
    * @see Validator#isValid(Object)
    */
-  public boolean isValid (Object value)
+  public boolean isValid(Object value)
   {
     if (value instanceof String){
       return ((String)value).trim().length() > 0;
@@ -75,7 +74,7 @@ public class RequiredValidator
    * {@inheritDoc}
    * @see Validator#getErrorMessage()
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return MESSAGE;
   }
@@ -84,7 +83,7 @@ public class RequiredValidator
    * {@inheritDoc}
    * @see Object#hashCode()
    */
-  public int hashCode ()
+  public int hashCode()
   {
     return 11;
   }
@@ -93,7 +92,7 @@ public class RequiredValidator
    * {@inheritDoc}
    * @see Object#equals(Object)
    */
-  public boolean equals (Object obj)
+  public boolean equals(Object obj)
   {
     if(obj == this){
       return true;

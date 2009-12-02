@@ -28,8 +28,7 @@ import org.formic.Installer;
 /**
  * Defines a step in the installation process.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Step
   extends Typedef
@@ -42,7 +41,7 @@ public class Step
    *
    * @return The step name.
    */
-  public String getName ()
+  public String getName()
   {
     return this.name;
   }
@@ -52,7 +51,7 @@ public class Step
    *
    * @param name The step name.
    */
-  public void setName (String name)
+  public void setName(String name)
   {
     this.name = name;
   }
@@ -62,7 +61,7 @@ public class Step
    *
    * @return The step description.
    */
-  public String getDescription ()
+  public String getDescription()
   {
     return Installer.getString(getName() + ".description");
   }
@@ -72,7 +71,7 @@ public class Step
    *
    * @param _property The property.
    */
-  public void addConfiguredProperty (Property _property)
+  public void addConfiguredProperty(Property _property)
   {
     properties.setProperty(_property.getName(), _property.getValue());
   }
@@ -82,7 +81,7 @@ public class Step
    *
    * @return The Properties.
    */
-  public Properties getProperties ()
+  public Properties getProperties()
   {
     return properties;
   }

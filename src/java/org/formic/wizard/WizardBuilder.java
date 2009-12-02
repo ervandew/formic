@@ -61,8 +61,7 @@ import org.pietschy.wizard.models.Condition;
 /**
  * Class for building wizards.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class WizardBuilder
 {
@@ -74,7 +73,7 @@ public class WizardBuilder
    *
    * @param _resource The resource.
    */
-  public static void loadSteps (String _resource)
+  public static void loadSteps(String _resource)
   {
     try{
       steps.load(Installer.class.getResourceAsStream(_resource));
@@ -95,7 +94,7 @@ public class WizardBuilder
    * @param _consoleMode true if running in console mode, false otherwise.
    * @return The Wizard.
    */
-  public static Wizard build (List _paths, boolean _consoleMode)
+  public static Wizard build(List _paths, boolean _consoleMode)
   {
     consoleMode = _consoleMode;
 
@@ -136,7 +135,7 @@ public class WizardBuilder
    * @param _paths A map of all other paths (except the main one).
    * @return The wizard path.
    */
-  private static org.pietschy.wizard.models.Path buildPath (
+  private static org.pietschy.wizard.models.Path buildPath(
       Path _path, Map _paths)
   {
     // add steps and branches.
@@ -201,7 +200,7 @@ public class WizardBuilder
    *
    * @return The step.
    */
-  private static Object getStep (String _name, Properties _properties)
+  private static Object getStep(String _name, Properties _properties)
   {
     try{
       String name = _name;
@@ -243,7 +242,7 @@ public class WizardBuilder
    * @param path The path.
    * @return The name.
    */
-  private static String getPathName (org.pietschy.wizard.models.Path path)
+  private static String getPathName(org.pietschy.wizard.models.Path path)
   {
     if(path instanceof SimplePath){
       return ((SimplePath)path).getName();
@@ -264,7 +263,7 @@ public class WizardBuilder
      *
      * @param antCondition The antCondition for this instance.
      */
-    public WizardCondition (ConditionBase antCondition)
+    public WizardCondition(ConditionBase antCondition)
     {
       this.antCondition = antCondition;
     }
@@ -273,7 +272,7 @@ public class WizardBuilder
      * {@inheritDoc}
      * @see org.pietschy.wizard.models.Condition#evaluate(WizardModel)
      */
-    public boolean evaluate (WizardModel _model)
+    public boolean evaluate(WizardModel _model)
     {
       return ((org.apache.tools.ant.taskdefs.condition.Condition)
           antCondition).eval();
@@ -294,7 +293,7 @@ public class WizardBuilder
      *
      * @param value The value for this instance.
      */
-    public StaticCondition (boolean value)
+    public StaticCondition(boolean value)
     {
       this.value = value;
     }
@@ -303,7 +302,7 @@ public class WizardBuilder
      * {@inheritDoc}
      * @see org.pietschy.wizard.models.Condition#evaluate(WizardModel)
      */
-    public boolean evaluate (WizardModel _model)
+    public boolean evaluate(WizardModel _model)
     {
       return value;
     }

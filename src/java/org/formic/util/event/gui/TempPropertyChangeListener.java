@@ -27,8 +27,7 @@ import java.util.List;
 /**
  * Temporary listener that queues up events.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class TempPropertyChangeListener
   implements PropertyChangeListener
@@ -39,7 +38,7 @@ public class TempPropertyChangeListener
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange(PropertyChangeEvent evt)
   {
     events.add(evt);
   }
@@ -49,7 +48,7 @@ public class TempPropertyChangeListener
    *
    * @return Array of events.
    */
-  public PropertyChangeEvent[] getEvents ()
+  public PropertyChangeEvent[] getEvents()
   {
     return (PropertyChangeEvent[])
       events.toArray(new PropertyChangeEvent[events.size()]);
@@ -58,7 +57,7 @@ public class TempPropertyChangeListener
   /**
    * Clears the queued events.
    */
-  public void clear ()
+  public void clear()
   {
     events.clear();
   }

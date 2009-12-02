@@ -35,8 +35,7 @@ import org.pietschy.wizard.models.PathVisitor;
  * map for storing paths, and has support for a name property for debugging
  * purposes.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class BranchingPath
   extends org.pietschy.wizard.models.BranchingPath
@@ -73,7 +72,7 @@ public class BranchingPath
    *
    * @return The name.
    */
-  public String getName ()
+  public String getName()
   {
     return name;
   }
@@ -138,7 +137,7 @@ public class BranchingPath
    * @param path The path.
    * @return The name.
    */
-  private String getPathName (org.pietschy.wizard.models.Path path)
+  private String getPathName(org.pietschy.wizard.models.Path path)
   {
     if(path instanceof SimplePath){
       return ((SimplePath)path).getName();
@@ -150,7 +149,7 @@ public class BranchingPath
    * {@inheritDoc}
    * @see Object#toString()
    */
-  public String toString ()
+  public String toString()
   {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Name: ").append(name);
@@ -193,7 +192,7 @@ public class BranchingPath
     public Path path;
     public Condition condition;
 
-    public PathInfo (Path path, Condition condition){
+    public PathInfo(Path path, Condition condition){
       this.path = path;
       this.condition = condition;
     }

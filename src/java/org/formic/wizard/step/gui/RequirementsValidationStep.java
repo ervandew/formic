@@ -78,7 +78,6 @@ import org.formic.wizard.step.AbstractGuiStep;
  * </table>
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class RequirementsValidationStep
   extends AbstractGuiStep
@@ -104,7 +103,7 @@ public class RequirementsValidationStep
   /**
    * Constructs the step.
    */
-  public RequirementsValidationStep (String name, Properties properties)
+  public RequirementsValidationStep(String name, Properties properties)
   {
     super(name, properties);
 
@@ -131,7 +130,7 @@ public class RequirementsValidationStep
    * {@inheritDoc}
    * @see org.formic.wizard.GuiStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     busyIcon = new ImageIcon(Installer.getImage(getName() + ".busy"));
     okIcon = new ImageIcon(Installer.getImage(getName() + ".ok"));
@@ -143,11 +142,11 @@ public class RequirementsValidationStep
     requirementInfo.addHyperlinkListener(new HyperlinkListener());
 
     table = new JTable(1, 2){
-      public Class getColumnClass (int column){
+      public Class getColumnClass(int column){
         Object value = getValueAt(0, column);
         return value != null ? value.getClass() : Object.class;
       }
-      public boolean isCellEditable (int row, int column){
+      public boolean isCellEditable(int row, int column){
         return false;
       }
     };
@@ -167,7 +166,7 @@ public class RequirementsValidationStep
     retryButton = new JButton(Installer.getString("requirements.retry"));
     retryButton.setVisible(false);
     retryButton.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent e){
+      public void actionPerformed(ActionEvent e){
         displayed();
       }
     });
@@ -192,7 +191,7 @@ public class RequirementsValidationStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#prepare()
    */
-  public void prepare ()
+  public void prepare()
   {
     Requirement[] requirements = provider.getRequirements();
     DefaultTableModel model = new DefaultTableModel(requirements.length, 2);
@@ -214,7 +213,7 @@ public class RequirementsValidationStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     form.showInfoMessage(null);
     requirementInfo.setText(null);
@@ -223,7 +222,7 @@ public class RequirementsValidationStep
     setBusy(true);
     try{
       Integer result = (Integer)Worker.post(new Task(){
-        public Object run ()
+        public Object run()
           throws Exception
         {
           Integer result = OK;
@@ -231,7 +230,7 @@ public class RequirementsValidationStep
           for (int ii = 0; ii < model.getRowCount(); ii++){
             final JLabel label = (JLabel)model.getValueAt(ii, 1);
             SwingUtilities.invokeLater(new Runnable(){
-              public void run (){
+              public void run(){
                 label.setIcon(busyIcon);
                 busyIcon.setImageObserver(table);
                 table.revalidate();
@@ -251,7 +250,7 @@ public class RequirementsValidationStep
             }
 
             SwingUtilities.invokeLater(new Runnable(){
-              public void run (){
+              public void run(){
                 switch(status.getCode()){
                   case RequirementProvider.OK:
                     label.setIcon(okIcon);
@@ -295,7 +294,7 @@ public class RequirementsValidationStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isBusyAnimated()
    */
-  public boolean isBusyAnimated ()
+  public boolean isBusyAnimated()
   {
     return false;
   }
@@ -315,7 +314,7 @@ public class RequirementsValidationStep
      *
      * @param key The key for this instance.
      */
-    public Requirement (String key)
+    public Requirement(String key)
     {
       this.key = key;
     }
@@ -325,7 +324,7 @@ public class RequirementsValidationStep
      *
      * @return The key.
      */
-    public String getKey ()
+    public String getKey()
     {
       return this.key;
     }
@@ -335,7 +334,7 @@ public class RequirementsValidationStep
      *
      * @return The title.
      */
-    private String getTitle ()
+    private String getTitle()
     {
       return this.title;
     }
@@ -345,7 +344,7 @@ public class RequirementsValidationStep
      *
      * @param title The title.
      */
-    private void setTitle (String title)
+    private void setTitle(String title)
     {
       this.title = title;
     }
@@ -355,7 +354,7 @@ public class RequirementsValidationStep
      *
      * @return The info.
      */
-    private String getInfo ()
+    private String getInfo()
     {
       return this.info;
     }
@@ -365,7 +364,7 @@ public class RequirementsValidationStep
      *
      * @param info The info.
      */
-    private void setInfo (String info)
+    private void setInfo(String info)
     {
       this.info = info;
     }
@@ -375,7 +374,7 @@ public class RequirementsValidationStep
      *
      * @return The status.
      */
-    public RequirementProvider.Status getStatus ()
+    public RequirementProvider.Status getStatus()
     {
       return this.status;
     }
@@ -385,7 +384,7 @@ public class RequirementsValidationStep
      *
      * @param status The status.
      */
-    public void setStatus (RequirementProvider.Status status)
+    public void setStatus(RequirementProvider.Status status)
     {
       this.status = status;
     }
@@ -394,7 +393,7 @@ public class RequirementsValidationStep
      * {@inheritDoc}
      * @see Object#toString()
      */
-    public String toString ()
+    public String toString()
     {
       return title;
     }
@@ -406,12 +405,12 @@ public class RequirementsValidationStep
   public static abstract class ValidatingRequirement
     extends Requirement
   {
-    public ValidatingRequirement (String key)
+    public ValidatingRequirement(String key)
     {
       super(key);
     }
 
-    public abstract RequirementProvider.Status validate ();
+    public abstract RequirementProvider.Status validate();
   }
 
   /**
@@ -444,7 +443,7 @@ public class RequirementsValidationStep
      *
      * @return Array of Requirement.
      */
-    public Requirement[] getRequirements ();
+    public Requirement[] getRequirements();
 
     /**
      * Validates the supplied Requirement returning a status with a code of
@@ -455,7 +454,7 @@ public class RequirementsValidationStep
      * @param requirement The requirement to validate.
      * @return The status of the validation.
      */
-    public Status validate (Requirement requirement);
+    public Status validate(Requirement requirement);
 
     /**
      * Represents a status returned when validating a requirement.
@@ -471,7 +470,7 @@ public class RequirementsValidationStep
        * @param code The code for this instance.
        * @param message The message for this instance.
        */
-      public Status (int code, String message)
+      public Status(int code, String message)
       {
         this.code = code;
         this.message = message;
@@ -482,7 +481,7 @@ public class RequirementsValidationStep
        *
        * @return The code.
        */
-      public int getCode ()
+      public int getCode()
       {
         return this.code;
       }
@@ -492,7 +491,7 @@ public class RequirementsValidationStep
        *
        * @return The message.
        */
-      public String getMessage ()
+      public String getMessage()
       {
         return this.message;
       }
@@ -511,7 +510,7 @@ public class RequirementsValidationStep
     /**
      * Constructs a new instance.
      */
-    public RequirementsSelectionListener (JTable table)
+    public RequirementsSelectionListener(JTable table)
     {
       this.table = table;
     }
@@ -520,7 +519,7 @@ public class RequirementsValidationStep
      * {@inheritDoc}
      * @see ListSelectionListener#valueChanged(ListSelectionEvent)
      */
-    public void valueChanged (ListSelectionEvent e)
+    public void valueChanged(ListSelectionEvent e)
     {
       if(!e.getValueIsAdjusting()){
         int row = table.getSelectedRow();

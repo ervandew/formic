@@ -29,8 +29,7 @@ import org.formic.Log;
  * Represents a branch to another path if the child condition(s) evaluate to
  * true.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Branch
   extends ConditionBase
@@ -43,7 +42,7 @@ public class Branch
    *
    * @return The branch path.
    */
-  public String getPath ()
+  public String getPath()
   {
     return this.path;
   }
@@ -53,7 +52,7 @@ public class Branch
    *
    * @param path The branch path.
    */
-  public void setPath (String path)
+  public void setPath(String path)
   {
     this.path = path;
   }
@@ -62,7 +61,7 @@ public class Branch
    * {@inheritDoc}
    * @see org.apache.tools.ant.taskdefs.condition.Condition#eval()
    */
-  public boolean eval ()
+  public boolean eval()
     throws BuildException
   {
     return ((Condition)getConditions().nextElement()).eval();

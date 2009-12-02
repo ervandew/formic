@@ -49,7 +49,6 @@ import org.formic.wizard.step.shared.InstallAction;
  * the user.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class InstallStep
   extends AbstractConsoleStep
@@ -66,7 +65,7 @@ public class InstallStep
   /**
    * Constructs the step.
    */
-  public InstallStep (String name, Properties properties)
+  public InstallStep(String name, Properties properties)
   {
     super(name, properties);
   }
@@ -75,7 +74,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.ConsoleStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     overallLabel = new JLabel(Installer.getString("install.initialize"));
     overallProgress = new JProgressBar();
@@ -127,7 +126,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isBusyAnimated()
    */
-  public boolean isBusyAnimated ()
+  public boolean isBusyAnimated()
   {
     return false;
   }
@@ -136,19 +135,19 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     setBusy(true);
     setPreviousEnabled(false);
     new Thread(){
-      public void run ()
+      public void run()
       {
         try{
           InstallAction action = new InstallAction(InstallStep.this);
           action.execute();
 
           SwingUtilities.invokeLater(new Runnable(){
-            public void run () {
+            public void run() {
               overallProgress.setValue(overallProgress.getMaximum());
               overallLabel.setText(Installer.getString("install.done"));
               taskProgress.setValue(taskProgress.getMaximum());
@@ -161,7 +160,7 @@ public class InstallStep
           error = e;
           error.printStackTrace();
           SwingUtilities.invokeLater(new Runnable(){
-            public void run () {
+            public void run() {
               ConsoleDialogs.showError(error);
               overallLabel.setText(
                   "install: " + Installer.getString("error.dialog.text"));
@@ -170,7 +169,7 @@ public class InstallStep
           });
         }finally{
           SwingUtilities.invokeLater(new Runnable(){
-            public void run () {
+            public void run() {
               taskProgress.setIndeterminate(false);
               setBusy(false);
             }
@@ -184,7 +183,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#installStarted(int)
    */
-  public void installStarted (int tasks)
+  public void installStarted(int tasks)
   {
     overallProgress.setMaximum(tasks);
     overallProgress.setValue(0);
@@ -194,7 +193,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#taskStarted(String)
    */
-  public void taskStarted (String info)
+  public void taskStarted(String info)
   {
     overallLabel.setText(info);
   }
@@ -203,7 +202,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#taskFinished(int)
    */
-  public void taskFinished (int index)
+  public void taskFinished(int index)
   {
     overallProgress.setValue(index);
   }
@@ -212,7 +211,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#messageLogged(String)
    */
-  public void messageLogged (String message)
+  public void messageLogged(String message)
   {
     taskLabel.setText(message);
   }
@@ -220,11 +219,11 @@ public class InstallStep
   private class ShowErrorAction
     extends AbstractAction
   {
-    public ShowErrorAction (){
+    public ShowErrorAction(){
       super(Installer.getString("install.error.view"));
     }
 
-    public void actionPerformed (ActionEvent e){
+    public void actionPerformed(ActionEvent e){
       ConsoleDialogs.showError(error);
     }
   }

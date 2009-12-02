@@ -47,8 +47,7 @@ import org.pietschy.wizard.WizardModel;
 /**
  * Wraps {@link GuiStep} implementations for use in the gui wizard framework.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class GuiWizardStep
   extends PanelWizardStep
@@ -65,7 +64,7 @@ public class GuiWizardStep
    *
    * @param step The step for this instance.
    */
-  public GuiWizardStep (GuiStep step)
+  public GuiWizardStep(GuiStep step)
   {
     super(step.getTitle(), step.getDescription());
     this.step = step;
@@ -79,7 +78,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see PanelWizardStep#setBusy(boolean)
    */
-  public void setBusy (boolean busy)
+  public void setBusy(boolean busy)
   {
     super.setBusy(busy);
 
@@ -113,7 +112,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#init(WizardModel)
    */
-  public void init (WizardModel _model)
+  public void init(WizardModel _model)
   {
   }
 
@@ -121,7 +120,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#prepare()
    */
-  public void prepare ()
+  public void prepare()
   {
     try{
       if(component == null){
@@ -141,7 +140,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#applyState()
    */
-  public void applyState ()
+  public void applyState()
     throws InvalidStateException
   {
     if (!step.proceed()){
@@ -153,7 +152,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#isComplete()
    */
-  public boolean isComplete ()
+  public boolean isComplete()
   {
     return step.isValid();
   }
@@ -162,7 +161,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#isBusy()
    */
-  public boolean isBusy ()
+  public boolean isBusy()
   {
     return step.isBusy();
   }
@@ -171,7 +170,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getIcon()
    */
-  public Icon getIcon ()
+  public Icon getIcon()
   {
     return step.getIcon();
   }
@@ -180,7 +179,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see java.beans.PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange(PropertyChangeEvent evt)
   {
     if(WizardStep.VALID.equals(evt.getPropertyName())){
       setComplete(((Boolean)evt.getNewValue()).booleanValue());
@@ -198,7 +197,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#abortBusy()
    */
-  public void abortBusy ()
+  public void abortBusy()
   {
     step.abort();
     setBusy(false);
@@ -208,7 +207,7 @@ public class GuiWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getPreferredSize()
    */
-  public Dimension getPreferredSize ()
+  public Dimension getPreferredSize()
   {
     return new Dimension(
         Installer.getDimension().width - 15,
@@ -220,7 +219,7 @@ public class GuiWizardStep
    *
    * @return The WizardStep.
    */
-  public WizardStep getStep ()
+  public WizardStep getStep()
   {
     return step;
   }

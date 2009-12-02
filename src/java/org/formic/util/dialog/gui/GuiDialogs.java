@@ -33,8 +33,7 @@ import javax.swing.JOptionPane;
 /**
  * Provides several methods for displaying dialogs.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class GuiDialogs
 {
@@ -51,7 +50,7 @@ public class GuiDialogs
    *
    * @return true if the user confirmed, false otherwise.
    */
-  public static boolean showConfirm (String message)
+  public static boolean showConfirm(String message)
   {
     return showConfirm(null, message);
   }
@@ -64,7 +63,7 @@ public class GuiDialogs
    *
    * @return true if the user confirmed, false otherwise.
    */
-  public static boolean showConfirm (String title, String message)
+  public static boolean showConfirm(String title, String message)
   {
     String t = getString(title, title);
     String m = getString(message, message);
@@ -79,7 +78,7 @@ public class GuiDialogs
    *
    * @param message The message.
    */
-  public static void showInfo (String message)
+  public static void showInfo(String message)
   {
     showInfo(null, message);
   }
@@ -90,7 +89,7 @@ public class GuiDialogs
    * @param title The dialog title.
    * @param message The message.
    */
-  public static void showInfo (String title, String message)
+  public static void showInfo(String title, String message)
   {
     String t = getString(title, title);
     String m = getString(message, message);
@@ -104,7 +103,7 @@ public class GuiDialogs
    *
    * @param message The message.
    */
-  public static void showWarning (String message)
+  public static void showWarning(String message)
   {
     showWarning(null, message);
   }
@@ -115,7 +114,7 @@ public class GuiDialogs
    * @param title The dialog title.
    * @param message The message.
    */
-  public static void showWarning (String title, String message)
+  public static void showWarning(String title, String message)
   {
     String t = getString(title, title);
     String m = getString(message, message);
@@ -129,7 +128,7 @@ public class GuiDialogs
    *
    * @param message The error message.
    */
-  public static void showError (String message)
+  public static void showError(String message)
   {
     showError(null, message, null, null);
   }
@@ -139,7 +138,7 @@ public class GuiDialogs
    *
    * @param thrown The error detail.
    */
-  public static void showError (Throwable thrown)
+  public static void showError(Throwable thrown)
   {
     showError(null, null, thrown, null);
   }
@@ -150,7 +149,7 @@ public class GuiDialogs
    * @param message The error message.
    * @param thrown The error detail.
    */
-  public static void showError (String message, Throwable thrown)
+  public static void showError(String message, Throwable thrown)
   {
     showError(null, message, thrown, null);
   }
@@ -161,7 +160,7 @@ public class GuiDialogs
    * @param message The error message.
    * @param detail The error detail.
    */
-  public static void showError (String message, String detail)
+  public static void showError(String message, String detail)
   {
     showError(null, message, null, detail);
   }
@@ -173,7 +172,7 @@ public class GuiDialogs
    * @param message The error message.
    * @param thrown The error detail.
    */
-  public static void showError (String title, String message, Throwable thrown)
+  public static void showError(String title, String message, Throwable thrown)
   {
     showError(title, message, thrown, null);
   }
@@ -186,7 +185,7 @@ public class GuiDialogs
    * @param thrown The error detail.
    * @param detail If no exception, the detail to show.
    */
-  private static void showError (
+  private static void showError(
       String title, String message, Throwable thrown, String detail)
   {
     String t = getString(title, RESOURCES.getString("error.dialog.title"));
@@ -209,7 +208,7 @@ public class GuiDialogs
    *
    * @param bundle The ResourceBundle.
    */
-  public static void setBundle (ResourceBundle bundle)
+  public static void setBundle(ResourceBundle bundle)
   {
     if(bundle != null){
       RESOURCES = bundle;
@@ -229,7 +228,7 @@ public class GuiDialogs
    * @param image The image.
    * @return The Image.
    */
-  static Image getImage (ResourceBundle bundle, String image)
+  static Image getImage(ResourceBundle bundle, String image)
   {
     String path = bundle.getString(image);
     if(path == null){
@@ -247,7 +246,7 @@ public class GuiDialogs
    * @param dflt The default if not found.
    * @return The value.
    */
-  private static String getString (String key, String dflt)
+  private static String getString(String key, String dflt)
   {
     try{
       return key != null ? RESOURCES.getString(key) : dflt;

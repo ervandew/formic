@@ -22,7 +22,6 @@ package org.formic.wizard.step.shared;
  * Defines a feature provider for determining available features.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public interface FeatureProvider
 {
@@ -31,5 +30,5 @@ public interface FeatureProvider
    *
    * @return Array of Feature.
    */
-  public Feature[] getFeatures ();
+  public Feature[] getFeatures();
 }

@@ -39,7 +39,6 @@ import org.formic.wizard.form.ValidationUtils;
  * Class for binding a JTextComponent to a Form.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class TextComponentBinding
   extends FormField
@@ -55,13 +54,13 @@ public class TextComponentBinding
    * @param component The JTextComponent.
    * @param form The form the component is a part of.
    */
-  public TextComponentBinding (JTextComponent component, Form form)
+  public TextComponentBinding(JTextComponent component, Form form)
   {
     this.component = component;
     this.form = form;
   }
 
-  public static FormField bind (JTextComponent component, Form form)
+  public static FormField bind(JTextComponent component, Form form)
   {
     TextComponentBinding binding = new TextComponentBinding(component, form);
     component.getDocument().addDocumentListener(binding);
@@ -72,7 +71,7 @@ public class TextComponentBinding
    * {@inheritDoc}
    * @see DocumentListener#insertUpdate(DocumentEvent)
    */
-  public void insertUpdate (DocumentEvent e)
+  public void insertUpdate(DocumentEvent e)
   {
     textUpdated(e);
   }
@@ -81,7 +80,7 @@ public class TextComponentBinding
    * {@inheritDoc}
    * @see DocumentListener#removeUpdate(DocumentEvent)
    */
-  public void removeUpdate (DocumentEvent e)
+  public void removeUpdate(DocumentEvent e)
   {
     textUpdated(e);
   }
@@ -90,19 +89,19 @@ public class TextComponentBinding
    * {@inheritDoc}
    * @see DocumentListener#changedUpdate(DocumentEvent)
    */
-  public void changedUpdate (DocumentEvent e)
+  public void changedUpdate(DocumentEvent e)
   {
     textUpdated(e);
   }
 
-  private void textUpdated (final DocumentEvent e)
+  private void textUpdated(final DocumentEvent e)
   {
     if(timer != null){
       timer.cancel();
     }
     timer = new Timer();
     timer.schedule(new TimerTask(){
-      public void run () {
+      public void run() {
         try{
           Document document = e.getDocument();
           String value = document.getText(0, document.getLength());

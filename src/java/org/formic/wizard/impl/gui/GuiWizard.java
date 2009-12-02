@@ -50,8 +50,7 @@ import org.pietschy.wizard.WizardModel;
 /**
  * Extension to default Wizard that provides a {@link #waitFor()} method.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class GuiWizard
   extends org.pietschy.wizard.Wizard
@@ -71,7 +70,7 @@ public class GuiWizard
   /**
    * Constructs a new instance.
    */
-  public GuiWizard (WizardModel _model)
+  public GuiWizard(WizardModel _model)
   {
     super(_model);
     setDefaultExitMode(org.pietschy.wizard.Wizard.EXIT_ON_FINISH);
@@ -89,7 +88,7 @@ public class GuiWizard
   /**
    * Forces current thread to wait for the wizard thread to complete.
    */
-  public void waitFor ()
+  public void waitFor()
   {
     try{
       semaphore.acquire();
@@ -102,7 +101,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#createButtonBar()
    */
-  protected org.pietschy.wizard.ButtonBar createButtonBar ()
+  protected org.pietschy.wizard.ButtonBar createButtonBar()
   {
     buttonBar = new ButtonBar(this);
     return buttonBar;
@@ -112,7 +111,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#getPreviousAction()
    */
-  public Action getPreviousAction ()
+  public Action getPreviousAction()
   {
     if(previousAction == null){
       previousAction = super.getPreviousAction();
@@ -124,7 +123,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#getCancelAction()
    */
-  public Action getCancelAction ()
+  public Action getCancelAction()
   {
     if(cancelAction == null){
       cancelAction = new CancelAction(this);
@@ -136,7 +135,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#cancel()
    */
-  public void cancel ()
+  public void cancel()
   {
     super.cancel();
     try{
@@ -150,7 +149,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#confirmAbort()
    */
-  protected boolean confirmAbort ()
+  protected boolean confirmAbort()
   {
     /*int response = JOptionPane.showConfirmDialog(this,
         Installer.getString("abort.confirm.text"),
@@ -164,7 +163,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#close()
    */
-  public void close ()
+  public void close()
   {
     try{
       semaphore.release();
@@ -179,7 +178,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.pietschy.wizard.Wizard#showInFrame(String,Image)
    */
-  public void showInFrame (String title, Image image)
+  public void showInFrame(String title, Image image)
   {
     JFrame window = new JFrame(title);
     window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
@@ -203,7 +202,7 @@ public class GuiWizard
    * {@inheritDoc}
    * @see org.formic.wizard.Wizard#showWizard(String)
    */
-  public void showWizard (String action)
+  public void showWizard(String action)
   {
     showInFrame(Installer.getString(action + ".title"), Installer.getImage());
 
@@ -214,10 +213,10 @@ public class GuiWizard
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (final PropertyChangeEvent evt)
+  public void propertyChange(final PropertyChangeEvent evt)
   {
     SwingUtilities.invokeLater(new Runnable(){
-      public void run (){
+      public void run(){
         MultiPathModel model = (MultiPathModel)getModel();
         org.pietschy.wizard.WizardStep step = model.getActiveStep();
 
@@ -269,7 +268,7 @@ public class GuiWizard
   /**
    * Update the state (enabled / disabled) of the buttons in the button bar.
    */
-  private void updateButtonStatus (
+  private void updateButtonStatus(
       MultiPathModel model, WizardStep ws, org.pietschy.wizard.WizardStep step)
   {
     // set whether next step is enabled or not.
@@ -293,7 +292,7 @@ public class GuiWizard
   /**
    * Sets the default button according to the current state of the step.
    */
-  private void updateDefaultButton ()
+  private void updateDefaultButton()
   {
     if(buttonBar.getNextButton().isEnabled()){
       getRootPane().setDefaultButton(buttonBar.getNextButton());
@@ -310,7 +309,7 @@ public class GuiWizard
    *
    * @param events The events.
    */
-  public void setEventQueue (PropertyChangeEvent[] events)
+  public void setEventQueue(PropertyChangeEvent[] events)
   {
     this.events = events;
   }
@@ -318,7 +317,7 @@ public class GuiWizard
   /**
    * Fire the queued up events.
    */
-  private void fireQueuedEvents ()
+  private void fireQueuedEvents()
   {
     if(events != null){
       for (int ii = 0; ii < events.length; ii++){
@@ -333,7 +332,7 @@ public class GuiWizard
   private final class FocusChangeHandler
     implements PropertyChangeListener
   {
-    public void propertyChange (PropertyChangeEvent event)
+    public void propertyChange(PropertyChangeEvent event)
     {
       String propertyName = event.getPropertyName();
       if (!"permanentFocusOwner".equals(propertyName)){

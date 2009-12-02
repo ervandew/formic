@@ -26,8 +26,7 @@ import org.apache.tools.ant.taskdefs.Typedef;
 /**
  * Represents a path in the installation process.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Path
   extends Typedef
@@ -40,7 +39,7 @@ public class Path
    *
    * @return The path name.
    */
-  public String getName ()
+  public String getName()
   {
     return this.name;
   }
@@ -50,7 +49,7 @@ public class Path
    *
    * @param name The path name.
    */
-  public void setName (String name)
+  public void setName(String name)
   {
     this.name = name;
   }
@@ -60,7 +59,7 @@ public class Path
    *
    * @param _step The step to add.
    */
-  public void addConfiguredStep (Step _step)
+  public void addConfiguredStep(Step _step)
   {
     steps.add(_step);
   }
@@ -70,7 +69,7 @@ public class Path
    *
    * @return List of Step.
    */
-  public List getSteps ()
+  public List getSteps()
   {
     return steps;
   }
@@ -80,7 +79,7 @@ public class Path
    *
    * @param _branch The branch to add.
    */
-  public void addConfiguredBranch (Branch _branch)
+  public void addConfiguredBranch(Branch _branch)
   {
     steps.add(_branch);
   }

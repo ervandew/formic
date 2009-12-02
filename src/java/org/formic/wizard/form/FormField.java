@@ -22,7 +22,6 @@ package org.formic.wizard.form;
  * Base class for bound form fields.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class FormField
 {
@@ -31,7 +30,7 @@ public class FormField
    *
    * @return true if valid false otherwise.
    */
-  public boolean isValid ()
+  public boolean isValid()
   {
     return true;
   }

@@ -30,7 +30,6 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
  * &lt;contains value="${myproperty}"/&gt;
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class Contains
   extends ProjectComponent

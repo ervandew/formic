@@ -26,8 +26,7 @@ import javax.swing.ListCellRenderer;
 /**
  * List cell renderer that renders the swing component in the list.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ComponentListCellRenderer
   implements ListCellRenderer
@@ -36,7 +35,7 @@ public class ComponentListCellRenderer
    * {@inheritDoc}
    * @see ListCellRenderer#getListCellRendererComponent(JList,Object,int,boolean,boolean)
    */
-  public Component getListCellRendererComponent (
+  public Component getListCellRendererComponent(
       JList list, Object value, int index, boolean isSelected, boolean hasFocus)
   {
     Component component = (Component)value;

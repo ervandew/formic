@@ -40,8 +40,7 @@ import org.formic.wizard.WizardBuilder;
 /**
  * Ant task that initializes the installer.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class InstallerTask
   extends Task
@@ -58,7 +57,7 @@ public class InstallerTask
   /**
    * Executes this task.
    */
-  public void execute ()
+  public void execute()
     throws BuildException
   {
     Installer.setProject(getProject());
@@ -79,7 +78,7 @@ public class InstallerTask
     }
 
     Runtime.getRuntime().addShutdownHook(new Thread(){
-      public void run () {
+      public void run() {
         // run canceled target if install canceled and target exists.
         if(!isCompleted()){
           canceled();
@@ -98,7 +97,7 @@ public class InstallerTask
    *
    * @return True if completed, false if canceled or aborted.
    */
-  private boolean isCompleted ()
+  private boolean isCompleted()
   {
     return completed;
   }
@@ -107,7 +106,7 @@ public class InstallerTask
    * Invoked if the installer is canceled, which in turn executes the 'canceled'
    * target of the installer script.
    */
-  private void canceled ()
+  private void canceled()
   {
     Target target = (Target)getProject().getTargets().get(CANCEL_TARGET);
     if(target != null){
@@ -121,7 +120,7 @@ public class InstallerTask
    *
    * @param property The property name.
    */
-  public void setProperty (String property)
+  public void setProperty(String property)
   {
     this.property = property;
   }
@@ -131,7 +130,7 @@ public class InstallerTask
    *
    * @param resources The resources.
    */
-  public void setResources (String resources)
+  public void setResources(String resources)
   {
     this.resources = resources;
   }
@@ -142,7 +141,7 @@ public class InstallerTask
    *
    * @param steps The steps.
    */
-  public void setSteps (String steps)
+  public void setSteps(String steps)
   {
     this.steps = steps;
   }
@@ -152,7 +151,7 @@ public class InstallerTask
    *
    * @param _path The path.
    */
-  public void addConfiguredPath (Path _path)
+  public void addConfiguredPath(Path _path)
   {
     paths.add(_path);
   }
@@ -162,7 +161,7 @@ public class InstallerTask
    *
    * @param _property The property.
    */
-  public void addConfiguredProperty (Property _property)
+  public void addConfiguredProperty(Property _property)
   {
     properties.setProperty(_property.getName(), _property.getValue());
   }
@@ -172,7 +171,7 @@ public class InstallerTask
    *
    * @return The Properties.
    */
-  public Properties getProperties ()
+  public Properties getProperties()
   {
     return properties;
   }

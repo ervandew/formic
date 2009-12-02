@@ -31,8 +31,7 @@ import org.slf4j.LoggerFactory;
  * Charva currenlty does not fire KeyEvents for space, so will revisit this
  * later.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class RadioButtonKeyListener
   implements KeyListener
@@ -43,7 +42,7 @@ public class RadioButtonKeyListener
   private static final RadioButtonKeyListener INSTANCE =
     new RadioButtonKeyListener();
 
-  private RadioButtonKeyListener ()
+  private RadioButtonKeyListener()
   {
   }
 
@@ -52,7 +51,7 @@ public class RadioButtonKeyListener
    *
    * @return The RadioButtonKeyListener instance.
    */
-  public static RadioButtonKeyListener getInstance ()
+  public static RadioButtonKeyListener getInstance()
   {
     return INSTANCE;
   }
@@ -61,7 +60,7 @@ public class RadioButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyPressed(KeyEvent)
    */
-  public void keyPressed (KeyEvent evt)
+  public void keyPressed(KeyEvent evt)
   {
     logger.info("### key pressed char = '" + evt.getKeyChar() + "'");
     logger.info("### key pressed code = '" + evt.getKeyCode() + "'");
@@ -71,7 +70,7 @@ public class RadioButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyTyped(KeyEvent)
    */
-  public void keyTyped (KeyEvent evt)
+  public void keyTyped(KeyEvent evt)
   {
   }
 
@@ -79,7 +78,7 @@ public class RadioButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyReleased(KeyEvent)
    */
-  public void keyReleased (KeyEvent evt)
+  public void keyReleased(KeyEvent evt)
   {
     logger.info("### key released char = '" + evt.getKeyChar() + "'");
     logger.info("### key released code = '" + evt.getKeyCode() + "'");

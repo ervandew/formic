@@ -27,8 +27,7 @@ import javax.swing.table.TableCellRenderer;
 /**
  * Table cell renderer that renders the swing component in the list.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ComponentTableCellRenderer
   implements TableCellRenderer
@@ -37,7 +36,7 @@ public class ComponentTableCellRenderer
    * {@inheritDoc}
    * @see TableCellRenderer#getTableCellRendererComponent(JTable,Object,boolean,boolean,int,int)
    */
-  public Component getTableCellRendererComponent (
+  public Component getTableCellRendererComponent(
       JTable table, Object value,
       boolean isSelected, boolean hasFocus,
       int row, int column)

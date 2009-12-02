@@ -30,8 +30,7 @@ import org.apache.tools.ant.Project;
  * Context that contains the current state of the install process including any
  * user inputed values.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class InstallContext
 {

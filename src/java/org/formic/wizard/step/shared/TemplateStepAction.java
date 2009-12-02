@@ -34,7 +34,6 @@ import org.formic.util.TemplateUtils;
  * Shared logic for gui and console template steps.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class TemplateStepAction
 {
@@ -49,7 +48,7 @@ public class TemplateStepAction
    * @param template The template file.
    * @return The template evaluation result.
    */
-  public String processTemplate (String template)
+  public String processTemplate(String template)
   {
     HashMap values = new HashMap();
 

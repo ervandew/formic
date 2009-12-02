@@ -47,7 +47,6 @@ import org.formic.Installer;
  * JFileChooser which populates the text field with the chosen entry.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class FileChooser
   extends JPanel
@@ -59,7 +58,7 @@ public class FileChooser
   /**
    * Creates a new instance.
    */
-  public FileChooser ()
+  public FileChooser()
   {
     this(JFileChooser.FILES_AND_DIRECTORIES, null);
   }
@@ -67,7 +66,7 @@ public class FileChooser
   /**
    * Creates a new instance.
    */
-  public FileChooser (int selectionMode)
+  public FileChooser(int selectionMode)
   {
     this(selectionMode, null);
   }
@@ -75,12 +74,12 @@ public class FileChooser
   /**
    * Creates a new instance.
    */
-  public FileChooser (int selectionMode, String choosable)
+  public FileChooser(int selectionMode, String choosable)
   {
     super(new BorderLayout());
     chooser = new JFileChooser(){
       // force "proper" behavior of <enter> when a button has focus
-      protected boolean processKeyBinding (
+      protected boolean processKeyBinding(
         KeyStroke key, KeyEvent event, int condition, boolean pressed)
       {
         if(event.getKeyCode() == KeyEvent.VK_ENTER){
@@ -102,7 +101,7 @@ public class FileChooser
     button = new JButton(Installer.getString("browse.text"));
 
     button.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent event){
+      public void actionPerformed(ActionEvent event){
         int result = chooser.showOpenDialog(getParent());
         if(result == JFileChooser.APPROVE_OPTION){
           textField.setText(chooser.getSelectedFile().getPath());
@@ -118,7 +117,7 @@ public class FileChooser
    *
    * @return The text field.
    */
-  public JTextField getTextField ()
+  public JTextField getTextField()
   {
     return textField;
   }
@@ -128,7 +127,7 @@ public class FileChooser
    *
    * @return The button.
    */
-  public JButton getButton ()
+  public JButton getButton()
   {
     return button;
   }
@@ -138,7 +137,7 @@ public class FileChooser
    *
    * @return The JFileChooser.
    */
-  public JFileChooser getFileChooser ()
+  public JFileChooser getFileChooser()
   {
     return chooser;
   }
@@ -147,7 +146,7 @@ public class FileChooser
    * {@inheritDoc}
    * @see javax.swing.JComponent#grabFocus()
    */
-  public void grabFocus ()
+  public void grabFocus()
   {
     textField.grabFocus();
   }
@@ -158,7 +157,7 @@ public class FileChooser
    *
    * @param choosable The choosable string.
    */
-  private void addChoosableFileFilters (String choosable)
+  private void addChoosableFileFilters(String choosable)
   {
     if(choosable != null){
       String[] values = StringUtils.split(choosable, ',');
@@ -187,7 +186,7 @@ public class FileChooser
      *
      * @param ext The ext for this instance.
      */
-    public ExtensionFileFilter (String ext)
+    public ExtensionFileFilter(String ext)
     {
       this(ext, null);
     }
@@ -198,7 +197,7 @@ public class FileChooser
      * @param ext The ext for this instance.
      * @param desc The desc for this instance.
      */
-    public ExtensionFileFilter (String ext, String desc)
+    public ExtensionFileFilter(String ext, String desc)
     {
       this.ext = ext;
       this.desc = desc;
@@ -208,7 +207,7 @@ public class FileChooser
      * {@inheritDoc}
      * @see FileFilter#accept(File)
      */
-    public boolean accept (File f)
+    public boolean accept(File f)
     {
       return f.isDirectory() || ext.equalsIgnoreCase(
           FilenameUtils.getExtension(f.getAbsolutePath()));
@@ -218,7 +217,7 @@ public class FileChooser
      * {@inheritDoc}
      * @see FileFilter#getDescription()
      */
-    public String getDescription ()
+    public String getDescription()
     {
       return desc;
     }

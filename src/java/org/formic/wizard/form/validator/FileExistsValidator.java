@@ -25,8 +25,7 @@ import org.formic.wizard.form.Validator;
 /**
  * Validator that determines if the file / directory exists.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class FileExistsValidator
   implements Validator
@@ -38,7 +37,7 @@ public class FileExistsValidator
   /**
    * Prevent construction.
    */
-  private FileExistsValidator ()
+  private FileExistsValidator()
   {
   }
 
@@ -46,7 +45,7 @@ public class FileExistsValidator
    * {@inheritDoc}
    * @see Validator#isValid(Object)
    */
-  public boolean isValid (Object value)
+  public boolean isValid(Object value)
   {
     String file = (String)value;
     if(file != null && file.trim().length() > 0){
@@ -59,7 +58,7 @@ public class FileExistsValidator
    * {@inheritDoc}
    * @see Validator#getErrorMessage()
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return MESSAGE;
   }

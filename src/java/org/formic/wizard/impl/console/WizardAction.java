@@ -26,8 +26,7 @@ import org.formic.util.dialog.console.ConsoleDialogs;
 /**
  * Abstract super class for wizard actions.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public abstract class WizardAction
   implements ActionListener
@@ -39,7 +38,7 @@ public abstract class WizardAction
    *
    * @param wizard The ConsoleWizard.
    */
-  public WizardAction (ConsoleWizard wizard)
+  public WizardAction(ConsoleWizard wizard)
   {
     this.wizard = wizard;
   }
@@ -49,7 +48,7 @@ public abstract class WizardAction
    *
    * @return The wizard.
    */
-  public ConsoleWizard getWizard ()
+  public ConsoleWizard getWizard()
   {
     return this.wizard;
   }
@@ -58,7 +57,7 @@ public abstract class WizardAction
    * {@inheritDoc}
    * @see ActionListener#actionPerformed(ActionEvent)
    */
-  public void actionPerformed (ActionEvent event)
+  public void actionPerformed(ActionEvent event)
   {
     try{
       doAction();
@@ -70,6 +69,6 @@ public abstract class WizardAction
   /**
    * Perform the action.
    */
-  protected abstract void doAction ()
+  protected abstract void doAction()
     throws Exception;
 }

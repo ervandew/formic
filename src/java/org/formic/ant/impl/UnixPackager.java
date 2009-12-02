@@ -31,8 +31,7 @@ import org.formic.ant.util.AntUtils;
  * Implementation of {@link org.formic.ant.Packager} for windows based operating
  * systems.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class UnixPackager
   extends AbstractPackager
@@ -43,7 +42,7 @@ public class UnixPackager
    * {@inheritDoc}
    * @see org.formic.ant.Packager#execute()
    */
-  public void execute ()
+  public void execute()
     throws Exception
   {
     getProject().log("Building *nix installer...");
@@ -82,7 +81,7 @@ public class UnixPackager
   /**
    * Builds a self extracting shell script for *nix operating systems.
    */
-  private void buildSelfExtractingShellScript (File archive)
+  private void buildSelfExtractingShellScript(File archive)
   {
     File selfextract = new File(getBuildDir() + "/selfextract");
 
@@ -115,7 +114,7 @@ public class UnixPackager
    *
    * @param tar The tar.
    */
-  public void setTar (Tar tar)
+  public void setTar(Tar tar)
   {
     this.tar = tar;
   }

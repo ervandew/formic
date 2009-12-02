@@ -25,8 +25,7 @@ import ca.beq.util.win32.registry.RootKey;
 /**
  * Initial cut at methods for registering an uninstaller under Windows.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Uninstaller
 {
@@ -39,7 +38,7 @@ public class Uninstaller
    * java -cp lib/jRegistryKey.jar:.
    *   -Djava.library.path=lib/native/windows Uninstaller
    */
-  public static void main (String[] args)
+  public static void main(String[] args)
   {
     //register("A Small Test App",
     //  "A Small Test App (remove only)", "c:\\test.bat");
@@ -53,7 +52,7 @@ public class Uninstaller
    * @param displayName Name to display in the Windows Add/Remove Programs list.
    * @param uninstaller Path to the uninstaller to execute.
    */
-  public static void register (
+  public static void register(
       String productName, String displayName, String uninstaller)
   {
     RegistryKey key = new RegistryKey(RootKey.HKEY_LOCAL_MACHINE,
@@ -72,7 +71,7 @@ public class Uninstaller
    *
    * @param productName Product name to use.
    */
-  public static void unregister (String productName)
+  public static void unregister(String productName)
   {
     RegistryKey key = new RegistryKey(RootKey.HKEY_LOCAL_MACHINE,
         UNINSTALL + normalizeProductName(productName));
@@ -87,7 +86,7 @@ public class Uninstaller
    *
    * @param productName The product name.
    */
-  private static String normalizeProductName (String productName)
+  private static String normalizeProductName(String productName)
   {
     StringBuffer name = new StringBuffer();
     char[] chars = productName.toCharArray();

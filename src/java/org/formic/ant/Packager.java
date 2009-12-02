@@ -25,8 +25,7 @@ import org.apache.tools.ant.Project;
 /**
  * Interface representing a platform specific packager of installers.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public interface Packager
 {
@@ -36,7 +35,7 @@ public interface Packager
   /**
    * Executes this packager.
    */
-  public void execute ()
+  public void execute()
     throws Exception;
 
   /**
@@ -44,33 +43,33 @@ public interface Packager
    *
    * @param project The ant project.
    */
-  public void setProject (Project project);
+  public void setProject(Project project);
 
   /**
    * Sets the name of the task currently executing.
    *
    * @param name The task name.
    */
-  public void setTaskName (String name);
+  public void setTaskName(String name);
 
   /**
    * Sets the path to the local formic distribution.
    *
    * @param home The path.
    */
-  public void setFormicHome (String home);
+  public void setFormicHome(String home);
 
   /**
    * Sets the path to the build directory.
    *
    * @param dir The build path.
    */
-  public void setBuildDir (String dir);
+  public void setBuildDir(String dir);
 
   /**
    * Sets the destination file.
    *
    * @param destFile The destination file.
    */
-  public void setDestFile (File destFile);
+  public void setDestFile(File destFile);
 }

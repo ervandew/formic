@@ -23,8 +23,7 @@ import org.pietschy.wizard.WizardStep;
 /**
  * Action listener for 'Finish' button.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class FinishAction
   extends WizardAction
@@ -32,7 +31,7 @@ public class FinishAction
   /**
    * @see WizardAction#WizardAction(ConsoleWizard)
    */
-  public FinishAction (ConsoleWizard wizard)
+  public FinishAction(ConsoleWizard wizard)
   {
     super(wizard);
   }
@@ -41,7 +40,7 @@ public class FinishAction
    * {@inheritDoc}
    * @see WizardAction#doAction()
    */
-  public void doAction ()
+  public void doAction()
     throws Exception
   {
     WizardStep finishStep = getWizard().getModel().getActiveStep();

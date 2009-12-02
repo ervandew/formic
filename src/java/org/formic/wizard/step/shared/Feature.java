@@ -25,7 +25,6 @@ import java.beans.PropertyChangeSupport;
  * Represents an available feature.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class Feature
 {
@@ -45,7 +44,7 @@ public class Feature
    * @param enabled True if the feature is enabled by default, false
    * otherwise.
    */
-  public Feature (String key, boolean enabled)
+  public Feature(String key, boolean enabled)
   {
     this.key = key;
     this.enabled = enabled;
@@ -61,7 +60,7 @@ public class Feature
    * @param dependencies Array of other feature keys, that are required for
    * this feature to be installed.
    */
-  public Feature (String key, boolean enabled, String[] dependencies)
+  public Feature(String key, boolean enabled, String[] dependencies)
   {
     this(key, enabled);
     this.dependencies = dependencies;
@@ -82,7 +81,7 @@ public class Feature
    *
    * @return The enabled.
    */
-  public boolean isEnabled ()
+  public boolean isEnabled()
   {
     return this.enabled;
   }
@@ -92,7 +91,7 @@ public class Feature
    *
    * @param enabled True if enabled, false otherwise.
    */
-  public void setEnabled (boolean enabled)
+  public void setEnabled(boolean enabled)
   {
     propertyChangeSupport.firePropertyChange(
         ENABLED_PROPERTY, this.enabled, this.enabled = enabled);
@@ -103,7 +102,7 @@ public class Feature
    *
    * @return The dependencies.
    */
-  public String[] getDependencies ()
+  public String[] getDependencies()
   {
     return this.dependencies;
   }
@@ -113,7 +112,7 @@ public class Feature
    *
    * @param dependencies The dependencies.
    */
-  public void setDependencies (String[] dependencies)
+  public void setDependencies(String[] dependencies)
   {
     this.dependencies = dependencies;
   }
@@ -123,7 +122,7 @@ public class Feature
    *
    * @return The info.
    */
-  public String getInfo ()
+  public String getInfo()
   {
     return this.info;
   }
@@ -133,7 +132,7 @@ public class Feature
    *
    * @param info The info.
    */
-  public void setInfo (String info)
+  public void setInfo(String info)
   {
     this.info = info;
   }
@@ -143,7 +142,7 @@ public class Feature
    *
    * @param title The title.
    */
-  public void setTitle (String title)
+  public void setTitle(String title)
   {
     this.title = title;
   }
@@ -152,7 +151,7 @@ public class Feature
    * {@inheritDoc}
    * @see Object#toString()
    */
-  public String toString ()
+  public String toString()
   {
     return title;
   }
@@ -160,7 +159,7 @@ public class Feature
   /**
    * @see PropertyChangeSupport#addPropertyChangeListener(PropertyChangeListener)
    */
-  public void addPropertyChangeListener (PropertyChangeListener listener)
+  public void addPropertyChangeListener(PropertyChangeListener listener)
   {
     propertyChangeSupport.addPropertyChangeListener(listener);
   }
@@ -168,7 +167,7 @@ public class Feature
   /**
    * @see PropertyChangeSupport#removePropertyChangeListener(PropertyChangeListener)
    */
-  public void removePropertyChangeListener (PropertyChangeListener listener)
+  public void removePropertyChangeListener(PropertyChangeListener listener)
   {
     propertyChangeSupport.removePropertyChangeListener(listener);
   }

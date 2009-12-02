@@ -59,8 +59,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Installer class that holds installer resources, etc.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Installer
 {
@@ -85,7 +84,7 @@ public class Installer
    * @return true if the installation completed successfully, false if the user
    * canceled or the installation was aborted.
    */
-  public static boolean run (
+  public static boolean run(
       Properties properties, List paths)
   {
     logger.info("Running Installer.");
@@ -128,7 +127,7 @@ public class Installer
    *
    * @return The InstallContext.
    */
-  public static InstallContext getContext ()
+  public static InstallContext getContext()
   {
     return context;
   }
@@ -138,7 +137,7 @@ public class Installer
    *
    * @return The resourceBundle.
    */
-  public static ResourceBundle getResourceBundle ()
+  public static ResourceBundle getResourceBundle()
   {
     return resourceBundle;
   }
@@ -148,7 +147,7 @@ public class Installer
    *
    * @param bundle The resourceBundle.
    */
-  public static void setResourceBundle (ResourceBundle bundle)
+  public static void setResourceBundle(ResourceBundle bundle)
   {
     if(resourceBundle != null){
       throw new IllegalStateException(getString("resource.already.loaded"));
@@ -166,7 +165,7 @@ public class Installer
    * @param key The key.
    * @return The value or null if not found.
    */
-  public static String getString (String key)
+  public static String getString(String key)
   {
     try{
       return key != null ? getResourceBundle().getString(key) : null;
@@ -183,7 +182,7 @@ public class Installer
    * key.
    * @return The value or the supplied default.
    */
-  public static String getStringOrDefault (String key, String dflt)
+  public static String getStringOrDefault(String key, String dflt)
   {
     try{
       return key != null ? getResourceBundle().getString(key) : dflt;
@@ -200,7 +199,7 @@ public class Installer
    * @param arg The value to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String key, Object arg)
+  public static String getString(String key, Object arg)
   {
     return getString(key, new Object[]{arg});
   }
@@ -214,7 +213,7 @@ public class Installer
    * @param arg2 The second value to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String key, Object arg1, Object arg2)
+  public static String getString(String key, Object arg1, Object arg2)
   {
     return getString(key, new Object[]{arg1, arg2});
   }
@@ -227,7 +226,7 @@ public class Installer
    * @param args The values to format the result with.
    * @return The value or null if not found.
    */
-  public static String getString (String key, Object[] args)
+  public static String getString(String key, Object[] args)
   {
     String message = getString(key);
     return MessageFormat.format(message != null ? message : key, args);
@@ -240,7 +239,7 @@ public class Installer
    * @param image The path or key.
    * @return The image or null if not found.
    */
-  public static Image getImage (String image)
+  public static Image getImage(String image)
   {
     String path = getString(image);
     if(path == null){
@@ -257,7 +256,7 @@ public class Installer
    * @param color The key.
    * @return The color or null if not found.
    */
-  public static Color getColor (String color)
+  public static Color getColor(String color)
   {
     String value = getString(color);
     if(color == null){
@@ -275,7 +274,7 @@ public class Installer
   /**
    * Sets the look and feel.
    */
-  private static void setLookAndFeel ()
+  private static void setLookAndFeel()
   {
     try {
       String laf = getString("wizard.laf",
@@ -303,7 +302,7 @@ public class Installer
    *
    * @return The ant project.
    */
-  public static Project getProject ()
+  public static Project getProject()
   {
     return project;
   }
@@ -313,7 +312,7 @@ public class Installer
    *
    * @param prjct The ant project.
    */
-  public static void setProject (Project prjct)
+  public static void setProject(Project prjct)
   {
     project = prjct;
     Log.setProject(project);
@@ -324,7 +323,7 @@ public class Installer
    *
    * @return The dimension of the installer window.
    */
-  public static Dimension getDimension ()
+  public static Dimension getDimension()
   {
     return dimension;
   }
@@ -334,7 +333,7 @@ public class Installer
    *
    * @return The wizard image or null if none.
    */
-  public static Image getImage ()
+  public static Image getImage()
   {
     return image;
   }
@@ -344,7 +343,7 @@ public class Installer
    *
    * @return true if in console mode, false otherwise.
    */
-  public static boolean isConsoleMode ()
+  public static boolean isConsoleMode()
   {
     return consoleMode;
   }
@@ -355,7 +354,7 @@ public class Installer
    * @param name The name of the environment variable to get.
    * @return The value of the environment variable, or null if not found.
    */
-  public synchronized static String getEnvironmentVariable (String name)
+  public synchronized static String getEnvironmentVariable(String name)
   {
     if(!envInitialized){
       envInitialized = true;

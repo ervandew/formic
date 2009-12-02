@@ -23,8 +23,7 @@ import org.formic.util.dialog.console.ConsoleDialogs;
 /**
  * Action listener for 'Cancel' button.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class CancelAction
   extends WizardAction
@@ -32,7 +31,7 @@ public class CancelAction
   /**
    * @see WizardAction#WizardAction(ConsoleWizard)
    */
-  public CancelAction (ConsoleWizard wizard)
+  public CancelAction(ConsoleWizard wizard)
   {
     super(wizard);
   }
@@ -41,7 +40,7 @@ public class CancelAction
    * {@inheritDoc}
    * @see WizardAction#doAction()
    */
-  public void doAction ()
+  public void doAction()
     throws Exception
   {
     if(ConsoleDialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){

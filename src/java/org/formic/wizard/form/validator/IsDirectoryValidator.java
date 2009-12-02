@@ -25,8 +25,7 @@ import org.formic.wizard.form.Validator;
 /**
  * Validator that determines if the value is a valid file.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class IsDirectoryValidator
   implements Validator
@@ -38,7 +37,7 @@ public class IsDirectoryValidator
   /**
    * Prevent construction.
    */
-  private IsDirectoryValidator ()
+  private IsDirectoryValidator()
   {
   }
 
@@ -46,7 +45,7 @@ public class IsDirectoryValidator
    * {@inheritDoc}
    * @see Validator#isValid(Object)
    */
-  public boolean isValid (Object value)
+  public boolean isValid(Object value)
   {
     String file = (String)value;
     if(file != null && file.trim().length() > 0){
@@ -59,7 +58,7 @@ public class IsDirectoryValidator
    * {@inheritDoc}
    * @see Validator#getErrorMessage()
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return MESSAGE;
   }

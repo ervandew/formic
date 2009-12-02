@@ -32,8 +32,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Log via log4j.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Log4jLogger
   extends DefaultLogger
@@ -44,7 +43,7 @@ public class Log4jLogger
    * {@inheritDoc}
    * @see DefaultLogger#printMessage(String,PrintStream,int)
    */
-  protected void printMessage (String message, PrintStream out, int priority)
+  protected void printMessage(String message, PrintStream out, int priority)
   {
     switch (priority){
       case Project.MSG_ERR:
@@ -67,7 +66,7 @@ public class Log4jLogger
    * {@inheritDoc}
    * @see org.apache.tools.ant.BuildListener#targetStarted(BuildEvent)
    */
-  public void targetStarted (BuildEvent event)
+  public void targetStarted(BuildEvent event)
   {
     logEvent(event);
   }
@@ -76,7 +75,7 @@ public class Log4jLogger
    * {@inheritDoc}
    * @see org.apache.tools.ant.BuildListener#targetFinished(BuildEvent)
    */
-  public void targetFinished (BuildEvent event)
+  public void targetFinished(BuildEvent event)
   {
     logEvent(event);
   }
@@ -86,7 +85,7 @@ public class Log4jLogger
    *
    * @param event The event to log.
    */
-  private void logEvent (BuildEvent event)
+  private void logEvent(BuildEvent event)
   {
     if(event.getMessage() != null){
       logger.info("[{}] {}", event.getTask().getTaskName(), event.getMessage());

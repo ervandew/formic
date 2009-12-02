@@ -28,8 +28,7 @@ import java.util.ResourceBundle;
 /**
  * Aggregates multiple resource bundles together.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ResourceBundleAggregate
   extends ResourceBundle
@@ -42,7 +41,7 @@ public class ResourceBundleAggregate
    *
    * @param _bundle The bundle to add.
    */
-  public void addBundle (ResourceBundle _bundle)
+  public void addBundle(ResourceBundle _bundle)
   {
     bundles.add(_bundle);
   }
@@ -51,7 +50,7 @@ public class ResourceBundleAggregate
    * {@inheritDoc}
    * @see java.util.ResourceBundle#handleGetObject(String)
    */
-  protected Object handleGetObject (String _key)
+  protected Object handleGetObject(String _key)
   {
     for (int ii = 0; ii < bundles.size(); ii++){
       ResourceBundle bundle = (ResourceBundle)bundles.get(ii);
@@ -69,7 +68,7 @@ public class ResourceBundleAggregate
    * {@inheritDoc}
    * @see java.util.ResourceBundle#getKeys()
    */
-  public Enumeration getKeys ()
+  public Enumeration getKeys()
   {
     if(keys == null){
       List keys = new ArrayList();

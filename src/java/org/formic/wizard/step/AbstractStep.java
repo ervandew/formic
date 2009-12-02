@@ -38,8 +38,7 @@ import org.pietschy.wizard.WizardModel;
 /**
  * Abstract super class for wizard steps.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision: 282 $
+ * @author Eric Van Dewoestine
  */
 public abstract class AbstractStep
   implements WizardStep, PropertyChangeListener
@@ -71,7 +70,7 @@ public abstract class AbstractStep
    * @param name The name of the step.
    * @param properties The step properties.
    */
-  public AbstractStep (String name, Properties properties)
+  public AbstractStep(String name, Properties properties)
   {
     this.name = name;
     this.properties = properties;
@@ -84,7 +83,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#getName()
    */
-  public String getName ()
+  public String getName()
   {
     return this.name;
   }
@@ -93,7 +92,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#getTitle()
    */
-  public String getTitle ()
+  public String getTitle()
   {
     return title;
   }
@@ -102,7 +101,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#getDescription()
    */
-  public String getDescription ()
+  public String getDescription()
   {
     return description;
   }
@@ -113,7 +112,7 @@ public abstract class AbstractStep
    * @param name The property name.
    * @return The property value or null if not found.
    */
-  public String getProperty (String name)
+  public String getProperty(String name)
   {
     return properties.getProperty(name);
   }
@@ -122,7 +121,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#prepare()
    */
-  public void prepare ()
+  public void prepare()
   {
   }
 
@@ -130,7 +129,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
   }
 
@@ -138,7 +137,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#proceed()
    */
-  public boolean proceed ()
+  public boolean proceed()
   {
     if(form != null){
       InstallContext context = Installer.getContext();
@@ -158,14 +157,14 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#abort()
    */
-  public void abort ()
+  public void abort()
   {
   }
 
   /**
    * Sets whether the cancel button is enabled.
    */
-  public void setCancelEnabled (boolean _cancel)
+  public void setCancelEnabled(boolean _cancel)
   {
     changeSupport.firePropertyChange(CANCEL, cancel, cancel = _cancel);
   }
@@ -173,7 +172,7 @@ public abstract class AbstractStep
   /**
    * Sets whether the previous button is enabled.
    */
-  public void setPreviousEnabled (boolean _previous)
+  public void setPreviousEnabled(boolean _previous)
   {
     changeSupport.firePropertyChange(PREVIOUS, previous, previous = _previous);
   }
@@ -182,7 +181,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isValid()
    */
-  public boolean isValid ()
+  public boolean isValid()
   {
     return valid;
   }
@@ -192,7 +191,7 @@ public abstract class AbstractStep
    *
    * @param valid true if the data is valid, false otherwise.
    */
-  public void setValid (boolean valid)
+  public void setValid(boolean valid)
   {
     changeSupport.firePropertyChange(VALID, this.valid, this.valid = valid);
   }
@@ -201,7 +200,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isBusy()
    */
-  public boolean isBusy ()
+  public boolean isBusy()
   {
     return busy;
   }
@@ -209,7 +208,7 @@ public abstract class AbstractStep
   /**
    * Sets whether this step is busy.
    */
-  public void setBusy (boolean _busy)
+  public void setBusy(boolean _busy)
   {
     changeSupport.firePropertyChange(BUSY, busy, busy = _busy);
   }
@@ -218,7 +217,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#isBusyAnimated()
    */
-  public boolean isBusyAnimated ()
+  public boolean isBusyAnimated()
   {
     return true;
   }
@@ -227,7 +226,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#isPreviousEnabled()
    */
-  public boolean isPreviousEnabled ()
+  public boolean isPreviousEnabled()
   {
     return previous;
   }
@@ -236,7 +235,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see WizardStep#isCancelEnabled()
    */
-  public boolean isCancelEnabled ()
+  public boolean isCancelEnabled()
   {
     return cancel;
   }
@@ -244,7 +243,7 @@ public abstract class AbstractStep
   /**
    * @see PropertyChangeSupport#addPropertyChangeListener(PropertyChangeListener)
    */
-  public void addPropertyChangeListener (PropertyChangeListener listener)
+  public void addPropertyChangeListener(PropertyChangeListener listener)
   {
     changeSupport.addPropertyChangeListener(listener);
   }
@@ -252,7 +251,7 @@ public abstract class AbstractStep
   /**
    * @see PropertyChangeSupport#removePropertyChangeListener(PropertyChangeListener)
    */
-  public void removePropertyChangeListener (PropertyChangeListener listener)
+  public void removePropertyChangeListener(PropertyChangeListener listener)
   {
     changeSupport.removePropertyChangeListener(listener);
   }
@@ -261,7 +260,7 @@ public abstract class AbstractStep
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange(PropertyChangeEvent evt)
   {
     if(Form.VALID.equals(evt.getPropertyName())){
       Boolean value = (Boolean)evt.getNewValue();
@@ -275,7 +274,7 @@ public abstract class AbstractStep
    * @param name The unqualified field name.
    * @return The fully qualified field name.
    */
-  protected String fieldName (String name)
+  protected String fieldName(String name)
   {
     return this.name + '.' + name;
   }

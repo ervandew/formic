@@ -23,7 +23,6 @@ package org.formic.wizard.form.shared;
  * form field based on the user's environment.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public abstract class Discoverer
 {
@@ -32,7 +31,7 @@ public abstract class Discoverer
    *
    * @return The default value or null if none.
    */
-  public abstract String discover ();
+  public abstract String discover();
 
   /**
    * Given a discoverer class name, instantiates it and executes its discover
@@ -41,7 +40,7 @@ public abstract class Discoverer
    * @param discoverer The discoverer class name.
    * @return The discovered value.
    */
-  public static String discover (String discoverer)
+  public static String discover(String discoverer)
   {
     try{
       Discoverer instance = (Discoverer)

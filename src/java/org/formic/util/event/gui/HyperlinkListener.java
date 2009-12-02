@@ -28,8 +28,7 @@ import javax.swing.event.HyperlinkEvent;
  * Listener to open the user's default browser (win, mac), or first browser
  * found on the system (linux, unix).
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class HyperlinkListener
   implements javax.swing.event.HyperlinkListener
@@ -40,7 +39,7 @@ public class HyperlinkListener
    * {@inheritDoc}
    * @see javax.swing.event.HyperlinkListener#hyperlinkUpdate(HyperlinkEvent)
    */
-  public void hyperlinkUpdate (HyperlinkEvent _event)
+  public void hyperlinkUpdate(HyperlinkEvent _event)
   {
     if (_event.getEventType() == HyperlinkEvent.EventType.ACTIVATED){
       launchBrowser(_event.getURL().toString());
@@ -49,7 +48,7 @@ public class HyperlinkListener
 
   // initially based on "Bare Bones Browser Launch"
   // http://www.centerkey.com/java/browser/myapp/BareBonesBrowserLaunch.java
-  public void launchBrowser (String url)
+  public void launchBrowser(String url)
   {
     if(browser == null){
       String osName = System.getProperty("os.name");

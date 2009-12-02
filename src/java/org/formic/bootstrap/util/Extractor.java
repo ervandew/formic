@@ -34,12 +34,11 @@ import java.util.zip.ZipFile;
 /**
  * Handles extraction of resources.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Extractor
 {
-  /*public static void main (String[] args)
+  /*public static void main(String[] args)
     throws Exception
   {
     readArchive("toolkit.jar", "tmp/tmp.zip");
@@ -53,7 +52,7 @@ public class Extractor
    * @param resource The resource representing the archive.
    * @param dest The destination to write the archive to.
    */
-  public static void readArchive (String resource, String dest)
+  public static void readArchive(String resource, String dest)
     throws Exception
   {
     FileOutputStream out = null;
@@ -78,7 +77,7 @@ public class Extractor
    * @param archive The archive to extract.
    * @param dest The directory to extract it to.
    */
-  public static void extractArchive (
+  public static void extractArchive(
       String archive, String dest, ArchiveExtractionListener listener)
     throws Exception
   {
@@ -139,7 +138,7 @@ public class Extractor
    * @param in The InputStream to read from.
    * @param out The OutputStream to write to.
    */
-  private static void copy (InputStream in, OutputStream out)
+  private static void copy(InputStream in, OutputStream out)
     throws Exception
   {
     byte[] buffer = new byte[1024 * 4];
@@ -155,7 +154,7 @@ public class Extractor
    *
    * @param object The object to close.
    */
-  private static void closeQuietly (Object object)
+  private static void closeQuietly(Object object)
     throws Exception
   {
     if(object != null){
@@ -190,12 +189,12 @@ public class Extractor
      *
      * @param count The number of files to be extracted.
      */
-    public void startExtraction (int count);
+    public void startExtraction(int count);
 
     /**
      * Invoked after all files have been extracted.
      */
-    public void finishExtraction ();
+    public void finishExtraction();
 
     /**
      * Invoked when the supplied file is to be extracted.
@@ -203,7 +202,7 @@ public class Extractor
      * @param index The index of the file within the archive.
      * @param file The file name.
      */
-    public void startExtractingFile (int index, String file);
+    public void startExtractingFile(int index, String file);
 
     /**
      * Invoked when the supplied file has been completely extracted.
@@ -211,6 +210,6 @@ public class Extractor
      * @param index The index of the file within the archive.
      * @param file The file name.
      */
-    public void finishExtractingFile (int index, String file);
+    public void finishExtractingFile(int index, String file);
   }
 }

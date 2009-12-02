@@ -30,7 +30,6 @@ import org.apache.tools.ant.taskdefs.condition.Condition;
  * &lt;equals arg1="${myproperty}" arg2="${otherproperty}"/&gt;
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class Equals
   extends ProjectComponent

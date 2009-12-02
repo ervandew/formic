@@ -29,8 +29,7 @@ import org.formic.ant.util.AntUtils;
 /**
  * Abstract base class consisting of shared logic for Packager implementations.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public abstract class AbstractPackager
   implements Packager
@@ -46,7 +45,7 @@ public abstract class AbstractPackager
    *
    * @return The project.
    */
-  public Project getProject ()
+  public Project getProject()
   {
     return this.project;
   }
@@ -55,7 +54,7 @@ public abstract class AbstractPackager
    * {@inheritDoc}
    * @see Packager#setProject(Project)
    */
-  public void setProject (Project project)
+  public void setProject(Project project)
   {
     this.project = project;
   }
@@ -65,7 +64,7 @@ public abstract class AbstractPackager
    *
    * @return The taskName.
    */
-  public String getTaskName ()
+  public String getTaskName()
   {
     return this.taskName;
   }
@@ -74,7 +73,7 @@ public abstract class AbstractPackager
    * {@inheritDoc}
    * @see Packager#setTaskName(String)
    */
-  public void setTaskName (String taskName)
+  public void setTaskName(String taskName)
   {
     this.taskName = taskName;
   }
@@ -84,7 +83,7 @@ public abstract class AbstractPackager
    *
    * @return The formicHome.
    */
-  public String getFormicHome ()
+  public String getFormicHome()
   {
     return this.formicHome;
   }
@@ -93,7 +92,7 @@ public abstract class AbstractPackager
    * {@inheritDoc}
    * @see Packager#setFormicHome(String)
    */
-  public void setFormicHome (String formicHome)
+  public void setFormicHome(String formicHome)
   {
     this.formicHome = formicHome;
   }
@@ -103,7 +102,7 @@ public abstract class AbstractPackager
    *
    * @return The buildDir.
    */
-  public String getBuildDir ()
+  public String getBuildDir()
   {
     return this.buildDir;
   }
@@ -112,7 +111,7 @@ public abstract class AbstractPackager
    * {@inheritDoc}
    * @see Packager#setBuildDir(String)
    */
-  public void setBuildDir (String buildDir)
+  public void setBuildDir(String buildDir)
   {
     this.buildDir = buildDir;
     AntUtils.mkdir(getProject(), getTaskName(), new File(buildDir));
@@ -123,7 +122,7 @@ public abstract class AbstractPackager
    *
    * @return The destFile.
    */
-  public File getDestFile ()
+  public File getDestFile()
   {
     return this.destFile;
   }
@@ -132,7 +131,7 @@ public abstract class AbstractPackager
    * {@inheritDoc}
    * @see Packager#setDestFile(File)
    */
-  public void setDestFile (File destFile)
+  public void setDestFile(File destFile)
   {
     this.destFile = destFile;
   }

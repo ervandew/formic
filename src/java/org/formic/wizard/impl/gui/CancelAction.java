@@ -29,8 +29,7 @@ import org.pietschy.wizard.WizardStep;
 /**
  * Action for canceling the installation.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class CancelAction
   extends WizardAction
@@ -44,7 +43,7 @@ public class CancelAction
    * {@inheritDoc}
    * @see WizardAction#doAction(ActionEvent)
    */
-  public void doAction (ActionEvent e)
+  public void doAction(ActionEvent e)
   {
     if(isEnabled()){
       if(GuiDialogs.showConfirm("quit.confirm.title", "quit.confirm.text")){

@@ -23,8 +23,7 @@ import org.formic.wizard.form.Validator;
 /**
  * Used to build a validator.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ValidatorBuilder
 {
@@ -33,7 +32,7 @@ public class ValidatorBuilder
   /**
    * Constructs a new instance.
    */
-  public ValidatorBuilder ()
+  public ValidatorBuilder()
   {
     validator = new AggregateValidator();
   }
@@ -43,7 +42,7 @@ public class ValidatorBuilder
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder required ()
+  public ValidatorBuilder required()
   {
     validator(RequiredValidator.INSTANCE);
     return this;
@@ -54,7 +53,7 @@ public class ValidatorBuilder
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder fileExists ()
+  public ValidatorBuilder fileExists()
   {
     validator(FileExistsValidator.INSTANCE);
     return this;
@@ -65,7 +64,7 @@ public class ValidatorBuilder
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder isDirectory ()
+  public ValidatorBuilder isDirectory()
   {
     validator(IsDirectoryValidator.INSTANCE);
     return this;
@@ -76,7 +75,7 @@ public class ValidatorBuilder
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder isFile ()
+  public ValidatorBuilder isFile()
   {
     validator(IsFileValidator.INSTANCE);
     return this;
@@ -87,7 +86,7 @@ public class ValidatorBuilder
    *
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder isWritable ()
+  public ValidatorBuilder isWritable()
   {
     validator(IsWritableValidator.INSTANCE);
     return this;
@@ -99,7 +98,7 @@ public class ValidatorBuilder
    * @param validator The validator to add.
    * @return This ValidatorBuilder instance for method chaining.
    */
-  public ValidatorBuilder validator (Validator validator)
+  public ValidatorBuilder validator(Validator validator)
   {
     this.validator.addValidator(validator);
     return this;
@@ -110,7 +109,7 @@ public class ValidatorBuilder
    *
    * @return The validator.
    */
-  public Validator validator ()
+  public Validator validator()
   {
     return validator;
   }

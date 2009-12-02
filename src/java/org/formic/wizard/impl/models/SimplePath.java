@@ -24,8 +24,7 @@ import org.pietschy.wizard.WizardStep;
  * Extension to original SimplePath that has support for a name property for
  * debugging purposes.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class SimplePath
   extends org.pietschy.wizard.models.SimplePath
@@ -37,7 +36,7 @@ public class SimplePath
    *
    * @param name the name to give this path.
    */
-  public SimplePath (String name)
+  public SimplePath(String name)
   {
     super();
     this.name = name;
@@ -50,7 +49,7 @@ public class SimplePath
    * @param name the name to give this path.
    * @param step the first step of the path.
    */
-  public SimplePath (String name, WizardStep step)
+  public SimplePath(String name, WizardStep step)
   {
     super(step);
     this.name = name;
@@ -61,7 +60,7 @@ public class SimplePath
    *
    * @return The name.
    */
-  public String getName ()
+  public String getName()
   {
     return name;
   }
@@ -70,7 +69,7 @@ public class SimplePath
    * {@inheritDoc}
    * @see Object#toString()
    */
-  public String toString ()
+  public String toString()
   {
     StringBuffer buffer = new StringBuffer();
     buffer.append("Name: ").append(name);

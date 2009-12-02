@@ -23,8 +23,7 @@ import org.apache.tools.ant.Project;
 /**
  * Class used to log messages.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Log
 {
@@ -35,7 +34,7 @@ public class Log
    *
    * @param _project The ant project.
    */
-  static void setProject (Project _project)
+  static void setProject(Project _project)
   {
     project = _project;
   }
@@ -45,7 +44,7 @@ public class Log
    *
    * @param _message The message.
    */
-  public static void debug (String _message)
+  public static void debug(String _message)
   {
     project.log(_message, Project.MSG_DEBUG);
   }
@@ -55,7 +54,7 @@ public class Log
    *
    * @param _message The message.
    */
-  public static void info (String _message)
+  public static void info(String _message)
   {
     project.log(_message, Project.MSG_INFO);
   }
@@ -65,7 +64,7 @@ public class Log
    *
    * @param _message The message.
    */
-  public static void warn (String _message)
+  public static void warn(String _message)
   {
     project.log(_message, Project.MSG_WARN);
   }
@@ -75,7 +74,7 @@ public class Log
    *
    * @param _message The message.
    */
-  public static void error (String _message)
+  public static void error(String _message)
   {
     project.log(_message, Project.MSG_ERR);
   }

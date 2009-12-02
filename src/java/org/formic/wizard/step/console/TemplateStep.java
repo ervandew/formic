@@ -54,7 +54,6 @@ import org.formic.wizard.step.shared.TemplateStepAction;
  * </table>
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class TemplateStep
   extends AbstractConsoleStep
@@ -66,7 +65,7 @@ public class TemplateStep
   /**
    * Constructs the template step.
    */
-  public TemplateStep (String name, Properties properties)
+  public TemplateStep(String name, Properties properties)
   {
     super(name, properties);
     this.action = new TemplateStepAction();
@@ -83,7 +82,7 @@ public class TemplateStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.ConsoleStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     JPanel panel = new JPanel();
     panel.setLayout(new BorderLayout());
@@ -106,7 +105,7 @@ public class TemplateStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     area.setText(action.processTemplate(text));
     area.setCaretPosition(0);

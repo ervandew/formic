@@ -63,8 +63,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Wizard for console installers.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine(ervandew@yahoo.com)
  */
 public class ConsoleWizard
   implements Wizard, PropertyChangeListener
@@ -97,7 +96,7 @@ public class ConsoleWizard
   /**
    * Constructs a new instance.
    */
-  public ConsoleWizard (WizardModel _model)
+  public ConsoleWizard(WizardModel _model)
   {
     model = _model;
     model.addPropertyChangeListener(this);
@@ -112,7 +111,7 @@ public class ConsoleWizard
    * {@inheritDoc}
    * @see org.formic.wizard.Wizard#showWizard(String)
    */
-  public void showWizard (String action)
+  public void showWizard(String action)
   {
     String error = null;
 
@@ -138,7 +137,7 @@ public class ConsoleWizard
     frame = new JFrame(Installer.getString(action + ".title"));
     frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     frame.addWindowListener(new WindowAdapter(){
-      public void windowClosing (WindowEvent _event){
+      public void windowClosing(WindowEvent _event){
         canceled = true;
       }
     });
@@ -229,7 +228,7 @@ public class ConsoleWizard
    * {@inheritDoc}
    * @see org.formic.wizard.Wizard#waitFor()
    */
-  public void waitFor ()
+  public void waitFor()
   {
     try{
       semaphore.acquire();
@@ -242,7 +241,7 @@ public class ConsoleWizard
    * {@inheritDoc}
    * @see org.formic.wizard.Wizard#wasCanceled()
    */
-  public boolean wasCanceled ()
+  public boolean wasCanceled()
   {
     return canceled;
   }
@@ -252,7 +251,7 @@ public class ConsoleWizard
    *
    * @param canceled true if the wizard was canceled.
    */
-  public void close (boolean canceled)
+  public void close(boolean canceled)
   {
     canceled = canceled;
     //frame.setVisible(false);
@@ -269,7 +268,7 @@ public class ConsoleWizard
    *
    * @return The model.
    */
-  public WizardModel getModel ()
+  public WizardModel getModel()
   {
     return this.model;
   }
@@ -279,7 +278,7 @@ public class ConsoleWizard
    *
    * @return The frame.
    */
-  public static JFrame getFrame ()
+  public static JFrame getFrame()
   {
     return frame;
   }
@@ -288,7 +287,7 @@ public class ConsoleWizard
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange(PropertyChangeEvent evt)
   {
     if (evt.getPropertyName().equals(Wizard.ACTIVE_STEP)){
       MultiPathModel model = (MultiPathModel)getModel();
@@ -333,7 +332,7 @@ public class ConsoleWizard
         final boolean busy = ((Boolean)evt.getNewValue()).booleanValue();
 
         SwingUtilities.invokeLater(new Runnable(){
-          public void run () {
+          public void run() {
             if(busy){
               hiddenPanel = (JPanel)viewPanel.getComponents()[0];
               updateView(new BusyPanel(ws));
@@ -350,7 +349,7 @@ public class ConsoleWizard
   /**
    * Update the view for the current step.
    */
-  private void updateView (Component view)
+  private void updateView(Component view)
   {
     viewPanel.add(view);
     Component[] components = viewPanel.getComponents();
@@ -371,7 +370,7 @@ public class ConsoleWizard
   /**
    * Update the state (enabled / disabled) of the buttons in the button bar.
    */
-  private void updateButtonStatus (
+  private void updateButtonStatus(
       MultiPathModel model, WizardStep ws, org.pietschy.wizard.WizardStep step)
   {
     // set whether previous step is enabled or not.
@@ -406,7 +405,7 @@ public class ConsoleWizard
      *
      * @param ws The WizardStep.
      */
-    public BusyPanel (WizardStep ws)
+    public BusyPanel(WizardStep ws)
     {
       setLayout(new BorderLayout());
 

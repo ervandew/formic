@@ -52,7 +52,6 @@ import org.formic.wizard.step.shared.InstallAction;
  * the user.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class InstallStep
   extends AbstractGuiStep
@@ -69,7 +68,7 @@ public class InstallStep
   /**
    * Constructs the step.
    */
-  public InstallStep (String name, Properties properties)
+  public InstallStep(String name, Properties properties)
   {
     super(name, properties);
   }
@@ -78,7 +77,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.GuiStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     overallLabel = new JLabel(Installer.getString("install.initialize"));
     overallLabel.setAlignmentX(0.0f);
@@ -123,7 +122,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#isBusyAnimated()
    */
-  public boolean isBusyAnimated ()
+  public boolean isBusyAnimated()
   {
     return false;
   }
@@ -132,13 +131,13 @@ public class InstallStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     setBusy(true);
     setPreviousEnabled(false);
     try{
       Worker.post(new foxtrot.Task(){
-        public Object run ()
+        public Object run()
           throws Exception
         {
           InstallAction action = new InstallAction(InstallStep.this);
@@ -149,7 +148,7 @@ public class InstallStep
       });
 
       SwingUtilities.invokeLater(new Runnable(){
-        public void run (){
+        public void run(){
           overallProgress.setValue(overallProgress.getMaximum());
           overallLabel.setText(Installer.getString("install.done"));
           taskProgress.setValue(taskProgress.getMaximum());
@@ -172,7 +171,7 @@ public class InstallStep
    *
    * @param error The Throwable error that occured.
    */
-  protected void setError (Throwable error)
+  protected void setError(Throwable error)
   {
     this.error = error;
     error.printStackTrace();
@@ -186,7 +185,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#installStarted(int)
    */
-  public void installStarted (int tasks)
+  public void installStarted(int tasks)
   {
     overallProgress.setMaximum(tasks);
     overallProgress.setValue(0);
@@ -196,7 +195,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#taskStarted(String)
    */
-  public void taskStarted (String info)
+  public void taskStarted(String info)
   {
     overallLabel.setText(info);
   }
@@ -205,7 +204,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#taskFinished(int)
    */
-  public void taskFinished (int index)
+  public void taskFinished(int index)
   {
     overallProgress.setValue(index);
   }
@@ -214,7 +213,7 @@ public class InstallStep
    * {@inheritDoc}
    * @see InstallAction.InstallListener#messageLogged(String)
    */
-  public void messageLogged (String message)
+  public void messageLogged(String message)
   {
     taskLabel.setText(message);
   }
@@ -222,13 +221,13 @@ public class InstallStep
   private class ShowErrorAction
     extends AbstractAction
   {
-    public ShowErrorAction ()
+    public ShowErrorAction()
     {
       super(Installer.getString("install.error.view"),
           new ImageIcon(Installer.getImage("/images/16x16/error.png")));
     }
 
-    public void actionPerformed (ActionEvent e){
+    public void actionPerformed(ActionEvent e){
       GuiDialogs.showError(error);
     }
   }

@@ -26,7 +26,6 @@ import org.formic.wizard.WizardStep;
  * Defines a console step.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public interface ConsoleStep
   extends WizardStep
@@ -38,5 +37,5 @@ public interface ConsoleStep
    *
    * @return This steps component.
    */
-  public Component init ();
+  public Component init();
 }

@@ -32,7 +32,6 @@ import javax.swing.JComponent;
  * Base class for forms.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class Form
 {
@@ -49,7 +48,7 @@ public class Form
   /**
    * Construct a new instance.
    */
-  public Form ()
+  public Form()
   {
     propertyChangeSupport = new PropertyChangeSupport(this);
   }
@@ -62,7 +61,7 @@ public class Form
    * @param value The value of the field.
    * @param valid true if the field is value is valid, false otherwise.
    */
-  public void setValue (
+  public void setValue(
       FormField field, JComponent component, Object value, boolean valid)
   {
     String name = (String)component.getClientProperty(NAME);
@@ -86,7 +85,7 @@ public class Form
    *
    * @return Map containing all the form values.
    */
-  public Map getValues ()
+  public Map getValues()
   {
     return values;
   }
@@ -96,7 +95,7 @@ public class Form
    *
    * @return true if valid false otherwise.
    */
-  public boolean isValid ()
+  public boolean isValid()
   {
     return invalidFields.size() == 0;
   }
@@ -107,7 +106,7 @@ public class Form
    * @param field The form field.
    * @param valid true if the form is currently valid, false otherwise.
    */
-  protected void addField (FormField field, boolean valid)
+  protected void addField(FormField field, boolean valid)
   {
     fields.add(field);
     if(!valid){
@@ -122,7 +121,7 @@ public class Form
   /**
    * @see PropertyChangeSupport#addPropertyChangeListener(PropertyChangeListener)
    */
-  public void addPropertyChangeListener (PropertyChangeListener listener)
+  public void addPropertyChangeListener(PropertyChangeListener listener)
   {
     propertyChangeSupport.addPropertyChangeListener(listener);
   }
@@ -130,7 +129,7 @@ public class Form
   /**
    * @see PropertyChangeSupport#removePropertyChangeListener(PropertyChangeListener)
    */
-  public void removePropertyChangeListener (PropertyChangeListener listener)
+  public void removePropertyChangeListener(PropertyChangeListener listener)
   {
     propertyChangeSupport.removePropertyChangeListener(listener);
   }

@@ -45,8 +45,7 @@ import javax.swing.WindowConstants;
 /**
  * Error dialog for notifying user of errors.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class GuiErrorDialog
   extends JDialog
@@ -74,7 +73,7 @@ public class GuiErrorDialog
    * @param thrown The error detail.
    * @param detail The error detail if no exception supplied.
    */
-  GuiErrorDialog (String title, String message, Throwable thrown, String detail)
+  GuiErrorDialog(String title, String message, Throwable thrown, String detail)
   {
     super(JOptionPane.getRootFrame(), title, true);
 
@@ -139,7 +138,7 @@ public class GuiErrorDialog
    *
    * @param bundle The ResourceBundle.
    */
-  static void setBundle (ResourceBundle bundle)
+  static void setBundle(ResourceBundle bundle)
   {
     if(bundle != null){
       ERROR = new ImageIcon(GuiDialogs.getImage(bundle, "error.dialog.image"));
@@ -165,7 +164,7 @@ public class GuiErrorDialog
     /**
      * Constructs a new instance.
      */
-    public DetailsAction ()
+    public DetailsAction()
     {
       super(SHOW_LABEL, SHOW_ICON);
     }
@@ -174,7 +173,7 @@ public class GuiErrorDialog
      * {@inheritDoc}
      * @see java.awt.event.ActionListener#actionPerformed(ActionEvent)
      */
-    public void actionPerformed (ActionEvent e)
+    public void actionPerformed(ActionEvent e)
     {
       detailsPane.setVisible(visible = !visible);
 

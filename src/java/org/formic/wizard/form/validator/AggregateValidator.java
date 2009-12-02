@@ -27,8 +27,7 @@ import org.formic.wizard.form.Validator;
 /**
  * Aggregates one or more validators.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class AggregateValidator
   implements Validator
@@ -50,7 +49,7 @@ public class AggregateValidator
    * {@inheritDoc}
    * @see Validator#isValid(Object)
    */
-  public boolean isValid (Object value)
+  public boolean isValid(Object value)
   {
     for (Iterator ii = validators.iterator(); ii.hasNext();){
       Validator validator = (Validator)ii.next();
@@ -66,7 +65,7 @@ public class AggregateValidator
    * {@inheritDoc}
    * @see Validator#getErrorMessage()
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return message;
   }
@@ -78,7 +77,7 @@ public class AggregateValidator
    * @return true if this aggregate contains the supplied validator, false
    * otherwise.
    */
-  public boolean containsValidator (Validator validator)
+  public boolean containsValidator(Validator validator)
   {
     if(validators.contains(validator)){
       return true;
@@ -102,7 +101,7 @@ public class AggregateValidator
    * @return true if this aggregate contains the supplied validator, false
    * otherwise.
    */
-  public boolean containsValidator (Class validator)
+  public boolean containsValidator(Class validator)
   {
     for (Iterator ii = validators.iterator(); ii.hasNext();){
       Object val = ii.next();

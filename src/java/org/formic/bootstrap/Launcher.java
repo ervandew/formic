@@ -49,8 +49,7 @@ import org.formic.util.dialog.gui.GuiDialogs;
  * Class responsible for extracting embedded archive and kicking off the ant
  * process.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class Launcher
   extends Thread
@@ -68,7 +67,7 @@ public class Launcher
    *
    * @param args Command line arguments.
    */
-  public static void main (String[] args)
+  public static void main(String[] args)
   {
     Launcher launcher = new Launcher(args);
     launcher.start();
@@ -79,7 +78,7 @@ public class Launcher
    *
    * @param args The command line arguments.
    */
-  public Launcher (String[] args)
+  public Launcher(String[] args)
   {
     this.args = args;
 
@@ -110,7 +109,7 @@ public class Launcher
     JButton cancelButton = new JButton("Cancel");
     cancelButton.setPreferredSize(new Dimension(75, 25));
     cancelButton.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent event) {
+      public void actionPerformed(ActionEvent event) {
         cancel();
         frame.setVisible(false);
       }
@@ -130,7 +129,7 @@ public class Launcher
    * {@inheritDoc}
    * @see Runnable#run()
    */
-  public void run ()
+  public void run()
   {
     try{
       extractArchive();
@@ -156,7 +155,7 @@ public class Launcher
   /**
    * Cancel execution of this thread.
    */
-  private void cancel ()
+  private void cancel()
   {
     interrupt();
     try{
@@ -171,7 +170,7 @@ public class Launcher
   /**
    * Extract the embedded archive to a temp directory.
    */
-  private void extractArchive ()
+  private void extractArchive()
     throws Exception
   {
     tempDir = System.getProperty("java.io.tmpdir").replace('\\', '/') +
@@ -195,7 +194,7 @@ public class Launcher
    *
    * @param args Supplied arguments.
    */
-  private void execute (String[] args)
+  private void execute(String[] args)
     throws Exception
   {
     String drive = tempDir.substring(0, 2);
@@ -232,7 +231,7 @@ public class Launcher
   /**
    * Performs any necessary cleanup.
    */
-  private void cleanup ()
+  private void cleanup()
     throws Exception
   {
     if(this.tempDir != null){
@@ -246,7 +245,7 @@ public class Launcher
    *
    * @param dir The directory to delete.
    */
-  private void deleteDir (File dir)
+  private void deleteDir(File dir)
     throws Exception
   {
     File[] files = dir.listFiles();
@@ -266,7 +265,7 @@ public class Launcher
    * {@inheritDoc}
    * @see Extractor.ArchiveExtractionListener#startExtraction(int)
    */
-  public void startExtraction (int count)
+  public void startExtraction(int count)
   {
     progressBar.setIndeterminate(false);
     progressBar.setMaximum(count);
@@ -277,7 +276,7 @@ public class Launcher
    * {@inheritDoc}
    * @see Extractor.ArchiveExtractionListener#finishExtraction()
    */
-  public void finishExtraction ()
+  public void finishExtraction()
   {
     progressBar.setValue(progressBar.getMaximum());
   }
@@ -286,7 +285,7 @@ public class Launcher
    * {@inheritDoc}
    * @see Extractor.ArchiveExtractionListener#startExtractingFile(int,String)
    */
-  public void startExtractingFile (int index, String file)
+  public void startExtractingFile(int index, String file)
   {
     progressBar.setValue(index);
   }
@@ -295,7 +294,7 @@ public class Launcher
    * {@inheritDoc}
    * @see Extractor.ArchiveExtractionListener#finishExtractingFile(int,String)
    */
-  public void finishExtractingFile (int index, String file)
+  public void finishExtractingFile(int index, String file)
   {
   }
 }

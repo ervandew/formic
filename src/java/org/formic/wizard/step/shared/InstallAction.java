@@ -44,7 +44,6 @@ import org.formic.ant.util.AntUtils;
  * Action for executing the install task and monitoring its progress.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class InstallAction
   implements BuildListener
@@ -68,7 +67,7 @@ public class InstallAction
    *
    * @param listener The listener listening to install progress events.
    */
-  public InstallAction (InstallListener listener)
+  public InstallAction(InstallListener listener)
   {
     this.listener = listener;
     target = (Target)
@@ -81,12 +80,12 @@ public class InstallAction
   /**
    * Executes the installation.
    */
-  public void execute ()
+  public void execute()
     throws Exception
   {
     if(listener != null){
       SwingUtilities.invokeLater(new Runnable(){
-        public void run (){
+        public void run(){
           listener.installStarted(tasks.size());
         }
       });
@@ -120,7 +119,7 @@ public class InstallAction
    *
    * @param tasks The tasks to register.
    */
-  private void registerTasks (Task[] tasks)
+  private void registerTasks(Task[] tasks)
   {
     for (int ii = 0; ii < tasks.length; ii++){
       Task task = tasks[ii];
@@ -167,7 +166,7 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#buildStarted(BuildEvent)
    */
-  public void buildStarted (BuildEvent e)
+  public void buildStarted(BuildEvent e)
   {
   }
 
@@ -175,7 +174,7 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#buildFinished(BuildEvent)
    */
-  public void buildFinished (BuildEvent e)
+  public void buildFinished(BuildEvent e)
   {
   }
 
@@ -183,7 +182,7 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#targetStarted(BuildEvent)
    */
-  public void targetStarted (BuildEvent e)
+  public void targetStarted(BuildEvent e)
   {
     targetStack.add(e.getTarget().getName());
   }
@@ -192,7 +191,7 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#targetFinished(BuildEvent)
    */
-  public void targetFinished (BuildEvent e)
+  public void targetFinished(BuildEvent e)
   {
     targetStack.remove(targetStack.size() - 1);
   }
@@ -201,10 +200,10 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#taskStarted(BuildEvent)
    */
-  public void taskStarted (final BuildEvent e)
+  public void taskStarted(final BuildEvent e)
   {
     SwingUtilities.invokeLater(new Runnable(){
-      public void run (){
+      public void run(){
         listener.taskStarted(getTargetPath() + " - " + e.getTask().getTaskName());
       }
     });
@@ -214,12 +213,12 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#taskFinished(BuildEvent)
    */
-  public void taskFinished (BuildEvent e)
+  public void taskFinished(BuildEvent e)
   {
     final int index = tasks.indexOf(e.getTask());
     if(index > 0){
       SwingUtilities.invokeLater(new Runnable(){
-        public void run (){
+        public void run(){
           listener.taskFinished(index + 1);
         }
       });
@@ -230,11 +229,11 @@ public class InstallAction
    * {@inheritDoc}
    * @see BuildListener#messageLogged(BuildEvent)
    */
-  public void messageLogged (final BuildEvent e)
+  public void messageLogged(final BuildEvent e)
   {
     if(!STACK_ELEMENT.matcher(e.getMessage()).matches()){
       SwingUtilities.invokeLater(new Runnable(){
-        public void run (){
+        public void run(){
           listener.messageLogged(e.getMessage());
         }
       });
@@ -246,7 +245,7 @@ public class InstallAction
    *
    * @return The path.
    */
-  private String getTargetPath ()
+  private String getTargetPath()
   {
     StringBuffer buffer = new StringBuffer();
     for (Iterator ii = targetStack.iterator(); ii.hasNext();){
@@ -263,12 +262,12 @@ public class InstallAction
    */
   public interface InstallListener
   {
-    public void installStarted (int tasks);
+    public void installStarted(int tasks);
 
-    public void taskStarted (String taskInfo);
+    public void taskStarted(String taskInfo);
 
-    public void taskFinished (int index);
+    public void taskFinished(int index);
 
-    public void messageLogged (String message);
+    public void messageLogged(String message);
   }
 }

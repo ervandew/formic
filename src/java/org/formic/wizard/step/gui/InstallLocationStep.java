@@ -44,7 +44,6 @@ import org.formic.wizard.step.AbstractGuiStep;
  * Step prompting the user to choose an install location.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class InstallLocationStep
   extends AbstractGuiStep
@@ -54,7 +53,7 @@ public class InstallLocationStep
   /**
    * Constructs the step.
    */
-  public InstallLocationStep (String name, Properties properties)
+  public InstallLocationStep(String name, Properties properties)
   {
     super(name, properties);
   }
@@ -63,7 +62,7 @@ public class InstallLocationStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.GuiForm#init()
    */
-  public Component init ()
+  public Component init()
   {
     JPanel panel = new JPanel();
 
@@ -88,7 +87,7 @@ public class InstallLocationStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     fileChooser.grabFocus();
   }
@@ -98,7 +97,7 @@ public class InstallLocationStep
    *
    * @return The default value.
    */
-  protected String getDefaultValue ()
+  protected String getDefaultValue()
   {
     String discoverer = getProperty("discoverer");
     if(discoverer != null){

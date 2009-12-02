@@ -34,8 +34,7 @@ import org.pietschy.wizard.WizardModel;
 /**
  * Wraps {@link WizardStep} implementations for use in the console wizard framework.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ConsoleWizardStep
   implements org.pietschy.wizard.WizardStep, PropertyChangeListener
@@ -52,7 +51,7 @@ public class ConsoleWizardStep
    *
    * @param step The step for this instance.
    */
-  public ConsoleWizardStep (ConsoleStep step)
+  public ConsoleWizardStep(ConsoleStep step)
   {
     this.step = step;
     changeSupport = new PropertyChangeSupport(this);
@@ -65,7 +64,7 @@ public class ConsoleWizardStep
    *
    * @return The step.
    */
-  public ConsoleStep getStep ()
+  public ConsoleStep getStep()
   {
     return this.step;
   }
@@ -75,7 +74,7 @@ public class ConsoleWizardStep
    *
    * @return The console component.
    */
-  public Component getConsoleView ()
+  public Component getConsoleView()
   {
     if(component == null){
       component = step.init();
@@ -87,7 +86,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getName()
    */
-  public String getName ()
+  public String getName()
   {
     return step.getTitle();
   }
@@ -96,7 +95,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getSummary()
    */
-  public String getSummary ()
+  public String getSummary()
   {
     return step.getDescription();
   }
@@ -105,7 +104,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getIcon()
    */
-  public Icon getIcon ()
+  public Icon getIcon()
   {
     return null;
   }
@@ -114,7 +113,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getView()
    */
-  public java.awt.Component getView ()
+  public java.awt.Component getView()
   {
     return null;
   }
@@ -123,7 +122,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#isComplete()
    */
-  public boolean isComplete ()
+  public boolean isComplete()
   {
     return complete;
   }
@@ -132,7 +131,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#isBusy()
    */
-  public boolean isBusy ()
+  public boolean isBusy()
   {
     return busy;
   }
@@ -141,7 +140,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#init(WizardModel)
    */
-  public void init (WizardModel _model)
+  public void init(WizardModel _model)
   {
   }
 
@@ -149,7 +148,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#prepare()
    */
-  public void prepare ()
+  public void prepare()
   {
   }
 
@@ -157,7 +156,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#applyState()
    */
-  public void applyState ()
+  public void applyState()
     throws InvalidStateException
   {
     if (!step.proceed()){
@@ -169,7 +168,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#abortBusy()
    */
-  public void abortBusy ()
+  public void abortBusy()
   {
   }
 
@@ -177,7 +176,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#getPreferredSize()
    */
-  public java.awt.Dimension getPreferredSize ()
+  public java.awt.Dimension getPreferredSize()
   {
     return null;
   }
@@ -186,7 +185,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#addPropertyChangeListener(PropertyChangeListener)
    */
-  public void addPropertyChangeListener (PropertyChangeListener listener)
+  public void addPropertyChangeListener(PropertyChangeListener listener)
   {
     changeSupport.addPropertyChangeListener(listener);
   }
@@ -195,7 +194,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#removePropertyChangeListener(PropertyChangeListener)
    */
-  public void removePropertyChangeListener (PropertyChangeListener listener)
+  public void removePropertyChangeListener(PropertyChangeListener listener)
   {
     changeSupport.removePropertyChangeListener(listener);
   }
@@ -204,7 +203,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#addPropertyChangeListener(String,PropertyChangeListener)
    */
-  public void addPropertyChangeListener (
+  public void addPropertyChangeListener(
       String property, PropertyChangeListener listener)
   {
     changeSupport.addPropertyChangeListener(property, listener);
@@ -214,7 +213,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardStep#removePropertyChangeListener(String,PropertyChangeListener)
    */
-  public void removePropertyChangeListener (
+  public void removePropertyChangeListener(
       String property, PropertyChangeListener listener)
   {
     changeSupport.removePropertyChangeListener(property, listener);
@@ -224,7 +223,7 @@ public class ConsoleWizardStep
    * {@inheritDoc}
    * @see PropertyChangeListener#propertyChange(PropertyChangeEvent)
    */
-  public void propertyChange (PropertyChangeEvent evt)
+  public void propertyChange(PropertyChangeEvent evt)
   {
     changeSupport.firePropertyChange(
         evt.getPropertyName(), evt.getOldValue(), evt.getNewValue());

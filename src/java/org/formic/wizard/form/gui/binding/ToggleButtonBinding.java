@@ -31,7 +31,6 @@ import org.formic.wizard.form.ValidationUtils;
  * Class for binding JToggleButton to a Form.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class ToggleButtonBinding
   extends FormField
@@ -46,7 +45,7 @@ public class ToggleButtonBinding
    * @param component The JToggleButton.
    * @param form The form the component is a part of.
    */
-  public ToggleButtonBinding (JToggleButton component, Form form)
+  public ToggleButtonBinding(JToggleButton component, Form form)
   {
     this.component = component;
     this.form = form;
@@ -54,7 +53,7 @@ public class ToggleButtonBinding
     this.form.setValue(this, component, Boolean.FALSE, valid);
   }
 
-  public static FormField bind (JToggleButton component, Form form)
+  public static FormField bind(JToggleButton component, Form form)
   {
     ToggleButtonBinding binding = new ToggleButtonBinding(component, form);
     component.addChangeListener(binding);
@@ -65,7 +64,7 @@ public class ToggleButtonBinding
    * {@inheritDoc}
    * @see ChangeListener#stateChanged(ChangeEvent)
    */
-  public void stateChanged (ChangeEvent e)
+  public void stateChanged(ChangeEvent e)
   {
     Boolean value = component.isSelected() ? Boolean.TRUE : Boolean.FALSE;
     boolean valid = ValidationUtils.validate(component, value.toString());

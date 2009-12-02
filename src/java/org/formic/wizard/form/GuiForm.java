@@ -47,7 +47,6 @@ import org.formic.wizard.form.gui.binding.ToggleButtonBinding;
  * of the data.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class GuiForm
   extends Form
@@ -61,7 +60,7 @@ public class GuiForm
   private Icon errorIcon;
   private Icon warningIcon;
 
-  public GuiForm ()
+  public GuiForm()
   {
     // listen for change of focus on fields.
     KeyboardFocusManager.getCurrentKeyboardFocusManager()
@@ -72,7 +71,7 @@ public class GuiForm
    * {@inheritDoc}
    * @see Form#setValue(FormField,JComponent,String,boolean)
    */
-  public void setValue (
+  public void setValue(
       FormField field, JComponent component, Object value, boolean valid)
   {
     super.setValue(field, component, value, valid);
@@ -86,7 +85,7 @@ public class GuiForm
    * @param name The name of the field.
    * @param field The field to bind.
    */
-  public void bind (String name, JTextComponent field)
+  public void bind(String name, JTextComponent field)
   {
     bind(name, field, null);
   }
@@ -99,7 +98,7 @@ public class GuiForm
    * @param validator The validator to use to validate the contents of the
    * field.
    */
-  public void bind (String name, JTextComponent field, Validator validator)
+  public void bind(String name, JTextComponent field, Validator validator)
   {
     ValidationUtils.decorate(field, validator);
     field.putClientProperty(NAME, name);
@@ -113,7 +112,7 @@ public class GuiForm
    * @param name The name of the field.
    * @param field The field to bind.
    */
-  public void bind (String name, JToggleButton field)
+  public void bind(String name, JToggleButton field)
   {
     field.putClientProperty(NAME, name);
     addField(ToggleButtonBinding.bind(field, this), true);
@@ -122,7 +121,7 @@ public class GuiForm
   /**
    * Creates a message panel for displaying field info, warnings, or errors.
    */
-  public Component createMessagePanel ()
+  public Component createMessagePanel()
   {
     messageArea = new JLabel();
     messageLabel = new JLabel();
@@ -149,7 +148,7 @@ public class GuiForm
    *
    * @param component The component.
    */
-  public void showHint (JComponent component)
+  public void showHint(JComponent component)
   {
     String name = (String)component.getClientProperty(NAME);
     if(name != null){
@@ -163,7 +162,7 @@ public class GuiForm
    *
    * @param text The text to display.
    */
-  public void showInfoMessage (String text)
+  public void showInfoMessage(String text)
   {
     if(infoIcon == null){
       infoIcon = new ImageIcon(Installer.getImage("form.info.icon"));
@@ -177,7 +176,7 @@ public class GuiForm
    *
    * @param text The text to display.
    */
-  public void showWarningMessage (String text)
+  public void showWarningMessage(String text)
   {
     if(warningIcon == null){
       warningIcon = new ImageIcon(Installer.getImage("form.warning.icon"));
@@ -191,7 +190,7 @@ public class GuiForm
    *
    * @param text The text to display.
    */
-  public void showErrorMessage (String text)
+  public void showErrorMessage(String text)
   {
     if(errorIcon == null){
       errorIcon = new ImageIcon(Installer.getImage("form.error.icon"));
@@ -206,7 +205,7 @@ public class GuiForm
    * @param text The text to display.
    * @param icon The icon to display.
    */
-  public void showMessage (String text, Icon icon)
+  public void showMessage(String text, Icon icon)
   {
     if(messagePanel != null){
       if(text != null && text.trim().length() > 0){
@@ -226,7 +225,7 @@ public class GuiForm
    *
    * @param event The property change event.
    */
-  public void propertyChange (PropertyChangeEvent event)
+  public void propertyChange(PropertyChangeEvent event)
   {
     String propertyName = event.getPropertyName();
     if (!"permanentFocusOwner".equals(propertyName)){
@@ -249,7 +248,7 @@ public class GuiForm
    *
    * @param component The focused component.
    */
-  private void focusField (JComponent component)
+  public void focusField(JComponent component)
   {
     String error = ValidationUtils.getValidationError(component);
     if(error != null){

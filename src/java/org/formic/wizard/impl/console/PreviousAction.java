@@ -21,8 +21,7 @@ package org.formic.wizard.impl.console;
 /**
  * Action listener for 'Previous' button.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class PreviousAction
   extends WizardAction
@@ -30,7 +29,7 @@ public class PreviousAction
   /**
    * @see WizardAction#WizardAction(ConsoleWizard)
    */
-  public PreviousAction (ConsoleWizard wizard)
+  public PreviousAction(ConsoleWizard wizard)
   {
     super(wizard);
   }
@@ -39,7 +38,7 @@ public class PreviousAction
    * {@inheritDoc}
    * @see WizardAction#doAction()
    */
-  public void doAction ()
+  public void doAction()
     throws Exception
   {
     getWizard().getModel().previousStep();

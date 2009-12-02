@@ -29,8 +29,7 @@ import org.pietschy.wizard.models.SimplePath;
 /**
  * Extension to original MultiPathModel that supports paths containing no steps.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class MultiPathModel
   extends org.pietschy.wizard.models.MultiPathModel
@@ -81,7 +80,7 @@ public class MultiPathModel
   /**
    * Gets the next path.
    */
-  private Path getNextPath (Path path)
+  private Path getNextPath(Path path)
   {
     if(path instanceof SimplePath){
       return ((SimplePath)path).getNextPath();
@@ -112,7 +111,7 @@ public class MultiPathModel
    * {@inheritDoc}
    * @see org.pietschy.wizard.WizardModel#isLastVisible()
    */
-  public boolean isLastVisible ()
+  public boolean isLastVisible()
   {
     return false;
   }
@@ -123,7 +122,7 @@ public class MultiPathModel
    * @param step The step.
    * @return true if the first step, false otherwise.
    */
-  public boolean isFirstStep (WizardStep step)
+  public boolean isFirstStep(WizardStep step)
   {
     Path path = getPathForStep(step);
     return path.equals(getFirstPath()) && path.isFirstStep(step);
@@ -144,7 +143,7 @@ public class MultiPathModel
    * {@inheritDoc}
    * @see org.pietschy.wizard.AbstractWizardModel#setNextAvailable(boolean)
    */
-  public void setNextAvailable (boolean available)
+  public void setNextAvailable(boolean available)
   {
     super.setNextAvailable(available);
   }
@@ -153,7 +152,7 @@ public class MultiPathModel
    * {@inheritDoc}
    * @see org.pietschy.wizard.AbstractWizardModel#setPreviousAvailable(boolean)
    */
-  public void setPreviousAvailable (boolean available)
+  public void setPreviousAvailable(boolean available)
   {
     super.setPreviousAvailable(available);
   }
@@ -162,7 +161,7 @@ public class MultiPathModel
    * {@inheritDoc}
    * @see org.pietschy.wizard.AbstractWizardModel#setCancelAvailable(boolean)
    */
-  public void setCancelAvailable (boolean available)
+  public void setCancelAvailable(boolean available)
   {
     super.setCancelAvailable(available);
   }
@@ -171,7 +170,7 @@ public class MultiPathModel
    * {@inheritDoc}
    * @see org.pietschy.wizard.models.MultiPathModel#refreshModelState()
    */
-  public void refreshModelState ()
+  public void refreshModelState()
   {
     // do nothing.
   }

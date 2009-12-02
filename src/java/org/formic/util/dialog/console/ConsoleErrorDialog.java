@@ -43,8 +43,7 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 /**
  * Error dialog for notifying user of errors.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ConsoleErrorDialog
   extends JDialog
@@ -56,7 +55,7 @@ public class ConsoleErrorDialog
    * @param message The error message.
    * @param thrown The error detail.
    */
-  ConsoleErrorDialog (String title, String message, Throwable thrown)
+  ConsoleErrorDialog(String title, String message, Throwable thrown)
   {
     super(ConsoleWizard.getFrame(), title);
 
@@ -86,7 +85,7 @@ public class ConsoleErrorDialog
 
     JButton closeButton = new JButton(Installer.getString("ok.text"));
     closeButton.addActionListener(new ActionListener(){
-      public void actionPerformed (ActionEvent _event){
+      public void actionPerformed(ActionEvent _event){
         setVisible(false);
       }
     });

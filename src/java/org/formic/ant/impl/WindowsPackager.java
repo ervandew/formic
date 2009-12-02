@@ -41,8 +41,7 @@ import org.formic.ant.util.AntUtils;
  * Implementation of {@link org.formic.ant.Packager} for unix based operating
  * systems.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class WindowsPackager
   extends AbstractPackager
@@ -53,7 +52,7 @@ public class WindowsPackager
    * {@inheritDoc}
    * @see org.formic.ant.Packager#execute()
    */
-  public void execute ()
+  public void execute()
     throws Exception
   {
     getProject().log("Building Windows installer...");
@@ -85,7 +84,7 @@ public class WindowsPackager
   /**
    * Builds an executable for Windows.
    */
-  private void buildWindowsExecutable (File archive)
+  private void buildWindowsExecutable(File archive)
     throws Exception
   {
     // construct bootstrap jar
@@ -104,7 +103,7 @@ public class WindowsPackager
    * @param archive The archive containing the installer files.
    * @return The bootstrap file.
    */
-  private File constructBoostrapJar (File archive)
+  private File constructBoostrapJar(File archive)
   {
     File bootstrap = new File(getBuildDir() + "/formic-bootstrap.jar");
 
@@ -132,7 +131,7 @@ public class WindowsPackager
    *
    * @return The generated config file.
    */
-  private File generateLaunch4jConfig (String action)
+  private File generateLaunch4jConfig(String action)
   {
     File launch4jConfig = new File(getBuildDir() + "/launch4j.config.xml");
     File icon = new File(getBuildDir() + "/icon.ico");
@@ -154,7 +153,7 @@ public class WindowsPackager
    * @param config The launch4j config file to use.
    * @param jar The jar file to be executed.
    */
-  private void executeLaunch4j (File config, File jar)
+  private void executeLaunch4j(File config, File jar)
     throws Exception
   {
     // set location of launch4j distribution
@@ -198,7 +197,7 @@ public class WindowsPackager
    *
    * @param zip The zip.
    */
-  public void setZip (Zip zip)
+  public void setZip(Zip zip)
   {
     this.zip = zip;
   }

@@ -31,7 +31,6 @@ import org.formic.wizard.form.GuiForm;
  * Abstract super class for gui wizard steps.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public abstract class AbstractGuiStep
   extends AbstractStep
@@ -46,7 +45,7 @@ public abstract class AbstractGuiStep
    * {@inheritDoc}
    * @see AbstractStep#AbstractGuiStep(String,Properties)
    */
-  public AbstractGuiStep (String name, Properties properties)
+  public AbstractGuiStep(String name, Properties properties)
   {
     super(name, properties);
     iconPath = Installer.getString(name + ".icon");
@@ -56,7 +55,7 @@ public abstract class AbstractGuiStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.GuiStep#getIcon()
    */
-  public Icon getIcon ()
+  public Icon getIcon()
   {
     if(icon == null){
       String path = getIconPath();
@@ -72,7 +71,7 @@ public abstract class AbstractGuiStep
    *
    * @return The path to the icon resource or null if none.
    */
-  protected String getIconPath ()
+  protected String getIconPath()
   {
     return iconPath;
   }
@@ -82,7 +81,7 @@ public abstract class AbstractGuiStep
    *
    * @return The new GuiForm.
    */
-  protected GuiForm createForm ()
+  protected GuiForm createForm()
   {
     form = new GuiForm();
     form.addPropertyChangeListener(this);

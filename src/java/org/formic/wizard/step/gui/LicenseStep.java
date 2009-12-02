@@ -61,7 +61,6 @@ import org.formic.wizard.step.AbstractGuiStep;
  * </table>
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class LicenseStep
   extends AbstractGuiStep
@@ -75,7 +74,7 @@ public class LicenseStep
   /**
    * Constructs this step.
    */
-  public LicenseStep (String name, Properties properties)
+  public LicenseStep(String name, Properties properties)
   {
     super(name, properties);
 
@@ -99,7 +98,7 @@ public class LicenseStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.GuiStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     JPanel panel = new JPanel();
     try{
@@ -115,7 +114,7 @@ public class LicenseStep
       scrollPane.setViewportView(content);
 
       ActionListener listener = new ActionListener(){
-        public void actionPerformed (ActionEvent _event){
+        public void actionPerformed(ActionEvent _event){
           setValid(ACCEPT.equals(_event.getActionCommand()));
         }
       };
@@ -153,7 +152,7 @@ public class LicenseStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     ((JComponent)scrollPane.getViewport().getView()).grabFocus();
   }

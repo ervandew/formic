@@ -36,8 +36,7 @@ import org.apache.velocity.app.Velocity;
 /**
  * Utility class for evaluating templates.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class TemplateUtils
 {
@@ -70,7 +69,7 @@ public class TemplateUtils
    * @param values The template values.
    * @return The evaluation result.
    */
-  public static String evaluate (String template, Map values)
+  public static String evaluate(String template, Map values)
     throws Exception
   {
     return evaluate(new ByteArrayInputStream(template.getBytes()), values);
@@ -84,7 +83,7 @@ public class TemplateUtils
    * @param values The template values.
    * @return The evaluation result.
    */
-  public static String evaluate (InputStream template, Map values)
+  public static String evaluate(InputStream template, Map values)
     throws Exception
   {
     BufferedReader reader = null;

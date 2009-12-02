@@ -27,8 +27,7 @@ import org.pietschy.wizard.Wizard;
 /**
  * Extension to default button bar.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ButtonBar
   extends org.pietschy.wizard.ButtonBar
@@ -41,7 +40,7 @@ public class ButtonBar
   /**
    * @see org.pietschy.wizard.ButtonBar#ButtonBar(Wizard)
    */
-  public ButtonBar (Wizard wizard)
+  public ButtonBar(Wizard wizard)
   {
     super(wizard);
   }
@@ -50,7 +49,7 @@ public class ButtonBar
    * {@inheritDoc}
    * @see org.pietschy.wizard.ButtonBar#layoutButtons(JButton,JButton,JButton,JButton,JButton,JButton,JButton)
    */
-  protected void layoutButtons (
+  protected void layoutButtons(
       JButton help,
       JButton previous, JButton next,
       JButton last, JButton finish,
@@ -75,7 +74,7 @@ public class ButtonBar
    *
    * @return The previousButton.
    */
-  public JButton getPreviousButton ()
+  public JButton getPreviousButton()
   {
     return this.previousButton;
   }
@@ -85,7 +84,7 @@ public class ButtonBar
    *
    * @return The nextButton.
    */
-  public JButton getNextButton ()
+  public JButton getNextButton()
   {
     return this.nextButton;
   }
@@ -95,7 +94,7 @@ public class ButtonBar
    *
    * @return The cancelButton.
    */
-  public JButton getCancelButton ()
+  public JButton getCancelButton()
   {
     return this.cancelButton;
   }
@@ -105,7 +104,7 @@ public class ButtonBar
    *
    * @return The finishButton.
    */
-  public JButton getFinishButton ()
+  public JButton getFinishButton()
   {
     return this.finishButton;
   }

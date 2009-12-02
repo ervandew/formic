@@ -21,8 +21,7 @@ package org.formic.wizard;
 /**
  * Defines a wizard.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public interface Wizard
 {
@@ -36,17 +35,17 @@ public interface Wizard
    *
    * @param action The action (install or uninstall).
    */
-  public void showWizard (String action);
+  public void showWizard(String action);
 
   /**
    * Forces the current thread to block until the user completes the wizard.
    */
-  public void waitFor ();
+  public void waitFor();
 
   /**
    * Determines if the wizard was canceled or closed prior to completion.
    *
    * @return true if the user closed or canceled the wizard, false otherwise.
    */
-  public boolean wasCanceled ();
+  public boolean wasCanceled();
 }

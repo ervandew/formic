@@ -21,8 +21,7 @@ package org.formic.wizard.form;
 /**
  * Defines a validator that can be used to validate a form value.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public interface Validator
 {
@@ -33,12 +32,12 @@ public interface Validator
    *
    * @return true if valid, false otherwise.
    */
-  public boolean isValid (Object value);
+  public boolean isValid(Object value);
 
   /**
    * Gets the error message to use if the value is not valid.
    *
    * @return The error message.
    */
-  public String getErrorMessage ();
+  public String getErrorMessage();
 }

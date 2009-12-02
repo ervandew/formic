@@ -23,7 +23,6 @@ package org.formic.wizard.form;
  * of the data.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class ConsoleForm
   extends Form

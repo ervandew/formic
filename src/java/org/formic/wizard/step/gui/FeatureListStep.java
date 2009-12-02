@@ -76,7 +76,6 @@ import org.formic.wizard.step.shared.FeatureProvider;
  * </table>
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class FeatureListStep
   extends AbstractGuiStep
@@ -90,7 +89,7 @@ public class FeatureListStep
   /**
    * Constructs the step.
    */
-  public FeatureListStep (String name, Properties properties)
+  public FeatureListStep(String name, Properties properties)
   {
     super(name, properties);
 
@@ -117,7 +116,7 @@ public class FeatureListStep
    * {@inheritDoc}
    * @see org.formic.wizard.GuiStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     featureInfo = new JEditorPane("text/html", StringUtils.EMPTY);
     featureInfo.setEditable(false);
@@ -125,10 +124,10 @@ public class FeatureListStep
 
     Feature[] features = provider.getFeatures();
     JTable table = new JTable(features.length, 2){
-      public Class getColumnClass (int column){
+      public Class getColumnClass(int column){
         return getValueAt(0, column).getClass();
       }
-      public boolean isCellEditable (int row, int column){
+      public boolean isCellEditable(int row, int column){
         return false;
       }
     };
@@ -150,7 +149,7 @@ public class FeatureListStep
       feature.setInfo(Installer.getString(
             getName() + "." + feature.getKey() + ".html"));
       feature.addPropertyChangeListener(new PropertyChangeListener(){
-        public void propertyChange (PropertyChangeEvent event){
+        public void propertyChange(PropertyChangeEvent event){
           if(Feature.ENABLED_PROPERTY.equals(event.getPropertyName())){
             if(box.isSelected() != feature.isEnabled()){
               box.setSelected(feature.isEnabled());
@@ -214,7 +213,7 @@ public class FeatureListStep
      * {@inheritDoc}
      * @see MouseListener#mouseClicked(MouseEvent)
      */
-    public void mouseClicked (MouseEvent e)
+    public void mouseClicked(MouseEvent e)
     {
       if(e.getButton() == MouseEvent.BUTTON1){
         JTable table = (JTable)e.getSource();
@@ -234,7 +233,7 @@ public class FeatureListStep
       }
     }
 
-    public void processDependencies (Feature feature)
+    public void processDependencies(Feature feature)
     {
       String[] dependencies = feature.getDependencies();
       if (dependencies != null){
@@ -267,7 +266,7 @@ public class FeatureListStep
      * {@inheritDoc}
      * @see KeyListener#keyTyped(KeyEvent)
      */
-    public void keyTyped (KeyEvent e)
+    public void keyTyped(KeyEvent e)
     {
       if(e.getKeyChar() == ' '){
         JTable table = (JTable)e.getSource();
@@ -287,7 +286,7 @@ public class FeatureListStep
      * {@inheritDoc}
      * @see KeyListener#keyPressed(KeyEvent)
      */
-    public void keyPressed (KeyEvent e)
+    public void keyPressed(KeyEvent e)
     {
     }
 
@@ -295,7 +294,7 @@ public class FeatureListStep
      * {@inheritDoc}
      * @see KeyListener#keyReleased(KeyEvent)
      */
-    public void keyReleased (KeyEvent e)
+    public void keyReleased(KeyEvent e)
     {
     }
   }
@@ -311,7 +310,7 @@ public class FeatureListStep
     /**
      * Constructs a new instance.
      */
-    public FeatureListSelectionListener (JTable table)
+    public FeatureListSelectionListener(JTable table)
     {
       this.table = table;
     }
@@ -320,7 +319,7 @@ public class FeatureListStep
      * {@inheritDoc}
      * @see ListSelectionListener#valueChanged(ListSelectionEvent)
      */
-    public void valueChanged (ListSelectionEvent e)
+    public void valueChanged(ListSelectionEvent e)
     {
       if(!e.getValueIsAdjusting()){
         Feature feature = (Feature)

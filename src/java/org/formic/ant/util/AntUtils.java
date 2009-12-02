@@ -34,8 +34,7 @@ import org.apache.tools.ant.taskdefs.Replace;
 /**
  * Utility methods for executing some common ant tasks.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class AntUtils
 {
@@ -49,7 +48,7 @@ public class AntUtils
    *
    * @return The formic home directory.
    */
-  public static String getFormicHome (Project project)
+  public static String getFormicHome(Project project)
     throws BuildException
   {
     if(formicHome == null){
@@ -79,7 +78,7 @@ public class AntUtils
    * @param file The file to chmod.
    * @param permissions The new file permissions.
    */
-  public static void chmod (Project project, File file, String permissions)
+  public static void chmod(Project project, File file, String permissions)
   {
     Chmod chmod = new Chmod();
     chmod.setProject(project);
@@ -96,7 +95,7 @@ public class AntUtils
    * @param src The src file.
    * @param dest The dest file.
    */
-  public static void copy (
+  public static void copy(
       Project project, String taskName, File src, File dest)
   {
     Copy copy = new Copy();
@@ -114,7 +113,7 @@ public class AntUtils
    * @param taskName The task name to use (name printed to console).
    * @param dir The directory to create.
    */
-  public static void mkdir (Project project, String taskName, File dir)
+  public static void mkdir(Project project, String taskName, File dir)
   {
     Mkdir mkdir = new Mkdir();
     mkdir.setProject(project);
@@ -129,7 +128,7 @@ public class AntUtils
    * @param project The current project.
    * @param env The environment property name to use.
    */
-  public static void property (Project project, String env)
+  public static void property(Project project, String env)
   {
     Property property = new Property();
     property.setProject(project);
@@ -144,7 +143,7 @@ public class AntUtils
    * @param name The property name.
    * @param value The property value.
    */
-  public static void property (Project project, String name, String value)
+  public static void property(Project project, String name, String value)
   {
     Property property = new Property();
     property.setProject(project);
@@ -160,7 +159,7 @@ public class AntUtils
    * @param name The property name.
    * @param location The location.
    */
-  public static void property (Project project, String name, File location)
+  public static void property(Project project, String name, File location)
   {
     Property property = new Property();
     property.setProject(project);
@@ -177,7 +176,7 @@ public class AntUtils
    * @param token The token to replace.
    * @param value The value to replace the token with.
    */
-  public static void replace (
+  public static void replace(
       Project project, File file, String token, String value)
   {
     Replace replace = new Replace();
@@ -198,7 +197,7 @@ public class AntUtils
    * @param file The file to resolve.
    * @return The resolved file.
    */
-  public static File resolve (Project project, File file)
+  public static File resolve(Project project, File file)
   {
     return new File(resolve(project, file.getAbsolutePath()));
   }
@@ -210,7 +209,7 @@ public class AntUtils
    * @param file The file to resolve.
    * @return The resolved file.
    */
-  public static String resolve (Project project, String file)
+  public static String resolve(Project project, String file)
   {
     String basedir = project.getProperty("basedir");
     return FilenameUtils.concat(basedir, file);

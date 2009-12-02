@@ -28,7 +28,6 @@ import org.formic.wizard.WizardStep;
  * Defines a gui step.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public interface GuiStep
   extends WizardStep
@@ -40,12 +39,12 @@ public interface GuiStep
    *
    * @return This steps component.
    */
-  public Component init ();
+  public Component init();
 
   /**
    * Gets the icon to display for this step.
    *
    * @return The step's icon.
    */
-  public Icon getIcon ();
+  public Icon getIcon();
 }

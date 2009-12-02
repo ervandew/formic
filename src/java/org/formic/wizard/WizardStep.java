@@ -23,8 +23,7 @@ import java.beans.PropertyChangeListener;
 /**
  * Represents a step in the wizard.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public interface WizardStep
 {
@@ -53,86 +52,86 @@ public interface WizardStep
    *
    * @return The step name.
    */
-  public String getName ();
+  public String getName();
 
   /**
    * Gets the title of this step.
    *
    * @return This step's title.
    */
-  public String getTitle ();
+  public String getTitle();
 
   /**
    * Gets the description of this step.
    *
    * @return The step's description.
    */
-  public String getDescription ();
+  public String getDescription();
 
   /**
    * Invoked before this step is displayed.
    * <p/>
    * This method is called prior to every display of the step, not just the first.
    */
-  public void prepare ();
+  public void prepare();
 
   /**
    * Invoked after this step is displayed.
    * <p/>
    * This method is called on every display of the step, not just the first.
    */
-  public void displayed ();
+  public void displayed();
 
   /**
    * Invoked prior to proceeding to the next step.
    *
    * @return True if the wizard can proceed to the next step, false otherwise.
    */
-  public boolean proceed ();
+  public boolean proceed();
 
   /**
    * Invoked to abort any processing taking place by this step.
    */
-  public void abort ();
+  public void abort();
 
   /**
    * Invoked to determine if the data supplied by the user for this step is
    * valid and if the user may proceed to the next step.
    */
-  public boolean isValid ();
+  public boolean isValid();
 
   /**
    * Invoked to determine if the step is busy working on a time consuming task.
    */
-  public boolean isBusy ();
+  public boolean isBusy();
 
   /**
    * Invoked to determine if an animated infinite progress should be displayed
    * when busy.
    */
-  public boolean isBusyAnimated ();
+  public boolean isBusyAnimated();
 
   /**
    * Invoked to determine if the previous button should be enabled.
    */
-  public boolean isPreviousEnabled ();
+  public boolean isPreviousEnabled();
 
   /**
    * Invoked to determine if the cancel button should be enabled.
    */
-  public boolean isCancelEnabled ();
+  public boolean isCancelEnabled();
 
   /**
    * Adds the supplied PropertyChangeListener.
    *
    * @param listener The PropertyChangeListener.
    */
-  public void addPropertyChangeListener (PropertyChangeListener listener);
+  public void addPropertyChangeListener(PropertyChangeListener listener);
 
   /**
    * Removes the supplied PropertyChangeListener.
    *
    * @param listener The PropertyChangeListener.
    */
-  public void removePropertyChangeListener (PropertyChangeListener listener);
+  public void removePropertyChangeListener(PropertyChangeListener listener);
 }

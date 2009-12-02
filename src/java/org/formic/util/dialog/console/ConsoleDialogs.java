@@ -27,8 +27,7 @@ import org.formic.wizard.impl.console.ConsoleWizard;
 /**
  * Provides several messages for displaying console dialogs.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ConsoleDialogs
 {
@@ -39,7 +38,7 @@ public class ConsoleDialogs
    *
    * @return true if the user confirmed, false otherwise.
    */
-  public static boolean showConfirm (String message)
+  public static boolean showConfirm(String message)
   {
     return showConfirm(null, message);
   }
@@ -52,7 +51,7 @@ public class ConsoleDialogs
    *
    * @return true if the user confirmed, false otherwise.
    */
-  public static boolean showConfirm (String title, String message)
+  public static boolean showConfirm(String title, String message)
   {
     String t = Installer.getStringOrDefault(title, title);
     String m = Installer.getStringOrDefault(message, message);
@@ -67,7 +66,7 @@ public class ConsoleDialogs
    *
    * @param message The message.
    */
-  public static void showInfo (String message)
+  public static void showInfo(String message)
   {
     showInfo(Installer.getString("info.dialog.title"), message);
   }
@@ -78,7 +77,7 @@ public class ConsoleDialogs
    * @param title The dialog title.
    * @param message The message.
    */
-  public static void showInfo (String title, String message)
+  public static void showInfo(String title, String message)
   {
     showMessage(title, message, JOptionPane.INFORMATION_MESSAGE);
   }
@@ -88,7 +87,7 @@ public class ConsoleDialogs
    *
    * @param message The message.
    */
-  public static void showWarning (String message)
+  public static void showWarning(String message)
   {
     showWarning(Installer.getString("warning.dialog.title"), message);
   }
@@ -99,7 +98,7 @@ public class ConsoleDialogs
    * @param title The dialog title.
    * @param message The message.
    */
-  public static void showWarning (String title, String message)
+  public static void showWarning(String title, String message)
   {
     showMessage(title, message, JOptionPane.WARNING_MESSAGE);
   }
@@ -111,7 +110,7 @@ public class ConsoleDialogs
    * @param message The message.
    * @param type The type of message.
    */
-  private static void showMessage (String title, String message, int type)
+  private static void showMessage(String title, String message, int type)
   {
     String t = Installer.getStringOrDefault(title, title);
     String m = Installer.getStringOrDefault(message, message);
@@ -124,7 +123,7 @@ public class ConsoleDialogs
    *
    * @param message The error message.
    */
-  public static void showError (String message)
+  public static void showError(String message)
   {
     showError(null, message, null);
   }
@@ -135,7 +134,7 @@ public class ConsoleDialogs
    * @param title The dialog title.
    * @param message The error message.
    */
-  public static void showError (String title, String message)
+  public static void showError(String title, String message)
   {
     showError(title, message, null);
   }
@@ -145,7 +144,7 @@ public class ConsoleDialogs
    *
    * @param thrown The error detail.
    */
-  public static void showError (Throwable thrown)
+  public static void showError(Throwable thrown)
   {
     showError(null, null, thrown);
   }
@@ -156,7 +155,7 @@ public class ConsoleDialogs
    * @param message The error message.
    * @param thrown The error detail.
    */
-  public static void showError (String message, Throwable thrown)
+  public static void showError(String message, Throwable thrown)
   {
     showError(null, message, thrown);
   }
@@ -168,7 +167,7 @@ public class ConsoleDialogs
    * @param message The error message.
    * @param thrown The error detail.
    */
-  public static void showError (String title, String message, Throwable thrown)
+  public static void showError(String title, String message, Throwable thrown)
   {
     String t = Installer.getStringOrDefault(
         title, Installer.getString("error.dialog.title"));

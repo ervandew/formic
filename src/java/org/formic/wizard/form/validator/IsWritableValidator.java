@@ -24,7 +24,6 @@ import org.formic.wizard.form.Validator;
  * which should be a valid file or directory path.
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class IsWritableValidator
   implements Validator
@@ -36,7 +35,7 @@ public class IsWritableValidator
   /**
    * Prevent construction.
    */
-  private IsWritableValidator ()
+  private IsWritableValidator()
   {
   }
 
@@ -44,7 +43,7 @@ public class IsWritableValidator
    * {@inheritDoc}
    * @see Validator#isValid(Object)
    */
-  public boolean isValid (Object value)
+  public boolean isValid(Object value)
   {
     String file = (String)value;
     if(file != null && file.trim().length() > 0){
@@ -57,7 +56,7 @@ public class IsWritableValidator
    * {@inheritDoc}
    * @see Validator#getErrorMessage()
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return MESSAGE;
   }

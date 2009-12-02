@@ -21,8 +21,7 @@ package org.formic.wizard.impl.console;
 /**
  * Action listener for 'Next' button.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class NextAction
   extends WizardAction
@@ -30,7 +29,7 @@ public class NextAction
   /**
    * @see WizardAction#WizardAction(ConsoleWizard)
    */
-  public NextAction (ConsoleWizard wizard)
+  public NextAction(ConsoleWizard wizard)
   {
     super(wizard);
   }
@@ -39,7 +38,7 @@ public class NextAction
    * {@inheritDoc}
    * @see WizardAction#doAction()
    */
-  public void doAction ()
+  public void doAction()
     throws Exception
   {
     getWizard().getModel().getActiveStep().applyState();

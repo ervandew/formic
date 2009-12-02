@@ -45,8 +45,7 @@ import org.formic.ant.util.AntUtils;
 /**
  * Task for packaging the installer for distribution.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class PackageTask
   extends Task
@@ -70,7 +69,7 @@ public class PackageTask
   /**
    * Executes this task.
    */
-  public void execute ()
+  public void execute()
     throws BuildException
   {
     checkOs();
@@ -118,7 +117,7 @@ public class PackageTask
    *
    * @param os The os.
    */
-  public void setOs (String os)
+  public void setOs(String os)
   {
     this.os = os;
     checkOs();
@@ -129,7 +128,7 @@ public class PackageTask
    *
    * @param destFile The destFile.
    */
-  public void setDestFile (File destFile)
+  public void setDestFile(File destFile)
   {
     this.destFile = destFile;
   }
@@ -139,7 +138,7 @@ public class PackageTask
    *
    * @return The tar instance.
    */
-  protected Tar getTar ()
+  protected Tar getTar()
   {
     if(tar == null){
       tar = new Tar();
@@ -153,7 +152,7 @@ public class PackageTask
    *
    * @return The zip instance.
    */
-  protected Zip getZip ()
+  protected Zip getZip()
   {
     if(zip == null){
       zip = new Zip();
@@ -166,7 +165,7 @@ public class PackageTask
    *
    * @return The build directory.
    */
-  private String determineBuildDir ()
+  private String determineBuildDir()
     throws BuildException
   {
     // first try ant property.
@@ -179,7 +178,7 @@ public class PackageTask
   /**
    * Validate that the OS was supplied and that it is valid.
    */
-  private void checkOs ()
+  private void checkOs()
     throws BuildException
   {
     check("os", os,
@@ -200,7 +199,7 @@ public class PackageTask
    * @param _value The attribute value.
    * @param _message The message to display.
    */
-  private void check (String _name, Object _value, String _message)
+  private void check(String _name, Object _value, String _message)
     throws BuildException
   {
     if (_value == null){
@@ -214,7 +213,7 @@ public class PackageTask
    *
    * @param libset The libset to add.
    */
-  public void addLibset (LibSet libset)
+  public void addLibset(LibSet libset)
   {
     libsets.add(libset);
   }
@@ -224,7 +223,7 @@ public class PackageTask
   /**
    * @see Tar#createTarFileSet()
    */
-  public Tar.TarFileSet createTarFileSet ()
+  public Tar.TarFileSet createTarFileSet()
   {
     return getTar().createTarFileSet();
   }
@@ -232,7 +231,7 @@ public class PackageTask
   /**
    * @see Tar#setCompression(Tar.TarCompressionMethod)
    */
-  public void setCompression (Tar.TarCompressionMethod _method)
+  public void setCompression(Tar.TarCompressionMethod _method)
   {
     getTar().setCompression(_method);
   }
@@ -242,7 +241,7 @@ public class PackageTask
   /**
    * @see Zip#setCompress(boolean)
    */
-  public void setCompress (boolean _compress)
+  public void setCompress(boolean _compress)
   {
     getZip().setCompress(_compress);
   }
@@ -250,7 +249,7 @@ public class PackageTask
   /**
    * @see Zip#addFileset(FileSet)
    */
-  public void addFileset (FileSet _fileset)
+  public void addFileset(FileSet _fileset)
   {
     getZip().addFileset(_fileset);
   }
@@ -258,7 +257,7 @@ public class PackageTask
   /**
    * @see Zip#addZipfileset(ZipFileSet)
    */
-  public void addZipfileset (ZipFileSet _fileset)
+  public void addZipfileset(ZipFileSet _fileset)
   {
     getZip().addZipfileset(_fileset);
   }
@@ -266,7 +265,7 @@ public class PackageTask
   /**
    * @see Zip#addZipGroupFileset(FileSet)
    */
-  public void addZipGroupFileset (FileSet _fileset)
+  public void addZipGroupFileset(FileSet _fileset)
   {
     getZip().addZipGroupFileset(_fileset);
   }

@@ -28,15 +28,14 @@ import javax.swing.JButton;
  * <p/>
  * Used to by pas default button if enter is pressed while on a selected button.
  *
- * @author Eric Van Dewoestine (ervandew@yahoo.com)
- * @version $Revision$
+ * @author Eric Van Dewoestine
  */
 public class ButtonKeyListener
   implements KeyListener
 {
   private static ButtonKeyListener INSTANCE = new ButtonKeyListener();
 
-  private ButtonKeyListener ()
+  private ButtonKeyListener()
   {
   }
 
@@ -45,7 +44,7 @@ public class ButtonKeyListener
    *
    * @return The instance.
    */
-  public static ButtonKeyListener getInstance ()
+  public static ButtonKeyListener getInstance()
   {
     return INSTANCE;
   }
@@ -54,7 +53,7 @@ public class ButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyTyped(KeyEvent)
    */
-  public void keyTyped (KeyEvent e)
+  public void keyTyped(KeyEvent e)
   {
   }
 
@@ -62,7 +61,7 @@ public class ButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyPressed(KeyEvent)
    */
-  public void keyPressed (KeyEvent e)
+  public void keyPressed(KeyEvent e)
   {
     if(e.getKeyCode() == KeyEvent.VK_ENTER){
       ((JButton)e.getSource()).doClick();
@@ -76,7 +75,7 @@ public class ButtonKeyListener
    * {@inheritDoc}
    * @see KeyListener#keyReleased(KeyEvent)
    */
-  public void keyReleased (KeyEvent e)
+  public void keyReleased(KeyEvent e)
   {
   }
 }

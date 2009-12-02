@@ -67,7 +67,6 @@ import org.formic.wizard.step.AbstractConsoleStep;
  * </table>
  *
  * @author Eric Van Dewoestine
- * @version $Revision$
  */
 public class LicenseStep
   extends AbstractConsoleStep
@@ -81,7 +80,7 @@ public class LicenseStep
   /**
    * Constructs this step.
    */
-  public LicenseStep (String name, Properties properties)
+  public LicenseStep(String name, Properties properties)
   {
     super(name, properties);
 
@@ -105,7 +104,7 @@ public class LicenseStep
    * {@inheritDoc}
    * @see org.formic.wizard.step.ConsoleStep#init()
    */
-  public Component init ()
+  public Component init()
   {
     JPanel panel = new JPanel(new BorderLayout());
 
@@ -131,7 +130,7 @@ public class LicenseStep
         new TitledBorder(Installer.getString("license.title")));
 
     ActionListener listener = new ActionListener(){
-      public void actionPerformed (ActionEvent _event){
+      public void actionPerformed(ActionEvent _event){
         setValid(ACCEPT.equals(_event.getActionCommand()));
       }
     };
@@ -170,7 +169,7 @@ public class LicenseStep
    * {@inheritDoc}
    * @see org.formic.wizard.WizardStep#displayed()
    */
-  public void displayed ()
+  public void displayed()
   {
     scrollPane.requestFocus();
   }
