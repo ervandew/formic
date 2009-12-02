@@ -24,11 +24,11 @@
     -->
   <target name="javadoc" depends="init"
       description="Generates the javadocs from the src.">
-    <mkdir dir="build/doc/api"/>
+    <mkdir dir="build/temp/formic/doc/api"/>
 
     <javadoc sourcepath="src/java"
         packagenames="org.formic"
-        destdir="build/formic/doc/api"
+        destdir="build/temp/formic/doc/api"
         stylesheetfile="src/ant/javadoc_stylesheet.css">
       <classpath refid="classpath"/>
       <fileset dir="src/java">
