@@ -75,8 +75,9 @@ public class GuiForm
       FormField field, JComponent component, Object value, boolean valid)
   {
     super.setValue(field, component, value, valid);
-    // May result in the last field's hint being displayed even if not desired.
-    //focusField(component);
+    if (component.hasFocus()){
+      focusField(component);
+    }
   }
 
   /**
