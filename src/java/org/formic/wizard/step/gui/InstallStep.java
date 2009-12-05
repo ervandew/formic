@@ -24,6 +24,11 @@ import java.awt.FlowLayout;
 
 import java.awt.event.ActionEvent;
 
+import java.text.Collator;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.swing.AbstractAction;
@@ -36,6 +41,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingUtilities;
+
+import org.formic.InstallContext;
 
 import foxtrot.Worker;
 
@@ -176,6 +183,19 @@ public class InstallStep
   {
     this.error = error;
     error.printStackTrace();
+
+    System.out.println("Installer Context (Please include in bug reports):");
+    InstallContext context = Installer.getContext();
+    ArrayList values = new ArrayList();
+    for(Iterator ii = context.keys(); ii.hasNext();){
+      Object key = ii.next();
+      values.add(key + "=" + context.getValue(key));
+    }
+    Collections.sort(values, Collator.getInstance());
+    for(Iterator ii = values.iterator(); ii.hasNext();){
+      System.out.println("  " + ii.next());
+    }
+
     GuiDialogs.showError(error);
     overallLabel.setText("install: " + Installer.getString("error.dialog.text"));
     showErrorButton.setVisible(true);
