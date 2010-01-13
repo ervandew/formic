@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Formic installer framework.
-# Copyright (C) 2004 - 2008  Eric Van Dewoestine
+# Copyright (C) 2004 - 2010  Eric Van Dewoestine
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Lesser General Public
@@ -22,11 +22,18 @@
 # Script executed to run the installer.
 
 BUILD_FILE="${1}.xml"
+TARGET=$1
+shift
 
 CUR_PATH=`dirname $0`
 
 # FORMIC_OPTS="-Djava.ext.dirs"
-ANT_OPTS="-Djava.library.path=$CUR_PATH/ant/lib/native/linux $FORMIC_OPTS" \
+ANT_OPTS="-Djava.library.path=$CUR_PATH/ant/lib/native/linux $FORMIC_OPTS"
+
+if [ "$1" == "install" ] ; then
+  TARGET=$1
+  shift
+fi
 
 echo "ANT_OPTS=$ANT_OPTS"
 echo "ANT_HOME=$CUR_PATH/ant"
@@ -34,11 +41,11 @@ echo -e "ANT=\"$CUR_PATH/ant/bin/ant\"
   --noconfig
   -logger org.formic.ant.logger.Log4jLogger
   -lib \"$CUR_PATH\"
-  -f \"$CUR_PATH/$BUILD_FILE\" $@"
+  -f \"$CUR_PATH/$BUILD_FILE\" $TARGET $@"
 
 ANT_OPTS="$ANT_OPTS" ANT_HOME="$CUR_PATH/ant" CLASSPATH="" \
   "$CUR_PATH/ant/bin/ant" \
     --noconfig \
     -logger org.formic.ant.logger.Log4jLogger \
     -lib "$CUR_PATH" \
-    -f "$CUR_PATH/$BUILD_FILE" $@
+    -f "$CUR_PATH/$BUILD_FILE" $TARGET "$@"
