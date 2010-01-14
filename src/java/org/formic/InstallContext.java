@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,6 +21,7 @@ package org.formic;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -55,32 +56,41 @@ public class InstallContext
    */
   public Object getValue(Object key)
   {
-    return values.get(key);
+    return values.containsKey(key) ?
+      values.get(key) : getProject().getProperties().get(key);
   }
 
   /**
    * Gets all keys that have the specified prefix.
    *
-   * @param keyPrefix The prefix.
+   * @param prefix The prefix.
    * @return array of keys.
    */
-  public String[] getKeysByPrefix(String keyPrefix)
+  public String[] getKeysByPrefix(String prefix)
   {
-    return getKeysByPrefix(keyPrefix, false);
+    return getKeysByPrefix(prefix, false);
   }
 
   /**
    * Gets all keys that have the specified prefix.
    *
-   * @param keyPrefix The prefix.
+   * @param prefix The prefix.
    * @return array of keys.
    */
-  public String[] getKeysByPrefix(String keyPrefix, boolean sort)
+  public String[] getKeysByPrefix(String prefix, boolean sort)
   {
     ArrayList results = new ArrayList();
     for (Iterator ii = values.keySet().iterator(); ii.hasNext();){
       String key = (String)ii.next();
-      if(key.startsWith(keyPrefix)){
+      if(key.startsWith(prefix)){
+        results.add(key);
+      }
+    }
+
+    Hashtable properties = getProject().getProperties();
+    for (Iterator ii = properties.keySet().iterator(); ii.hasNext();){
+      String key = (String)ii.next();
+      if(key.startsWith(prefix) && !results.contains(key)){
         results.add(key);
       }
     }
