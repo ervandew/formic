@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -115,6 +115,26 @@ public class Feature
   public void setDependencies(String[] dependencies)
   {
     this.dependencies = dependencies;
+  }
+
+  /**
+   * Determines if this feature has the supplied feature as a dependency.
+   *
+   * @param name The key of the feature.
+   * @return True if the feature is a dependency, false otherwise.
+   */
+  public boolean hasDependency(String key)
+  {
+    if (dependencies == null || key == null){
+      return false;
+    }
+
+    for(int ii = 0; ii < dependencies.length; ii++){
+      if (dependencies[ii].equals(key)){
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
