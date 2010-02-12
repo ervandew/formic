@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -249,7 +249,18 @@ public class FeatureListStep
               processDependencies(dfeature);
             }
           }else{
-            box.setEnabled(true);
+            // check if any other enabled feature has this as a dependency
+            boolean required = false;
+            Feature[] features = provider.getFeatures();
+            for(int jj = 0; jj < features.length; jj++){
+              JCheckBox fbox = (JCheckBox)featureMap.get(features[jj].getKey());
+              Feature f = (Feature)fbox.getClientProperty("feature");
+              if (f.isEnabled() && f.hasDependency(key)){
+                required = true;
+                break;
+              }
+            }
+            box.setEnabled(!required);
           }
         }
       }
