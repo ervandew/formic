@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -19,6 +19,7 @@
 package org.formic.wizard.impl.gui;
 
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 
@@ -181,6 +182,8 @@ public class GuiWizard
   public void showInFrame(String title, Image image)
   {
     JFrame window = new JFrame(title);
+    Dimension dimension = Installer.getDimension();
+    window.setMinimumSize(dimension);
     window.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
     window.setIconImage(image);
 
@@ -192,10 +195,14 @@ public class GuiWizard
     });
 
     WizardFrameCloser.bind(this, window);
-    window.pack();
     window.setLocationRelativeTo(null);
     window.setVisible(true);
     window.toFront();
+
+    // setting size and packing after frame is rendered to fix sizing issues on
+    // xmonad when the frame is floated.
+    window.setSize(dimension);
+    window.pack();
   }
 
   /**
