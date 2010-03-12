@@ -30,7 +30,7 @@ CUR_PATH=`dirname $0`
 # FORMIC_OPTS="-Djava.ext.dirs"
 ANT_OPTS="-Djava.library.path=$CUR_PATH/ant/lib/native/linux $FORMIC_OPTS"
 
-if [ "$1" == "install" ] ; then
+if [ "$1" = "install" ] ; then
   TARGET=$1
   shift
 fi
