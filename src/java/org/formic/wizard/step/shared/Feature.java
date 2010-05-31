@@ -120,7 +120,7 @@ public class Feature
   /**
    * Determines if this feature has the supplied feature as a dependency.
    *
-   * @param name The key of the feature.
+   * @param key The key of the feature.
    * @return True if the feature is a dependency, false otherwise.
    */
   public boolean hasDependency(String key)
