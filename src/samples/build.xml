@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2005 - 2008
+  Copyright (c) 2005 - 2010
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@
     <mkdir dir="build/classes"/>
 
     <!-- compile sample install steps and helper classes -->
-    <javac destdir="build/classes" debug="on" optimize="false">
+    <javac destdir="build/classes" debug="on" optimize="false" includeantruntime="true">
       <src path="samples/src/java"/>
       <include name="**/*.java"/>
       <classpath refid="formic.classpath"/>
@@ -41,21 +41,8 @@
       </fileset>
     </jar>
 
-    <!-- build linux installer -->
-    <formic:package os="linux"
-        destfile="build/test.sh" compression="gzip">
-      <formic:libset dir="build/dist">
-        <include name="sample.jar"/>
-      </formic:libset>
-      <tarfileset dir="samples/src">
-        <include name="*.xml"/>
-        <include name="resources/**/*"/>
-      </tarfileset>
-    </formic:package>
-
-    <!-- build windows installer -->
-    <formic:package os="windows"
-        destfile="build/test.exe">
+    <!-- build the installer -->
+    <formic:package destfile="build/test_installer.jar">
       <formic:libset dir="build/dist">
         <include name="sample.jar"/>
       </formic:libset>

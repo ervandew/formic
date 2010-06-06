@@ -3,8 +3,9 @@
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="src" path="src/java" excluding="**/.svn/**"/>
   <classpathentry kind="src" path="src/samples/src/java" excluding="**/.svn/**"/>
-  <classpathentry kind="lib" path="ant/lib/ant-contrib.jar"/>
-  <classpathentry kind="lib" path="ant/lib/ant.jar"/>
+  <classpathentry kind="lib" path="lib/ant-1.8.1.jar"/>
+  <classpathentry kind="lib" path="lib/ant-contrib-1.0b3.jar"/>
+  <classpathentry kind="lib" path="lib/ant-launcher.jar"/>
   <classpathentry kind="lib" path="lib/charva-1.1.4.jar"/>
   <classpathentry kind="lib" path="lib/commons-logging-1.1.1.jar"/>
   <classpathentry kind="lib" path="lib/foxtrot-3.0.beta1.jar"/>
@@ -12,6 +13,7 @@
   <classpathentry kind="lib" path="lib/looks-2.1.4.jar"/>
   <classpathentry kind="lib" path="lib/miglayout-3.5.0.jar"/>
   <classpathentry kind="lib" path="lib/nlog4j-1.2.25.jar"/>
+  <classpathentry kind="lib" path="lib/one-jar-ant-task-0.96.jar"/>
   <classpathentry kind="lib" path="lib/velocity-1.4.jar"/>
   <classpathentry kind="lib" path="lib/wizard-0.1.12.jar"/>
   <classpathentry kind="output" path="build/bin"/>

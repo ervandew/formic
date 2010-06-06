@@ -39,11 +39,13 @@ import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.Resource;
 import org.apache.tools.ant.types.ResourceCollection;
 import org.apache.tools.ant.types.resources.ArchiveResource;
+import org.apache.tools.ant.types.resources.FileProvider;
 import org.apache.tools.ant.types.resources.FileResource;
 import org.apache.tools.ant.types.selectors.SelectorUtils;
 import org.apache.tools.ant.types.resources.TarResource;
 import org.apache.tools.ant.util.FileUtils;
 import org.apache.tools.ant.util.MergingMapper;
+import org.apache.tools.ant.util.ResourceUtils;
 import org.apache.tools.ant.util.SourceFileScanner;
 import org.apache.tools.bzip2.CBZip2OutputStream;
 import org.apache.tools.tar.TarConstants;
@@ -58,6 +60,7 @@ import org.apache.tools.tar.TarOutputStream;
  * @ant.task category="packaging"
  */
 public class Tar extends MatchingTask {
+    private static final int BUFFER_SIZE = 8 * 1024;
 
     /**
      * @deprecated since 1.5.x.
@@ -282,6 +285,12 @@ public class Tar extends MatchingTask {
                 return;
             }
 
+            File parent = tarFile.getParentFile();
+            if (parent != null && !parent.isDirectory() && !parent.mkdirs()) {
+                throw new BuildException("Failed to create missing parent"
+                                         + " directory for " + tarFile);
+            }
+
             log("Building tar: " + tarFile.getAbsolutePath(), Project.MSG_INFO);
 
             TarOutputStream tOut = null;
@@ -364,6 +373,8 @@ public class Tar extends MatchingTask {
             return;
         }
 
+        boolean preserveLeadingSlashes = false;
+
         if (tarFileSet != null) {
             String fullpath = tarFileSet.getFullpath(this.getProject());
             if (fullpath.length() > 0) {
@@ -382,8 +393,9 @@ public class Tar extends MatchingTask {
                 vPath = prefix + vPath;
             }
 
-            if (vPath.startsWith("/")
-                && !tarFileSet.getPreserveLeadingSlashes()) {
+            preserveLeadingSlashes = tarFileSet.getPreserveLeadingSlashes();
+
+            if (vPath.startsWith("/") && !preserveLeadingSlashes) {
                 int l = vPath.length();
                 if (l <= 1) {
                     // we would end up adding "" to the archive
@@ -418,7 +430,7 @@ public class Tar extends MatchingTask {
             }
         }
 
-        TarEntry te = new TarEntry(vPath);
+        TarEntry te = new TarEntry(vPath, preserveLeadingSlashes);
         te.setModTime(r.getLastModified());
         // preserve permissions
         if (r instanceof ArchiveResource) {
@@ -472,7 +484,7 @@ public class Tar extends MatchingTask {
             if (!r.isDirectory()) {
                 in = r.getInputStream();
 
-                byte[] buffer = new byte[8 * 1024];
+                byte[] buffer = new byte[BUFFER_SIZE];
                 int count = 0;
                 do {
                     tOut.write(buffer, 0, count);
@@ -564,7 +576,9 @@ public class Tar extends MatchingTask {
             HashMap basedirToFilesMap = new HashMap();
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = (FileResource) iter.next();
+                Resource res = (Resource) iter.next();
+                FileResource r = ResourceUtils
+                    .asFileResource((FileProvider) res.as(FileProvider.class));
                 File base = r.getBaseDir();
                 if (base == null) {
                     base = Copy.NULL_FILE_PLACEHOLDER;
@@ -573,9 +587,13 @@ public class Tar extends MatchingTask {
                 Vector files = (Vector) basedirToFilesMap.get(base);
                 if (files == null) {
                     files = new Vector();
-                    basedirToFilesMap.put(base, new Vector());
+                    basedirToFilesMap.put(base, files);
                 }
-                files.add(r.getName());
+                if (base == Copy.NULL_FILE_PLACEHOLDER) {
+                    files.add(r.getFile().getAbsolutePath());
+                } else {
+                    files.add(r.getName());
+                }
             }
             iter = basedirs.iterator();
             while (iter.hasNext()) {
@@ -590,10 +608,9 @@ public class Tar extends MatchingTask {
             Iterator iter = rc.iterator();
             while (upToDate && iter.hasNext()) {
                 Resource r = (Resource) iter.next();
-                upToDate &= archiveIsUpToDate(r);
+                upToDate = archiveIsUpToDate(r);
             }
         }
-
         return upToDate;
     }
 
@@ -658,11 +675,8 @@ public class Tar extends MatchingTask {
         } else if (rc.isFilesystemOnly()) {
             Iterator iter = rc.iterator();
             while (iter.hasNext()) {
-                FileResource r = (FileResource) iter.next();
-                File f = r.getFile();
-                if (f == null) {
-                    f = new File(r.getBaseDir(), r.getName());
-                }
+                Resource r = (Resource) iter.next();
+                File f = ((FileProvider) r.as(FileProvider.class)).getFile();
                 tarFile(f, tOut, f.getName(), tfs);
             }
         } else { // non-file resources
@@ -681,7 +695,7 @@ public class Tar extends MatchingTask {
      * @return true if the collection is a fileset.
      * @since Ant 1.7
      */
-    protected static final boolean isFileFileSet(ResourceCollection rc) {
+    protected static boolean isFileFileSet(ResourceCollection rc) {
         return rc instanceof FileSet && rc.isFilesystemOnly();
     }
 
@@ -692,7 +706,7 @@ public class Tar extends MatchingTask {
      * @return a list of the filenames.
      * @since Ant 1.7
      */
-    protected static final String[] getFileNames(FileSet fs) {
+    protected static String[] getFileNames(FileSet fs) {
         DirectoryScanner ds = fs.getDirectoryScanner(fs.getProject());
         String[] directories = ds.getIncludedDirectories();
         String[] filesPerSe = ds.getIncludedFiles();

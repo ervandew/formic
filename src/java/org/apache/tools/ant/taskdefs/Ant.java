@@ -41,6 +41,9 @@ import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Main;
 import org.apache.tools.ant.types.PropertySet;
 import org.apache.tools.ant.util.FileUtils;
+import org.apache.tools.ant.util.VectorSet;
+
+import org.formic.ant.util.AntUtils;
 
 /**
  * Build a sub-project.
@@ -112,6 +115,15 @@ public class Ant extends Task {
     private boolean targetAttributeSet = false;
 
     /**
+     * Whether the basedir of the new project should be the same one
+     * as it would be when running the build file directly -
+     * independent of dir and/or inheritAll settings.
+     *
+     * @since Ant 1.8.0
+     */
+    private boolean useNativeBasedir = false;
+
+    /**
      * simple constructor
      */
     public Ant() {
@@ -126,6 +138,16 @@ public class Ant extends Task {
         bindToOwner(owner);
     }
 
+    /**
+     * Whether the basedir of the new project should be the same one
+     * as it would be when running the build file directly -
+     * independent of dir and/or inheritAll settings.
+     *
+     * @since Ant 1.8.0
+     */
+    public void setUseNativeBasedir(boolean b) {
+        useNativeBasedir = b;
+    }
 
     /**
      * If true, pass all properties to the new Ant project.
@@ -201,22 +223,26 @@ public class Ant extends Task {
             }
         }
         // set user-defined properties
-        getProject().copyUserProperties(newProject);
+        if (useNativeBasedir) {
+            addAlmostAll(getProject().getUserProperties(), PropertyType.USER);
+        } else {
+            getProject().copyUserProperties(newProject);
+        }
 
         if (!inheritAll) {
-           // set Java built-in properties separately,
-           // b/c we won't inherit them.
-           newProject.setSystemProperties();
+           // set Ant's built-in properties separately,
+           // because they are not being inherited.
+           newProject.initProperties();
 
         } else {
             // set all properties from calling project
-            addAlmostAll(getProject().getProperties());
+            addAlmostAll(getProject().getProperties(), PropertyType.PLAIN);
         }
 
         Enumeration e = propertySets.elements();
         while (e.hasMoreElements()) {
             PropertySet ps = (PropertySet) e.nextElement();
-            addAlmostAll(ps.getProperties());
+            addAlmostAll(ps.getProperties(), PropertyType.PLAIN);
         }
     }
 
@@ -317,7 +343,7 @@ public class Ant extends Task {
         String savedAntFile = antFile;
 // CHANGE
 // OLD
-        //Vector locals = new Vector(targets);
+        //Vector locals = new VectorSet(targets);
         try {
 // CHANGE
 // NEW
@@ -332,11 +358,13 @@ public class Ant extends Task {
             initializeProject();
 
             if (dir != null) {
-                newProject.setBaseDir(dir);
-                if (savedDir != null) {
-                    // has been set explicitly
-                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
-                                                    dir.getAbsolutePath());
+                if (!useNativeBasedir) {
+                    newProject.setBaseDir(dir);
+                    if (savedDir != null) {
+                        // has been set explicitly
+                        newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
+                                                        dir.getAbsolutePath());
+                    }
                 }
             } else {
                 dir = getProject().getBaseDir();
@@ -345,7 +373,7 @@ public class Ant extends Task {
             overrideProperties();
 
             if (antFile == null) {
-                antFile = Main.DEFAULT_BUILD_FILENAME;
+                antFile = getDefaultBuildFile();
             }
 
             File file = FILE_UTILS.resolveFile(dir, antFile);
@@ -477,6 +505,19 @@ public class Ant extends Task {
     }
 
     /**
+     * Get the default build file name to use when launching the task.
+     * <p>
+     * This function may be overrided by providers of custom ProjectHelper so they can implement easily their sub
+     * launcher.
+     *
+     * @return the name of the default file
+     * @since Ant 1.8.0
+     */
+    protected String getDefaultBuildFile() {
+        return Main.DEFAULT_BUILD_FILENAME;
+    }
+
+    /**
      * Override the properties in the new project with the one
      * explicitly defined as nested elements here.
      * @throws BuildException under unknown circumstances.
@@ -501,7 +542,12 @@ public class Ant extends Task {
             p.setProject(newProject);
             p.execute();
         }
-        getProject().copyInheritedProperties(newProject);
+        if (useNativeBasedir) {
+            addAlmostAll(getProject().getInheritedProperties(),
+                         PropertyType.INHERITED);
+        } else {
+            getProject().copyInheritedProperties(newProject);
+        }
     }
 
     /**
@@ -612,22 +658,31 @@ public class Ant extends Task {
      * well as properties named basedir or ant.file.
      * @param props properties <code>Hashtable</code> to copy to the
      * new project.
-     * @since Ant 1.6
+     * @param the type of property to set (a plain Ant property, a
+     * user property or an inherited property).
+     * @since Ant 1.8.0
      */
-    private void addAlmostAll(Hashtable props) {
+    private void addAlmostAll(Hashtable props, PropertyType type) {
         Enumeration e = props.keys();
         while (e.hasMoreElements()) {
             String key = e.nextElement().toString();
-            if (MagicNames.PROJECT_BASEDIR.equals(key) || MagicNames.ANT_FILE.equals(key)) {
+            if (MagicNames.PROJECT_BASEDIR.equals(key)
+                || MagicNames.ANT_FILE.equals(key)) {
                 // basedir and ant.file get special treatment in execute()
                 continue;
             }
 
             String value = props.get(key).toString();
-            // don't re-set user properties, avoid the warning message
-            if (newProject.getProperty(key) == null) {
-                // no user property
-                newProject.setNewProperty(key, value);
+            if (type == PropertyType.PLAIN) {
+                // don't re-set user properties, avoid the warning message
+                if (newProject.getProperty(key) == null) {
+                    // no user property
+                    newProject.setNewProperty(key, value);
+                }
+            } else if (type == PropertyType.USER) {
+                newProject.setUserProperty(key, value);
+            } else if (type == PropertyType.INHERITED) {
+                newProject.setInheritedProperty(key, value);
             }
         }
     }
@@ -727,7 +782,7 @@ public class Ant extends Task {
         propertySets.addElement(ps);
     }
 
-    /*
+    /**
      * Get the (sub)-Project instance currently in use.
      * @return Project
      * @since Ant 1.7
@@ -776,7 +831,7 @@ public class Ant extends Task {
       File savedDir = dir;
       String savedAntFile = antFile;
       if(!newProjectInitialized){
-        Vector locals = new Vector(targets);
+        Vector locals = new VectorSet(targets);
         getNewProject();
 
         if (dir == null && inheritAll) {
@@ -786,11 +841,13 @@ public class Ant extends Task {
         initializeProject();
 
         if (dir != null) {
-            newProject.setBaseDir(dir);
-            if (savedDir != null) {
-                // has been set explicitly
-                newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
-                                                dir.getAbsolutePath());
+            if (!useNativeBasedir) {
+                newProject.setBaseDir(dir);
+                if (savedDir != null) {
+                    // has been set explicitly
+                    newProject.setInheritedProperty(MagicNames.PROJECT_BASEDIR,
+                                                    dir.getAbsolutePath());
+                }
             }
         } else {
             dir = getProject().getBaseDir();
@@ -799,10 +856,17 @@ public class Ant extends Task {
         overrideProperties();
 
         if (antFile == null) {
-            antFile = Main.DEFAULT_BUILD_FILENAME;
+            antFile = getDefaultBuildFile();
         }
 
         File file = FILE_UTILS.resolveFile(dir, antFile);
+
+// CHANGE
+// NEW
+        if (!file.exists()){
+            AntUtils.configureProjectFromResource(antFile, newProject);
+        }else{
+// END CHANGE
         antFile = file.getAbsolutePath();
 
         log("calling target(s) "
@@ -869,6 +933,10 @@ public class Ant extends Task {
                                          + "\'.");
             }
         }
+// CHANGE
+// NEW
+        }
+// END CHANGE
 
         addReferences();
 // Setting targets to value of locals
@@ -945,5 +1013,12 @@ public class Ant extends Task {
         public String getName() {
             return name;
         }
+    }
+
+    private static final class PropertyType {
+        private PropertyType() {}
+        private static final PropertyType PLAIN = new PropertyType();
+        private static final PropertyType INHERITED = new PropertyType();
+        private static final PropertyType USER = new PropertyType();
     }
 }

@@ -86,7 +86,12 @@ public class CallTarget extends Task {
         callee = new Ant(this);
         callee.init();
 // CHANGE
-        callee.setAntfile(getProject().getProperty("ant.file"));
+        Project project = getProject();
+        String antfile = project.getProperty("ant.file");
+        if (antfile == null){
+          antfile = project.getProperty("ant.resource");
+        }
+        callee.setAntfile(antfile);
         callee.setInheritAll(inheritAll);
         callee.setInheritRefs(inheritRefs);
 // END CHANGE

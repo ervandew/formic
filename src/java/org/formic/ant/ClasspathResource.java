@@ -16,34 +16,46 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.ant.type;
+package org.formic.ant;
 
-import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
-import org.apache.tools.ant.Project;
+import java.net.URL;
 
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
+import org.apache.tools.ant.types.Resource;
 
-import org.formic.ant.util.AntUtils;
-
-/**
- * Extension to ant classpath element that represents the necessary jars for
- * formic.
- *
- * @author Eric Van Dewoestine
- */
-public class Classpath
-  extends Path
+public class ClasspathResource
+  extends Resource
 {
-  public Classpath(Project project)
+  private URL url;
+
+  public ClasspathResource(String name){
+    super("/" + name);
+    url = ClasspathResource.class.getResource(getName());
+  }
+
+  public URL getUrl()
   {
-    super(project);
+    return url;
+  }
 
-    FileSet fileset = new FileSet();
-    fileset.setDir(new File(AntUtils.getFormicHome(project)));
-    fileset.setIncludes("lib/*.jar");
+  /**
+   * {@inheritDoc}
+   * @see Resource#isExists()
+   */
+  public boolean isExists()
+  {
+    return url != null;
+  }
 
-    addFileset(fileset);
+  /**
+   * {@inheritDoc}
+   * @see Resource#getInputStream()
+   */
+  public InputStream getInputStream()
+    throws IOException
+  {
+    return ClasspathResource.class.getResourceAsStream(getName());
   }
 }

@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,6 +23,8 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
 
+import java.io.File;
+
 import java.net.URL;
 
 import java.text.MessageFormat;
@@ -30,6 +32,7 @@ import java.text.MessageFormat;
 import java.util.List;
 import java.util.MissingResourceException;
 import java.util.Properties;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.swing.UIManager;
@@ -72,6 +75,8 @@ public class Installer
   private static boolean consoleMode;
 
   private static InstallContext context = new InstallContext();
+
+  private static File tempDir;
 
   private static boolean envInitialized;
 
@@ -365,5 +370,50 @@ public class Installer
     String value = getProject().replaceProperties(key);
 
     return key.equals(value) ? null : value;
+  }
+
+  public static File tempDir(String name)
+  {
+    if (tempDir == null){
+      tempDir = new File(
+          System.getProperty("java.io.tmpdir").replace('\\', '/') +
+          "/formic_" + Math.abs(new Random().nextInt()));
+      Runtime.getRuntime().addShutdownHook(new ShutdownHook());
+    }
+
+    File dir = new File(tempDir + "/" + name);
+    if(!dir.exists()){
+      dir.mkdirs();
+    }
+    return dir;
+  }
+
+  /**
+   * Hook to cleanup temporary install resources.
+   */
+  public static class ShutdownHook
+    extends Thread
+  {
+    public void run()
+    {
+      if(tempDir != null){
+        deleteDir(tempDir);
+      }
+    }
+
+    private void deleteDir(File dir)
+    {
+      File[] files = dir.listFiles();
+      if(files != null){
+        for (int ii = 0; ii < files.length; ii++){
+          if(files[ii].isDirectory()){
+            deleteDir(files[ii]);
+          }else{
+            files[ii].delete();
+          }
+        }
+      }
+      dir.delete();
+    }
   }
 }

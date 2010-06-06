@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  Copyright (c) 2005 - 2008
+  Copyright (c) 2005 - 2010
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
   - Sample installer build file that is executed upon installation.
   -->
 <project xmlns:formic="antlib:org.formic.ant"
-    name="mock_installer" default="installer">
+    name="mock_installer" default="installer" basedir=".">
 
   <!--
     - Standard target to install the app.

@@ -16,34 +16,45 @@
  * License along with this library; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.formic.ant.type;
+package org.formic.ant;
 
 import java.io.File;
 
-import org.apache.tools.ant.Project;
+import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Task;
 
-import org.apache.tools.ant.types.FileSet;
-import org.apache.tools.ant.types.Path;
-
-import org.formic.ant.util.AntUtils;
+import org.formic.Installer;
 
 /**
- * Extension to ant classpath element that represents the necessary jars for
- * formic.
+ * Ant task which creates a temp directory for use in the install task where
+ * temporary installer files can be written and will be removed when the
+ * installer exits.
  *
  * @author Eric Van Dewoestine
  */
-public class Classpath
-  extends Path
+public class TempDirTask
+  extends Task
 {
-  public Classpath(Project project)
+  private String property;
+
+  /**
+   * Executes this task.
+   */
+  public void execute()
+    throws BuildException
   {
-    super(project);
+    File tempDir = Installer.tempDir("");
+    getProject().setProperty(property, tempDir.getAbsolutePath());
+  }
 
-    FileSet fileset = new FileSet();
-    fileset.setDir(new File(AntUtils.getFormicHome(project)));
-    fileset.setIncludes("lib/*.jar");
-
-    addFileset(fileset);
+  /**
+   * Sets the property that will be set to the absolute path of the temp
+   * directory.
+   *
+   * @param property The property name.
+   */
+  public void setProperty(String property)
+  {
+    this.property = property;
   }
 }

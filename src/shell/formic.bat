@@ -1,6 +1,6 @@
 @echo off
 rem Formic installer framework.
-rem Copyright (C) 2004 - 2008  Eric Van Dewoestine
+rem Copyright (C) 2004 - 2010  Eric Van Dewoestine
 rem
 rem This library is free software; you can redistribute it and/or
 rem modify it under the terms of the GNU Lesser General Public
@@ -21,10 +21,9 @@ rem Author: Eric Van Dewoestine
 rem Script used to execute ant tasks via formic's embedded ant.
 
 set FORMIC_HOME=%~dp0..
-set ANT_HOME="%FORMIC_HOME%\ant"
 
-"%ANT_HOME%\bin\ant" %*
+"%FORMIC_HOME%\bin\ant" -lib "%FORMIC_HOME%\lib" %*
 
 exit %EXIT_CODE%
 
-rem vim:fileformats=unix,dos:fileformat=dos:ssop-=unix
+rem vim:fileformats=dos:fileformat=dos

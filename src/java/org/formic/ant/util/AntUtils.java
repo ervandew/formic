@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -23,13 +23,18 @@ import java.io.File;
 import org.apache.commons.io.FilenameUtils;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.MagicNames;
 import org.apache.tools.ant.Project;
+import org.apache.tools.ant.ProjectHelper;
+import org.apache.tools.ant.ProjectHelperRepository;
 
 import org.apache.tools.ant.taskdefs.Chmod;
 import org.apache.tools.ant.taskdefs.Copy;
 import org.apache.tools.ant.taskdefs.Mkdir;
 import org.apache.tools.ant.taskdefs.Property;
 import org.apache.tools.ant.taskdefs.Replace;
+
+import org.formic.ant.ClasspathResource;
 
 /**
  * Utility methods for executing some common ant tasks.
@@ -213,5 +218,28 @@ public class AntUtils
   {
     String basedir = project.getProperty("basedir");
     return FilenameUtils.concat(basedir, file);
+  }
+
+  /**
+   * Configure the supplied project using the build file at the supplied
+   * resource name location.
+   *
+   * @param resourceName The resource name.
+   * @param project The project to configure.
+   */
+  public static void configureProjectFromResource(String resourceName, Project project)
+  {
+    ClasspathResource resource = new ClasspathResource(resourceName);
+
+    //project.setUserProperty(MagicNames.ANT_FILE, resourceName);
+    project.setUserProperty("ant.resource", resourceName);
+    project.setUserProperty("ant.file.url", resource.getUrl().toString());
+    project.setUserProperty(MagicNames.ANT_FILE_TYPE,
+        MagicNames.ANT_FILE_TYPE_URL);
+
+    ProjectHelper helper = ProjectHelperRepository.getInstance()
+      .getProjectHelperForBuildFile(resource);
+    project.addReference(ProjectHelper.PROJECTHELPER_REFERENCE, helper);
+    helper.parse(project, resource.getUrl());
   }
 }

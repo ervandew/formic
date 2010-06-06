@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -21,26 +21,23 @@ package org.formic.ant;
 import java.io.File;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.tools.ant.BuildException;
+import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
-import org.apache.tools.ant.taskdefs.Tar;
-import org.apache.tools.ant.taskdefs.Zip;
+import org.apache.tools.ant.taskdefs.Copy;
 
 import org.apache.tools.ant.types.FileSet;
 import org.apache.tools.ant.types.ZipFileSet;
 
-import org.formic.ant.impl.UnixPackager;
-import org.formic.ant.impl.WindowsPackager;
-
 import org.formic.ant.type.LibSet;
 
 import org.formic.ant.util.AntUtils;
+
+import com.simontuffs.onejar.ant.OneJarTask;
 
 /**
  * Task for packaging the installer for distribution.
@@ -53,17 +50,9 @@ public class PackageTask
   private static final String FORMIC_BUILDDIR_PROPERTY = "formic.builddir";
   private static final String DEFAULT_BUILDDIR = "build/formic";
 
-  private static final Map PACKAGERS = new HashMap();
-  static{
-    PACKAGERS.put("unix", UnixPackager.class);
-    PACKAGERS.put("linux", UnixPackager.class);
-    PACKAGERS.put("windows", WindowsPackager.class);
-  }
-
-  private String os;
   private File destFile;
-  private Tar tar;
-  private Zip zip;
+  private String buildDir;
+  private OneJarTask jar;
   private List libsets = new ArrayList();
 
   /**
@@ -72,36 +61,51 @@ public class PackageTask
   public void execute()
     throws BuildException
   {
-    checkOs();
+    log("Building installer jar...");
+
     check("destfile", destFile, "");
 
+    if (getBuildDir() == null){
+      setBuildDir(determineBuildDir());
+    }
+
+    Project project = getProject();
+    String formicHome = AntUtils.getFormicHome(project);
+
+    File libDir = new File(formicHome + "/lib");
     try{
-      Packager packager = (Packager)((Class)PACKAGERS.get(os)).newInstance();
-      packager.setProject(getProject());
-      packager.setTaskName(getTaskName());
-      packager.setFormicHome(AntUtils.getFormicHome(getProject()));
-      packager.setBuildDir(determineBuildDir());
-      packager.setDestFile(destFile);
+      OneJarTask jar = getJar();
+      jar.setDestFile(destFile);
+      jar.setTaskName(getTaskName());
+      jar.setProject(project);
 
-      if(packager instanceof UnixPackager){
-        for (Iterator ii = libsets.iterator(); ii.hasNext();){
-          LibSet libset = (LibSet)ii.next();
-          Tar.TarFileSet tarset = new Tar.TarFileSet(libset);
-          tarset.setPrefix("ant/lib");
-          getTar().addFileset(tarset);
-        }
-        ((UnixPackager)packager).setTar(getTar());
-      }else if(packager instanceof WindowsPackager){
-        for (Iterator ii = libsets.iterator(); ii.hasNext();){
-          LibSet libset = (LibSet)ii.next();
-          ZipFileSet zipset = new ZipFileSet(libset);
-          zipset.setPrefix("ant/lib");
-          getZip().addFileset(zipset);
-        }
-        ((WindowsPackager)packager).setZip(getZip());
+      Copy cp = new Copy();
+      cp.setFile(new File(libDir + "/formic.jar"));
+      cp.setTofile(new File(buildDir + "/main.jar"));
+      cp.execute();
+
+      OneJarTask.Main main = new OneJarTask.Main();
+      main.setJar(new File(buildDir + "/main.jar"));
+      jar.addMain(main);
+
+      OneJarTask.Lib lib = new OneJarTask.Lib();
+      for (Iterator ii = libsets.iterator(); ii.hasNext();){
+        LibSet libset = (LibSet)ii.next();
+        ZipFileSet zipset = new ZipFileSet(libset);
+        lib.addFileSet(zipset);
       }
+      ZipFileSet files = new ZipFileSet();
+      files.setDir(libDir);
+      files.setIncludes("*.jar");
+      files.setExcludes("one-jar-*.jar");
+      // excluding until we really support console mode
+      files.setExcludes("charva-*");
+      // excluding until this is utilized (for an uninstaller presumably)
+      files.setExcludes("jregisterykey-*");
+      lib.addFileSet(files);
+      jar.addConfiguredLib(lib);
 
-      packager.execute();
+      jar.execute();
     }catch(BuildException be){
       throw be;
     }catch(Exception e){
@@ -110,17 +114,6 @@ public class PackageTask
       }
       throw new BuildException(e);
     }
-  }
-
-  /**
-   * Sets the os for this instance.
-   *
-   * @param os The os.
-   */
-  public void setOs(String os)
-  {
-    this.os = os;
-    checkOs();
   }
 
   /**
@@ -134,30 +127,37 @@ public class PackageTask
   }
 
   /**
-   * Gets the tar instance for this task, creating it if necessary.
+   * Gets the jar instance for this task, creating it if necessary.
    *
-   * @return The tar instance.
+   * @return The jar instance.
    */
-  protected Tar getTar()
+  protected OneJarTask getJar()
   {
-    if(tar == null){
-      tar = new Tar();
-      tar.setProject(getProject());
+    if(jar == null){
+      jar = new OneJarTask();
     }
-    return tar;
+    return jar;
   }
 
   /**
-   * Gets the zip instance for this task, creating it if necessary.
+   * Gets the buildDir for this instance.
    *
-   * @return The zip instance.
+   * @return The buildDir.
    */
-  protected Zip getZip()
+  public String getBuildDir()
   {
-    if(zip == null){
-      zip = new Zip();
-    }
-    return zip;
+    return this.buildDir;
+  }
+
+  /**
+   * Set the buildDir.
+   *
+   * @param buildDir The buildDir.
+   */
+  public void setBuildDir(String buildDir)
+  {
+    this.buildDir = buildDir;
+    AntUtils.mkdir(getProject(), getTaskName(), new File(buildDir));
   }
 
   /**
@@ -173,23 +173,6 @@ public class PackageTask
     return dir != null ?
       AntUtils.resolve(getProject(), dir) :
       AntUtils.resolve(getProject(), DEFAULT_BUILDDIR);
-  }
-
-  /**
-   * Validate that the OS was supplied and that it is valid.
-   */
-  private void checkOs()
-    throws BuildException
-  {
-    check("os", os,
-      "The target OS must be specified.\n" +
-      "Possible values include linux, unix, and windows.");
-
-    if (!PACKAGERS.containsKey(os)){
-      throw new BuildException(
-          "Currently only linux/unix and windows are supported as target " +
-          "operating systems.");
-    }
   }
 
   /**
@@ -218,55 +201,29 @@ public class PackageTask
     libsets.add(libset);
   }
 
-// Tar delegation methods.
+// Jar delegation methods.
 
   /**
-   * @see Tar#createTarFileSet()
-   */
-  public Tar.TarFileSet createTarFileSet()
-  {
-    return getTar().createTarFileSet();
-  }
-
-  /**
-   * @see Tar#setCompression(Tar.TarCompressionMethod)
-   */
-  public void setCompression(Tar.TarCompressionMethod _method)
-  {
-    getTar().setCompression(_method);
-  }
-
-// Zip delegation methods.
-
-  /**
-   * @see Zip#setCompress(boolean)
-   */
-  public void setCompress(boolean _compress)
-  {
-    getZip().setCompress(_compress);
-  }
-
-  /**
-   * @see Zip#addFileset(FileSet)
+   * @see OneJarTask#addFileset(FileSet)
    */
   public void addFileset(FileSet _fileset)
   {
-    getZip().addFileset(_fileset);
+    getJar().addFileset(_fileset);
   }
 
   /**
-   * @see Zip#addZipfileset(ZipFileSet)
+   * @see OneJarTask#addZipfileset(ZipFileSet)
    */
   public void addZipfileset(ZipFileSet _fileset)
   {
-    getZip().addZipfileset(_fileset);
+    getJar().addZipfileset(_fileset);
   }
 
   /**
-   * @see Zip#addZipGroupFileset(FileSet)
+   * @see OneJarTask#addZipGroupFileset(FileSet)
    */
   public void addZipGroupFileset(FileSet _fileset)
   {
-    getZip().addZipGroupFileset(_fileset);
+    getJar().addZipGroupFileset(_fileset);
   }
 }

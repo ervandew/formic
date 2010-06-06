@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Formic installer framework.
-  Copyright (C) 2005 - 2008  Eric Van Dewoestine
+  Copyright (C) 2005 - 2010  Eric Van Dewoestine
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -31,7 +31,6 @@
   <!-- classpath -->
   <path id="classpath">
     <fileset dir="lib" includes="*.jar"/>
-    <fileset dir="ant" includes="lib/*.jar"/>
   </path>
 
   <!--
@@ -52,7 +51,8 @@
     <property name="deprecation" value="false"/>
     <javac destdir="build/temp/classes" debug="on" optimize="false"
         target="${javac.target}" source="${javac.target}"
-        deprecation="${deprecation}">
+        deprecation="${deprecation}"
+        includeantruntime="false">
       <src path="src/java"/>
       <include name="**/*.java"/>
       <classpath refid="classpath"/>
@@ -63,7 +63,6 @@
       <fileset dir="build/temp/classes">
         <include name="net/java/swingfx/**/*.class"/>
         <include name="org/formic/**/*.class"/>
-        <exclude name="org/formic/bootstrap/**/*"/>
         <!-- for debugging -->
         <include name="com/jgoodies/**/*.class"/>
       </fileset>
@@ -75,39 +74,14 @@
       <fileset dir="src">
         <include name="images/**/*"/>
       </fileset>
-    </jar>
-
-    <!-- formic windows installer bootstrap jar -->
-    <jar jarfile="build/temp/jars/formic-bootstrap.jar">
       <manifest>
-        <attribute name="Main-Class"
-            value="org.formic.bootstrap.Launcher"/>
+        <attribute name="Main-Class" value="org.formic.ant.Main"/>
       </manifest>
-      <fileset dir="build/temp/classes">
-        <include name="org/formic/bootstrap/**/*.class"/>
-        <include name="org/formic/util/CommandExecutor*.class"/>
-        <include name="org/formic/util/dialog/gui/*.class"/>
-      </fileset>
-      <fileset dir="src/java">
-        <include name="org/formic/messages.properties*"/>
-        <include name="org/formic/bootstrap/**/*"/>
-        <exclude name="**/package.html"/>
-        <exclude name="**/*.java"/>
-      </fileset>
-      <fileset dir="src">
-        <include name="images/16x16/details_hide.png"/>
-        <include name="images/16x16/details_show.png"/>
-        <include name="images/16x16/wizard.png"/>
-        <include name="images/32x32/error.png"/>
-        <include name="images/32x32/info.png"/>
-        <include name="images/32x32/question.png"/>
-        <include name="images/32x32/warning.png"/>
-      </fileset>
     </jar>
 
     <!-- patched ant jar file -->
-    <copy todir="build/temp/jars" file="ant/lib/ant.jar"/>
-    <jar jarfile="build/temp/jars/ant.jar" update="true">
+    <copy todir="build/temp/jars" file="lib/ant-1.8.1.jar"/>
+    <jar jarfile="build/temp/jars/ant-1.8.1.jar" update="true">
       <fileset dir="build/temp/classes">
         <include name="org/apache/tools/**/*.class"/>
       </fileset>
@@ -154,46 +128,24 @@
       </fileset>
     </jar>
 
-    <!-- copy ant and formic scripts over to build dir -->
     <copy todir="build/temp/formic">
       <fileset dir="." includes="LICENSE*.txt,NOTICE"/>
-      <fileset dir="." includes="ant/**/*"/>
       <fileset dir="lib" includes="license/*.license"/>
       <fileset dir="src" includes="samples/**/*"/>
-      <fileset dir="build/temp/jars" includes="formic.jar"/>
     </copy>
     <copy todir="build/temp/formic/bin">
       <fileset dir="src/shell" includes="**/*"/>
     </copy>
-
-    <!-- copy formic jar(s) to ant -->
-    <copy todir="build/temp/formic/ant/lib" overwrite="true">
-      <fileset dir="build/temp/jars"
-          includes="*.jar" excludes="formic-bootstrap.jar"/>
-      <fileset dir="lib" includes="**/*.jar"/>
-      <fileset dir="lib" includes="native/**/*"/>
+    <copy todir="build/temp/formic/lib">
+      <fileset dir="lib" includes="*.jar,native/**/*"/>
+      <fileset dir="build/temp/jars" includes="*.jar"/>
     </copy>
-    <!-- copy update charva jar -->
-    <copy todir="build/temp/formic/ant/lib" file="build/temp/jars/charva-1.1.4.jar"
-        overwrite="true"/>
-
-    <!-- copy over resource files -->
-    <copy todir="build/temp/formic/ant/resources">
-      <fileset dir="src/resources" includes="**/*" excludes="launch4j.tar.gz"/>
-      <fileset dir="build/temp/jars" includes="formic-bootstrap.jar"/>
-    </copy>
-
-    <!-- extract launch4j archive -->
-    <untar src="src/resources/launch4j.tar.gz" compression="gzip"
-        dest="build/temp/formic/ant/resources"/>
 
     <!-- set permissions on scripts -->
     <chmod perm="755">
       <fileset dir="build/temp/formic/">
-        <include name="ant/bin/**/*"/>
+        <include name="bin/ant"/>
         <include name="bin/formic"/>
-        <include name="ant/resources/launch4j/bin/ld"/>
-        <include name="ant/resources/launch4j/bin/windres"/>
       </fileset>
     </chmod>
   </target>
@@ -230,15 +182,11 @@
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/temp/formic">
         <include name="**/*"/>
-        <exclude name="ant/bin/ant"/>
-        <exclude name="ant/resources/launch4j/bin/ld"/>
-        <exclude name="ant/resources/launch4j/bin/windres"/>
+        <exclude name="bin/ant"/>
         <exclude name="bin/formic"/>
       </tarfileset>
       <tarfileset prefix="formic-${formic.version}/" dir="build/temp/formic" mode="755">
-        <include name="ant/bin/ant"/>
-        <include name="ant/resources/launch4j/bin/ld"/>
-        <include name="ant/resources/launch4j/bin/windres"/>
+        <include name="bin/ant"/>
         <include name="bin/formic"/>
       </tarfileset>
     </tar>
