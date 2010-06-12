@@ -24,8 +24,8 @@ import java.awt.Dimension;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -203,37 +203,22 @@ public class FeatureListStep
     return panel;
   }
 
-  /**
-   * Mouse listener for the feature list.
-   */
-  private class FeatureListMouseListener
-    extends MouseAdapter
+  private class FeatureListListener
   {
-    /**
-     * {@inheritDoc}
-     * @see MouseListener#mouseClicked(MouseEvent)
-     */
-    public void mouseClicked(MouseEvent e)
+    protected void toggleSelection(JTable table, int row)
     {
-      if(e.getButton() == MouseEvent.BUTTON1){
-        JTable table = (JTable)e.getSource();
-        int row = table.rowAtPoint(e.getPoint());
-        int col = table.columnAtPoint(e.getPoint());
-        if(col == 0 && row > -1){
-          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
-          Feature feature = (Feature)table.getModel().getValueAt(row, 1);
-          box.doClick();
-          feature.setEnabled(box.isSelected());
+      JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
+      Feature feature = (Feature)table.getModel().getValueAt(row, 1);
+      box.doClick();
+      feature.setEnabled(box.isSelected());
 
-          processDependencies(feature);
+      processDependencies(feature);
 
-          table.revalidate();
-          table.repaint();
-        }
-      }
+      table.revalidate();
+      table.repaint();
     }
 
-    public void processDependencies(Feature feature)
+    protected void processDependencies(Feature feature)
     {
       String[] dependencies = feature.getDependencies();
       if (dependencies != null){
@@ -268,9 +253,66 @@ public class FeatureListStep
   }
 
   /**
+   * Mouse listener for the feature list.
+   */
+  private class FeatureListMouseListener
+    extends FeatureListListener
+    implements MouseListener
+  {
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mouseClicked(MouseEvent)
+     */
+    public void mouseClicked(MouseEvent e)
+    {
+      if(e.getButton() == MouseEvent.BUTTON1){
+        JTable table = (JTable)e.getSource();
+        int row = table.rowAtPoint(e.getPoint());
+        int col = table.columnAtPoint(e.getPoint());
+        if(col == 0 && row > -1){
+          toggleSelection(table, row);
+        }
+      }
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mousePressed(MouseEvent)
+     */
+    public void mousePressed(MouseEvent e)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mouseReleased(MouseEvent)
+     */
+    public void mouseReleased(MouseEvent e)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mouseEntered(MouseEvent)
+     */
+    public void mouseEntered(MouseEvent e)
+    {
+    }
+
+    /**
+     * {@inheritDoc}
+     * @see MouseListener#mouseExited(MouseEvent)
+     */
+    public void mouseExited(MouseEvent e)
+    {
+    }
+  }
+
+  /**
    * Key listener for the feature list.
    */
   private class FeatureListKeyListener
+    extends FeatureListListener
     implements KeyListener
   {
     /**
@@ -283,12 +325,7 @@ public class FeatureListStep
         JTable table = (JTable)e.getSource();
         int row = table.getSelectedRow();
         if(row != -1){
-          JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
-          Feature feature = (Feature)table.getModel().getValueAt(row, 1);
-          box.doClick();
-          feature.setEnabled(box.isSelected());
-          table.revalidate();
-          table.repaint();
+          toggleSelection(table, row);
         }
       }
     }
