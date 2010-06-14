@@ -189,7 +189,6 @@ public class SingleComponentInfiniteProgress extends JComponent
 
     //this.timer = new Timer(1000 / fps, this);
     this.timerInterval = 1000 / fps;
-    this.timerTask = new RedrawTask();
 
     setInfiniteProgressAdapter(infiniteProgressAdapter);
 
@@ -235,6 +234,7 @@ public class SingleComponentInfiniteProgress extends JComponent
     setOpaque(false);
     // capture
     if(i_bIsVisible) {
+      timerTask = new RedrawTask();
       if(useBackBuffer) {
         // add window resize listener
         Window w = SwingUtilities.getWindowAncestor(this);
@@ -280,6 +280,7 @@ public class SingleComponentInfiniteProgress extends JComponent
       if (timer != null){
         timer.cancel();
         timer = null;
+        timerTask = null;
       }
       if(infiniteProgressAdapter != null) {
         infiniteProgressAdapter.animationStopping();
