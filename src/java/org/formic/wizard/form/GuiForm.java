@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -126,17 +126,16 @@ public class GuiForm
   {
     messageArea = new JLabel();
     messageLabel = new JLabel();
-    messageArea.setVisible(false);
     messageLabel.setVisible(false);
 
     messagePanel = new JPanel(new MigLayout());
     messagePanel.add(messageLabel);
-    messagePanel.add(messageArea);
+    messagePanel.add(messageArea, "height 20");
 
     int width = Installer.getDimension().width;
-    messageArea.setPreferredSize(new Dimension(width - 75 - 16, 30));
+    messageArea.setPreferredSize(new Dimension(width - 32 - 16, 30));
 
-    Dimension size = new Dimension(width - 75, 30);
+    Dimension size = new Dimension(width - 32, 30);
     messagePanel.setPreferredSize(size);
     messagePanel.setMinimumSize(size);
     messagePanel.setMaximumSize(size);
@@ -213,10 +212,9 @@ public class GuiForm
         messageLabel.setIcon(icon);
         messageArea.setText("<html>" + text + "</html>");
         messageLabel.setVisible(true);
-        messageArea.setVisible(true);
       }else{
         messageLabel.setVisible(false);
-        messageArea.setVisible(false);
+        messageArea.setText("");
       }
     }
   }
