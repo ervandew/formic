@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -105,6 +105,7 @@ public class FileChooser
         int result = chooser.showOpenDialog(getParent());
         if(result == JFileChooser.APPROVE_OPTION){
           textField.setText(chooser.getSelectedFile().getPath());
+          textField.requestFocus();
         }
       }
     });
