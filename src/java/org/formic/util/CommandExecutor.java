@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,25 +20,44 @@ package org.formic.util;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
+
+import java.util.Arrays;
+
+import org.apache.commons.io.IOUtils;
+
+import org.apache.commons.lang.StringUtils;
+
+import org.apache.log4j.Logger;
 
 /**
  * Thread to run the external command.
  */
 public class CommandExecutor
-  implements Runnable
+  extends Thread
 {
-  private int returnCode = -1;
-  private String[] cmd;
-  private String result;
-  private String error;
-  private Process process;
+  private static final Logger logger = Logger.getLogger(CommandExecutor.class);
+
+  protected int returnCode = -1;
+  protected String result;
+  protected String error;
+  protected String[] cmd;
+  protected Process process;
+
+  private boolean shutdown;
+  private ShutdownHook shutdownHook;
 
   /**
    * Construct a new instance.
    */
-  private CommandExecutor (String[] cmd)
+  protected CommandExecutor()
+  {
+  }
+
+  /**
+   * Construct a new instance.
+   */
+  protected CommandExecutor(String[] cmd)
   {
     this.cmd = cmd;
   }
@@ -48,7 +67,7 @@ public class CommandExecutor
    *
    * @param cmd The command to execute.
    */
-  public static CommandExecutor execute (String[] cmd)
+  public static CommandExecutor execute(String[] cmd)
     throws Exception
   {
     return execute(cmd, -1);
@@ -62,18 +81,16 @@ public class CommandExecutor
    * @return The CommandExecutor instance containing the ending state of the
    * process.
    */
-  public static CommandExecutor execute (String[] cmd, long timeout)
+  public static CommandExecutor execute(String[] cmd, long timeout)
     throws Exception
   {
     CommandExecutor executor = new CommandExecutor(cmd);
-
-    Thread thread = new Thread(executor);
-    thread.start();
+    executor.start();
 
     if(timeout > 0){
-      thread.join(timeout);
+      executor.join(timeout);
     }else{
-      thread.join();
+      executor.join();
     }
 
     return executor;
@@ -82,70 +99,97 @@ public class CommandExecutor
   /**
    * Run the thread.
    */
-  public void run ()
+  public void run()
   {
+    logger.info(this.toString());
+    Runtime runtime = Runtime.getRuntime();
     try{
-      Runtime runtime = Runtime.getRuntime();
       process = runtime.exec(cmd);
 
-      final ByteArrayOutputStream out = new ByteArrayOutputStream();
-      final ByteArrayOutputStream err = new ByteArrayOutputStream();
+      shutdownHook = new ShutdownHook();
+      try{
+        runtime.addShutdownHook(shutdownHook);
+      }catch(IllegalStateException ignore){
+        // happens if this is called during shutdown
+      }
 
-      Thread outThread = new Thread(){
-        public void run (){
-          try{
-            copy(process.getInputStream(), out);
-          }catch(IOException ioe){
-            ioe.printStackTrace();
-          }
-        }
-      };
+      ByteArrayOutputStream out = new ByteArrayOutputStream();
+      Thread outThread = createOutThread(out);
       outThread.start();
 
-      Thread errThread = new Thread(){
-        public void run (){
-          try{
-            copy(process.getErrorStream(), err);
-          }catch(IOException ioe){
-            ioe.printStackTrace();
-          }
-        }
-      };
+      ByteArrayOutputStream err = new ByteArrayOutputStream();
+      Thread errThread = createErrThread(err);
       errThread.start();
 
       returnCode = process.waitFor();
       outThread.join(1000);
       errThread.join(1000);
 
-      result = out.toString();
-      error = err.toString();
+      if (result == null){
+        result = out.toString();
+      }
+      if (error == null){
+        error = err.toString();
+      }
     }catch(Exception e){
       returnCode = 12;
       error = e.getMessage();
       e.printStackTrace();
+    }finally{
+      if (shutdownHook != null){
+        try{
+          runtime.removeShutdownHook(shutdownHook);
+        }catch(IllegalStateException ignore){
+          // happens if this is called during shutdown
+        }
+      }
     }
   }
 
   /**
-   * Copy the contents of the InputStream to the OutputStream.
+   * Create the thread that will handle the process's output stream.
    *
-   * @param in The InputStream to read from.
-   * @param out The OutputStream to write to.
+   * @param out An OutputStream which can be used to buffer up the entire
+   * process output.
+   * @return The Thread instance.
    */
-  private void copy (InputStream in, OutputStream out)
-    throws IOException
+  protected Thread createOutThread(final OutputStream out)
   {
-    byte[] buffer = new byte[1024 * 4];
-    int n = 0;
-    while (-1 != (n = in.read(buffer))) {
-      out.write(buffer, 0, n);
-    }
+    return new Thread(){
+      public void run (){
+        try{
+          IOUtils.copy(process.getInputStream(), out);
+        }catch(IOException ioe){
+          ioe.printStackTrace();
+        }
+      }
+    };
+  }
+
+  /**
+   * Create the thread that will handle the process's error stream.
+   *
+   * @param err An OutputStream which can be used to buffer up the entire
+   * process error output.
+   * @return The Thread instance.
+   */
+  protected Thread createErrThread(final OutputStream err)
+  {
+    return new Thread(){
+      public void run (){
+        try{
+          IOUtils.copy(process.getErrorStream(), err);
+        }catch(IOException ioe){
+          ioe.printStackTrace();
+        }
+      }
+    };
   }
 
   /**
    * Destroy this process.
    */
-  public void destroy ()
+  public void destroy()
   {
     if(process != null){
       process.destroy();
@@ -157,7 +201,7 @@ public class CommandExecutor
    *
    * @return The command result.
    */
-  public String getResult ()
+  public String getResult()
   {
     return result;
   }
@@ -167,7 +211,7 @@ public class CommandExecutor
    *
    * @return The return code.
    */
-  public int getReturnCode ()
+  public int getReturnCode()
   {
     return returnCode;
   }
@@ -177,8 +221,34 @@ public class CommandExecutor
    *
    * @return The possibly empty error message.
    */
-  public String getErrorMessage ()
+  public String getErrorMessage()
   {
     return error;
+  }
+
+  /**
+   * Determines if the process was terminated during a shutdown.
+   *
+   * @return The true if shutdown, false otherwise.
+   */
+  public boolean isShutdown()
+  {
+    return this.shutdown;
+  }
+
+  public String toString()
+  {
+    return StringUtils.join(cmd, ' ');
+  }
+
+  private class ShutdownHook
+    extends Thread
+  {
+    public void run(){
+      logger.info(
+          "Terminating process for command: " + Arrays.toString(cmd));
+      shutdown = true;
+      process.destroy();
+    }
   }
 }
