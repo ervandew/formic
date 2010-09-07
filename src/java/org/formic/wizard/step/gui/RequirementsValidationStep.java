@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2010 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -182,7 +182,7 @@ public class RequirementsValidationStep
     panel.add(form.createMessagePanel());
     panel.add(new JScrollPane(container), "grow");
     panel.add(infoScroll, "height 50!");
-    panel.add(retryButton, "right, width pref!");
+    panel.add(retryButton, "right, width 50!");
 
     return panel;
   }
