@@ -18,11 +18,21 @@ import java.security.PrivilegedAction;
  */
 class JREVersion
 {
+    private static Boolean jre7;
     private static Boolean jre141;
     private static Boolean jre140;
     private static Boolean jre14;
     private static Boolean jre13;
     private static Boolean jre12;
+
+    static boolean isJRE7()
+    {
+        if (jre7 == null)
+        {
+            jre7 = Boolean.valueOf(System.getProperty("java.version").startsWith("1.7"));
+        }
+        return jre7.booleanValue();
+    }
 
     static boolean isJRE141()
     {

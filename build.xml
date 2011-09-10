@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Formic installer framework.
-  Copyright (C) 2005 - 2010  Eric Van Dewoestine
+  Copyright (C) 2005 - 2011  Eric Van Dewoestine
 
   This library is free software; you can redistribute it and/or
   modify it under the terms of the GNU Lesser General Public
@@ -117,6 +117,14 @@
       <fileset dir="build/temp/classes">
         <include name="charva/**/*.class"/>
         <include name="charvax/**/*.class"/>
+      </fileset>
+    </jar>
+
+    <!-- patched foxtrot jar -->
+    <copy todir="build/temp/jars" file="lib/foxtrot-3.0.jar"/>
+    <jar jarfile="build/temp/jars/foxtrot-3.0.jar" update="true">
+      <fileset dir="build/temp/classes">
+        <include name="foxtrot/**/*.class"/>
       </fileset>
     </jar>
 
