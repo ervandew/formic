@@ -80,8 +80,8 @@
     </jar>
 
     <!-- patched ant jar file -->
-    <copy todir="build/temp/jars" file="lib/ant-1.8.1.jar"/>
-    <jar jarfile="build/temp/jars/ant-1.8.1.jar" update="true">
+    <copy todir="build/temp/jars" file="lib/ant-1.8.2.jar"/>
+    <jar jarfile="build/temp/jars/ant-1.8.2.jar" update="true">
       <fileset dir="build/temp/classes">
         <include name="org/apache/tools/**/*.class"/>
       </fileset>

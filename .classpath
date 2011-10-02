@@ -3,7 +3,7 @@
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
   <classpathentry kind="src" path="src/java" excluding="**/.svn/**"/>
   <classpathentry kind="src" path="src/samples/src/java" excluding="**/.svn/**"/>
-  <classpathentry kind="lib" path="lib/ant-1.8.1.jar"/>
+  <classpathentry kind="lib" path="lib/ant-1.8.2.jar"/>
   <classpathentry kind="lib" path="lib/ant-contrib-1.0b3.jar"/>
   <classpathentry kind="lib" path="lib/ant-launcher.jar"/>
   <classpathentry kind="lib" path="lib/charva-1.1.4.jar"/>
