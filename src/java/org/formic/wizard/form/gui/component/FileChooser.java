@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -51,6 +51,8 @@ import org.formic.Installer;
 public class FileChooser
   extends JPanel
 {
+  private static final long serialVersionUID = 1L;
+
   private JTextField textField;
   private JButton button;
   private JFileChooser chooser;
@@ -78,6 +80,8 @@ public class FileChooser
   {
     super(new BorderLayout());
     chooser = new JFileChooser(){
+      private static final long serialVersionUID = 1L;
+
       // force "proper" behavior of <enter> when a button has focus
       protected boolean processKeyBinding(
         KeyStroke key, KeyEvent event, int condition, boolean pressed)

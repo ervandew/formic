@@ -13,7 +13,6 @@ import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Window;
 
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -79,6 +78,8 @@ import javax.swing.event.AncestorListener;
 public class SingleComponentInfiniteProgress extends JComponent
     implements /*ActionListener,*/ CancelableAdaptee
 {
+  private static final long serialVersionUID = 1L;
+
   private static final double UNSCALED_BAR_SIZE       = 45d;
 
   public static final int     DEFAULT_NUMBER_OF_BARS  = 12;

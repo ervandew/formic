@@ -461,7 +461,7 @@ public class JTextArea
          */
         ScrollEvent scrollevent = null;
         int row = 0, col = 0;
-        outerloop:
+        //outerloop:
             for (int i = 0; i < getDocument().getLength(); i++) {
 
                 /* At some point during the scan of the document, the

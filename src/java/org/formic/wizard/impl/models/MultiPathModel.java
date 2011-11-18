@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -20,7 +20,6 @@ package org.formic.wizard.impl.models;
 
 import java.util.Stack;
 
-import org.pietschy.wizard.PanelWizardStep;
 import org.pietschy.wizard.WizardStep;
 
 import org.pietschy.wizard.models.Path;

@@ -44,6 +44,8 @@ import java.io.ObjectStreamException;
   */
 public abstract class TimeUnit implements java.io.Serializable {
 
+    private static final long serialVersionUID = 1L;
+
     public static final TimeUnit NANOSECONDS = new TimeUnit(0, "NANOSECONDS") {
         private final static long serialVersionUID = 535148490883208361L;
         public long toNanos(long d)   { return d; }

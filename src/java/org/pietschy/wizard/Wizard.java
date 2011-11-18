@@ -1,6 +1,6 @@
 /**
  * Wizard Framework
- * Copyright 2004 - 2005 Andrew Pietsch
+ * Copyright 2004 - 2011 Andrew Pietsch
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,8 +22,6 @@
 package org.pietschy.wizard;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.AbstractBorder;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -56,6 +54,8 @@ public class
 Wizard
 extends JPanel
 {
+   private static final long serialVersionUID = 1L;
+
    protected static final int BORDER_WIDTH = 8;
 
    /**
@@ -764,10 +764,12 @@ extends JPanel
       window.toFront();
    }
 
-   private class
+   /*private class
    OverviewBorder
    extends AbstractBorder
    {
+      private static final long serialVersionUID = 1L;
+
       private int width = 5;
       private Insets insets = new Insets(0, 0, 0, 2);
 
@@ -792,5 +794,5 @@ extends JPanel
       {
          return insets;
       }
-   }
+   }*/
 }

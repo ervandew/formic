@@ -165,7 +165,7 @@ public class JRadioButton
 
     public String toString() {
         return "JRadioButton location=" + getLocation() +
-                " label=\"" + getLabel() +
+                " label=\"" + getText() +
                 "\" actionCommand=\"" + getActionCommand() +
                 "\" selected=" + isSelected();
     }

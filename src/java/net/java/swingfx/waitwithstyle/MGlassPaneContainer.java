@@ -17,6 +17,8 @@ import javax.swing.JPanel;
  */
 public class MGlassPaneContainer extends JPanel
 {
+  private static final long serialVersionUID = 1L;
+
   private JComponent glassPane;
 
   public MGlassPaneContainer()
@@ -141,6 +143,8 @@ public class MGlassPaneContainer extends JPanel
 
   protected class Layout implements LayoutManager2, Serializable
   {
+    private static final long serialVersionUID = 1L;
+
     public Dimension maximumLayoutSize(final Container target)
     {
       assert target == MGlassPaneContainer.this;

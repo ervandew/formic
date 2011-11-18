@@ -957,7 +957,7 @@ public class Ant extends Task {
 
         /** Creates a reference to be configured by Ant. */
         public Reference() {
-                super();
+            super();
         }
 
         private String targetid = null;

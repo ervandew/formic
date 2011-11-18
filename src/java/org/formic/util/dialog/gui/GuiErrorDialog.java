@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -50,6 +50,8 @@ import javax.swing.WindowConstants;
 public class GuiErrorDialog
   extends JDialog
 {
+  private static final long serialVersionUID = 1L;
+
   private static Icon ERROR;
   private static Icon SHOW_ICON;
   private static String SHOW_LABEL;
@@ -159,6 +161,8 @@ public class GuiErrorDialog
   private class DetailsAction
     extends AbstractAction
   {
+    private static final long serialVersionUID = 1L;
+
     private boolean visible;
 
     /**

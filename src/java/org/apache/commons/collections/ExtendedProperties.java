@@ -1,5 +1,5 @@
 /*
- *  Copyright 2001-2006 The Apache Software Foundation
+ *  Copyright 2001-2011 The Apache Software Foundation
  *
  *  Licensed under the Apache License, Version 2.0 (the "License");
  *  you may not use this file except in compliance with the License.
@@ -141,7 +141,9 @@ import java.util.Vector;
  * @author <a href="mailto:hps@intermeta.de">Henning P. Schmiedehausen</a>
  */
 public class ExtendedProperties extends Hashtable {
-    
+
+    private static final long serialVersionUID = 1L;
+
     /**
      * Default configurations repository.
      */

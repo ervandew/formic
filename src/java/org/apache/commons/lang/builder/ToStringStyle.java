@@ -70,6 +70,8 @@ import org.apache.commons.lang.SystemUtils;
  */
 public abstract class ToStringStyle implements Serializable {
 
+   private static final long serialVersionUID = 1L;
+
     /**
      * The default toString style.
      */

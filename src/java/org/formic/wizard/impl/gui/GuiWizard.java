@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -57,6 +57,8 @@ public class GuiWizard
   extends org.pietschy.wizard.Wizard
   implements Wizard, PropertyChangeListener
 {
+  private static final long serialVersionUID = 1L;
+
   private Semaphore semaphore = new Semaphore(1);
 
   private Action cancelAction;

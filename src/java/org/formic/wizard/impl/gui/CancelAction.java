@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -34,6 +34,8 @@ import org.pietschy.wizard.WizardStep;
 public class CancelAction
   extends WizardAction
 {
+  private static final long serialVersionUID = 1L;
+
   protected CancelAction(Wizard model)
   {
     super("cancel", model);

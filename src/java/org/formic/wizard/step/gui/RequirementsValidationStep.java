@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -142,6 +142,7 @@ public class RequirementsValidationStep
     requirementInfo.addHyperlinkListener(new HyperlinkListener());
 
     table = new JTable(1, 2){
+      private static final long serialVersionUID = 1L;
       public Class getColumnClass(int column){
         Object value = getValueAt(0, column);
         return value != null ? value.getClass() : Object.class;
@@ -334,7 +335,7 @@ public class RequirementsValidationStep
      *
      * @return The title.
      */
-    private String getTitle()
+    public String getTitle()
     {
       return this.title;
     }

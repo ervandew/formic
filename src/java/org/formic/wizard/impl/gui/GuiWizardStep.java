@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2011  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -53,6 +53,8 @@ public class GuiWizardStep
   extends PanelWizardStep
   implements PropertyChangeListener
 {
+  private static final long serialVersionUID = 1L;
+
   private static SingleComponentInfiniteProgress INFINITE_PROGRESS;
   private static final String BUSY_TEXT = Installer.getString("busy.text");
 
