@@ -74,7 +74,7 @@ NOTES {{{
   Notes for myself.
 
     Running formic packager:
-      build/formic/bin/formic -buildfile build/formic/samples/build.xml
+      build/temp/formic/bin/formic -buildfile build/temp/formic/samples/build.xml
 
     When upgrading ant be sure to modify ant.bat to return an error code on
     failure.
