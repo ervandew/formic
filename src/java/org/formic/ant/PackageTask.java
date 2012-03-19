@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -28,6 +28,7 @@ import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Task;
 
+import org.apache.tools.ant.taskdefs.Concat;
 import org.apache.tools.ant.taskdefs.Copy;
 
 import org.apache.tools.ant.types.FileSet;
@@ -94,16 +95,28 @@ public class PackageTask
         ZipFileSet zipset = new ZipFileSet(libset);
         lib.addFileSet(zipset);
       }
-      ZipFileSet files = new ZipFileSet();
-      files.setDir(libDir);
-      files.setIncludes("*.jar");
-      files.setExcludes("one-jar-*.jar");
+      ZipFileSet libs = new ZipFileSet();
+      libs.setDir(libDir);
+      libs.setIncludes("*.jar");
+      libs.setExcludes("one-jar-*.jar");
       // excluding until we really support console mode
-      files.setExcludes("charva-*");
+      libs.setExcludes("charva-*");
       // excluding until this is utilized (for an uninstaller presumably)
-      files.setExcludes("jregisterykey-*");
-      lib.addFileSet(files);
+      libs.setExcludes("jregisterykey-*");
+      lib.addFileSet(libs);
       jar.addConfiguredLib(lib);
+
+      // create one-jar.properties file (currently only necessary to set
+      // application menu name for OSX).
+      Concat concat = new Concat();
+      concat.setDestfile(new File(buildDir + "/one-jar.properties"));
+      concat.addText("com.apple.mrj.application.apple.menu.about.name=Installer");
+      concat.execute();
+
+      ZipFileSet files = new ZipFileSet();
+      files.setDir(new File(buildDir));
+      files.setIncludes("one-jar.properties");
+      addFileset(files);
 
       jar.execute();
     }catch(BuildException be){
