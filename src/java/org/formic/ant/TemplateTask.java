@@ -29,6 +29,8 @@ import org.apache.commons.io.IOUtils;
 import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.Task;
 
+import org.apache.tools.ant.taskdefs.Move;
+
 import org.apache.velocity.VelocityContext;
 
 import org.apache.velocity.app.Velocity;
@@ -68,6 +70,7 @@ public class TemplateTask
     FileReader reader = null;
     FileWriter writer = null;
     try{
+      log("Evaluating template: " + template);
       reader = new FileReader(this.template);
       writer = new FileWriter(this.out);
       VelocityContext context = new VelocityContext(values);
@@ -80,7 +83,12 @@ public class TemplateTask
     }
 
     if (move){
-      out.renameTo(template);
+      Move move = new Move();
+      move.setProject(getProject());
+      move.setTaskName(getTaskName());
+      move.setFile(out);
+      move.setTofile(template);
+      move.execute();
     }
   }
 
