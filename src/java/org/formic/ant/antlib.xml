@@ -3,11 +3,12 @@
  Author: Eric Van Dewoestine
 -->
 <antlib xmlns:current="ant:current">
-  <taskdef name="package" classname="org.formic.ant.PackageTask"/>
   <taskdef name="installer" classname="org.formic.ant.InstallerTask"/>
-  <taskdef name="tempdir" classname="org.formic.ant.TempDirTask"/>
-  <taskdef name="unzip" classname="org.formic.ant.UnzipTask"/>
+  <taskdef name="package" classname="org.formic.ant.PackageTask"/>
   <taskdef name="property" classname="org.formic.ant.Property"/>
+  <taskdef name="tempdir" classname="org.formic.ant.TempDirTask"/>
+  <taskdef name="template" classname="org.formic.ant.TemplateTask"/>
+  <taskdef name="unzip" classname="org.formic.ant.UnzipTask"/>
 
   <typedef name="branch" classname="org.formic.ant.type.Branch"/>
   <typedef name="classpath" classname="org.formic.ant.type.Classpath"/>

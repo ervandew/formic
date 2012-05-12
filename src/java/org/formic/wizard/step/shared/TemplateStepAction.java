@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -37,10 +37,10 @@ import org.formic.util.TemplateUtils;
  */
 public class TemplateStepAction
 {
-  private static final String INSTALLER_KEY = "installer";
-  private static final Installer INSTALLER = new Installer();
-  private static final String OS_KEY = "os";
-  private static final Os OS = new Os();
+  public static final String INSTALLER_KEY = "installer";
+  public static final Installer INSTALLER = new Installer();
+  public static final String OS_KEY = "os";
+  public static final Os OS = new Os();
 
   /**
    * Processes the supplied template file and returns the result.
