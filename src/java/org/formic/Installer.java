@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -36,6 +36,8 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import javax.swing.UIManager;
+
+import org.apache.velocity.app.Velocity;
 
 import com.jgoodies.looks.plastic.PlasticLookAndFeel;
 import com.jgoodies.looks.plastic.PlasticTheme;
@@ -79,6 +81,25 @@ public class Installer
   private static File tempDir;
 
   private static boolean envInitialized;
+
+  static{
+    try{
+      // tell velocity to use log4j for all logging
+      Properties properties = new Properties();
+      properties.setProperty("runtime.log.logsystem.class",
+          org.apache.velocity.runtime.log.SimpleLog4JLogSystem.class.getName());
+      properties.setProperty("runtime.log.logsystem.log4j.category",
+          "org.apache.velocity");
+      properties.setProperty("directive.foreach.counter.initial.value", "0");
+      properties.setProperty("resource.loader", "file");
+
+      // stop annoying error regarding VM_global_library.vm not found.
+      properties.setProperty("velocimacro.library", "");
+      Velocity.init(properties);
+    }catch(Exception e){
+      logger.error("", e);
+    }
+  }
 
   /**
    * Runs the installer.

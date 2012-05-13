@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -25,9 +25,6 @@ import java.io.InputStreamReader;
 import java.io.StringWriter;
 
 import java.util.Map;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 import org.apache.velocity.VelocityContext;
 
@@ -40,28 +37,6 @@ import org.apache.velocity.app.Velocity;
  */
 public class TemplateUtils
 {
-  private static final Logger logger =
-    Logger.getLogger(TemplateUtils.class);
-
-  static{
-    try{
-      // tell velocity to use log4j for all logging
-      Properties properties = new Properties();
-      properties.setProperty("runtime.log.logsystem.class",
-          org.apache.velocity.runtime.log.SimpleLog4JLogSystem.class.getName());
-      properties.setProperty("runtime.log.logsystem.log4j.category",
-          "org.apache.velocity");
-      properties.setProperty("directive.foreach.counter.initial.value", "0");
-      properties.setProperty("resource.loader", "file");
-
-      // stop annoying error regarding VM_global_library.vm not found.
-      properties.setProperty("velocimacro.library", "");
-      Velocity.init(properties);
-    }catch(Exception e){
-      logger.error("", e);
-    }
-  }
-
   /**
    * Evaluates the template supplied w/ the specified values.
    *
