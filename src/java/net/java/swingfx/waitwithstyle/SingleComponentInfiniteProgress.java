@@ -13,7 +13,6 @@ import java.awt.RenderingHints;
 import java.awt.Robot;
 import java.awt.Window;
 
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyAdapter;
@@ -76,7 +75,6 @@ import javax.swing.event.AncestorListener;
  */
 
 public class SingleComponentInfiniteProgress extends JComponent
-    implements /*ActionListener,*/ CancelableAdaptee
 {
   private static final long serialVersionUID = 1L;
 
@@ -94,8 +92,6 @@ public class SingleComponentInfiniteProgress extends JComponent
   private double minBarSize = 4;
   private boolean useBackBuffer;
   private String text;
-  protected InfiniteProgressAdapter infiniteProgressAdapter;
-
 
   private MouseAdapter mouseAdapter = new MouseAdapter() { };
   private MouseMotionAdapter mouseMotionAdapter = new MouseMotionAdapter() { };
@@ -143,45 +139,20 @@ public class SingleComponentInfiniteProgress extends JComponent
 
   public SingleComponentInfiniteProgress(int numBars)
   {
-    this(true, numBars, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, null);
-  }
-
-  public SingleComponentInfiniteProgress(
-      InfiniteProgressAdapter infiniteProgressAdapter)
-  {
-    this(true, DEFAULT_NUMBER_OF_BARS,
-        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
-        infiniteProgressAdapter);
+    this(true, numBars, DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE);
   }
 
   public SingleComponentInfiniteProgress(boolean i_bUseBackBuffer, int numBars)
   {
     this(i_bUseBackBuffer, numBars,
-        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE, null);
-  }
-
-  public SingleComponentInfiniteProgress(
-      boolean i_bUseBackBuffer, InfiniteProgressAdapter infiniteProgressAdapter)
-  {
-    this(i_bUseBackBuffer, DEFAULT_NUMBER_OF_BARS,
-        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
-        infiniteProgressAdapter);
-  }
-
-  public SingleComponentInfiniteProgress(
-      int numBars, InfiniteProgressAdapter infiniteProgressAdapter)
-  {
-    this(true, numBars,
-        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE,
-        infiniteProgressAdapter);
+        DEFAULT_FPS, NO_AUTOMATIC_RESIZING, NO_MAX_BAR_SIZE);
   }
 
   public SingleComponentInfiniteProgress(boolean i_bUseBackBuffer,
                                          int numBars,
                                          int fps,
                                          double resizeRatio,
-                                         double maxBarSize,
-                                         InfiniteProgressAdapter infiniteProgressAdapter)
+                                         double maxBarSize)
   {
     this.useBackBuffer = i_bUseBackBuffer;
     this.numBars = numBars;
@@ -190,8 +161,6 @@ public class SingleComponentInfiniteProgress extends JComponent
 
     //this.timer = new Timer(1000 / fps, this);
     this.timerInterval = 1000 / fps;
-
-    setInfiniteProgressAdapter(infiniteProgressAdapter);
 
     colors = new Color[numBars * 2];
     // build bars
@@ -267,11 +236,6 @@ public class SingleComponentInfiniteProgress extends JComponent
       addMouseListener(mouseAdapter);
       addMouseMotionListener(mouseMotionAdapter);
       addKeyListener(keyAdapter);
-      // start anim
-      if(infiniteProgressAdapter != null) {
-        infiniteProgressAdapter.animationStarting();
-        infiniteProgressAdapter.rampUpEnded();
-      }
       //timer.start();
       timer = new Timer();
       timer.schedule(timerTask, 0, timerInterval);
@@ -282,9 +246,6 @@ public class SingleComponentInfiniteProgress extends JComponent
         timer.cancel();
         timer = null;
         timerTask = null;
-      }
-      if(infiniteProgressAdapter != null) {
-        infiniteProgressAdapter.animationStopping();
       }
       /// free back buffer
       imageBuf = null;
@@ -331,32 +292,6 @@ public class SingleComponentInfiniteProgress extends JComponent
     }
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-  //
-  // METHODS FROM INTERFACE CancelableAdaptee
-  //
-
-  public void start()
-  {
-    setVisible(true);
-  }
-
-  public void stop()
-  {
-    setVisible(false);
-  }
-
   public void setText(String text)
   {
     final String old = this.text;
@@ -369,82 +304,6 @@ public class SingleComponentInfiniteProgress extends JComponent
   {
     return this;
   }
-
-  /**
-   * Adds a listener to the cancel button in this progress panel.
-   *
-   * @param listener
-   *
-   * @throws RuntimeException if the infiniteProgressAdapter is null or is
-   *                          not a CancelableProgessAdapter
-   */
-  public void addCancelListener(ActionListener listener)
-  {
-    if(infiniteProgressAdapter instanceof CancelableProgessAdapter) {
-      ((CancelableProgessAdapter) infiniteProgressAdapter).addCancelListener(listener);
-    } else {
-      throw new RuntimeException(
-          "Expected CancelableProgessAdapter for cancel listener.  Adapter is " +
-          infiniteProgressAdapter);
-    }
-  }
-
-  /**
-   * Removes a listener to the cancel button in this progress panel.
-   *
-   * @param listener
-   *
-   * @throws RuntimeException if the infiniteProgressAdapter is null or is
-   *                          not a CancelableProgessAdapter
-   */
-  public void removeCancelListener(ActionListener listener)
-  {
-    if(infiniteProgressAdapter instanceof CancelableProgessAdapter) {
-      ((CancelableProgessAdapter) infiniteProgressAdapter)
-          .removeCancelListener(listener);
-    } else {
-      throw new RuntimeException(
-          "Expected CancelableProgessAdapter for cancel listener.  Adapter is " +
-          infiniteProgressAdapter);
-    }
-  }
-
-  //
-  // METHODS FROM INTERFACE ActionListener
-  //
-
-  /*int iterate;  //we use transparency to draw a number of iterations before making a snapshot
-
-  /**
-   * Called to animate the rotation of the bar's colors
-   */
-  /*public void actionPerformed(ActionEvent e)
-  {
-    // rotate colors
-    if(colorOffset == (numBars - 1)) {
-      colorOffset = 0;
-    } else {
-      colorOffset++;
-    }
-    // repaint
-    if(barsScreenBounds != null) {
-      repaint(barsScreenBounds);
-    } else {
-      repaint();
-    }
-    if(useBackBuffer && imageBuf == null) {
-      if(iterate < 0) {
-        try {
-          makeSnapshot();
-          setOpaque(true);
-        } catch(AWTException e1) {
-          throw new RuntimeException(e1);
-        }
-      } else {
-        iterate--;
-      }
-    }
-  }*/
 
   private class RedrawTask
     extends TimerTask
@@ -595,13 +454,6 @@ public class SingleComponentInfiniteProgress extends JComponent
     }
   }
 
-  protected void setInfiniteProgressAdapter(InfiniteProgressAdapter infiniteProgressAdapter)
-  {
-    this.infiniteProgressAdapter = infiniteProgressAdapter;
-  }
-
-
-
   protected double paintBars(final Graphics g, final boolean paintBackground)
   {
     Rectangle oClip = g.getClipBounds();
@@ -652,10 +504,6 @@ public class SingleComponentInfiniteProgress extends JComponent
     double maxY = drawTextAt(text, getFont(), (Graphics2D)g,
                              getWidth(), barsScreenBounds.getMaxY(),
                              getForeground());
-
-    if(infiniteProgressAdapter != null) {
-      infiniteProgressAdapter.paintSubComponents(maxY);
-    }
 
     // NOTE: this will not contain the size of the sub components, since the
     // paintSubComponents(...) method does not provide this information, and
@@ -714,9 +562,6 @@ public class SingleComponentInfiniteProgress extends JComponent
       return null;
     }
   }
-
-
-
 
   /**
    * Builds the circular shape and returns the result as an array of
