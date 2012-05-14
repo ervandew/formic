@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2011  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -55,11 +55,11 @@ public class GuiWizardStep
 {
   private static final long serialVersionUID = 1L;
 
-  private static SingleComponentInfiniteProgress INFINITE_PROGRESS;
   private static final String BUSY_TEXT = Installer.getString("busy.text");
 
   private GuiStep step;
   private Component component;
+  private SingleComponentInfiniteProgress infiniteProgress;
 
   /**
    * Constructs a new instance.
@@ -90,22 +90,26 @@ public class GuiWizardStep
 
     if(step.isBusyAnimated()){
       if(busy){
-        if(INFINITE_PROGRESS == null){
-          INFINITE_PROGRESS = new SingleComponentInfiniteProgress();
-          //INFINITE_PROGRESS.setBackground(java.awt.Color.BLACK);
-          //INFINITE_PROGRESS.setForeground(java.awt.Color.WHITE);
-          INFINITE_PROGRESS.setFont(new Font(null, Font.BOLD, 15));
+        if(infiniteProgress == null){
+          infiniteProgress = new SingleComponentInfiniteProgress(false);
+          //infiniteProgress.setBackground(java.awt.Color.BLACK);
+          //infiniteProgress.setForeground(java.awt.Color.WHITE);
+          infiniteProgress.setFont(new Font(null, Font.BOLD, 15));
+
+          grandparent.remove(parent);
+          MGlassPaneContainer container = new MGlassPaneContainer(parent);
+          grandparent.add(container, BorderLayout.CENTER);
+          container.setGlassPane(infiniteProgress);
+
+          String busyText = Installer.getString(step.getName() + ".busy");
+          infiniteProgress.setText(busyText != null ? busyText : BUSY_TEXT);
         }
 
-        grandparent.remove(parent);
-        MGlassPaneContainer container = new MGlassPaneContainer(parent);
-        grandparent.add(container, BorderLayout.CENTER);
-        container.setGlassPane(INFINITE_PROGRESS);
-        INFINITE_PROGRESS.setVisible(true);
-        String busyText = Installer.getString(step.getName() + ".busy");
-        INFINITE_PROGRESS.setText(busyText != null ? busyText : BUSY_TEXT);
+        infiniteProgress.setVisible(true);
       }else{
-        INFINITE_PROGRESS.setVisible(false);
+        if (infiniteProgress != null){
+          infiniteProgress.setVisible(false);
+        }
       }
     }
   }
