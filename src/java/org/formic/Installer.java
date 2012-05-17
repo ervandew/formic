@@ -75,6 +75,7 @@ public class Installer
   private static Dimension dimension;
   private static Image image;
   private static boolean consoleMode;
+  private static boolean uninstall;
 
   private static InstallContext context = new InstallContext();
 
@@ -113,9 +114,12 @@ public class Installer
   public static boolean run(
       Properties properties, List paths)
   {
-    logger.info("Running Installer.");
-    consoleMode = "true".equalsIgnoreCase(
-        properties.getProperty("formic.console"));
+    uninstall = "uninstaller".equals(properties.getProperty("formic.action"));
+
+    String name = uninstall ? "Uninstaller" : "Installer";
+    logger.info("Running " + name + "...");
+
+    consoleMode = "true".equalsIgnoreCase(properties.getProperty("formic.console"));
     if(consoleMode &&
         !"true".equalsIgnoreCase(Installer.getStringOrDefault("console.support", "true")))
     {
@@ -143,7 +147,7 @@ public class Installer
     wizard.showWizard(properties.getProperty("formic.action"));
     wizard.waitFor();
 
-    logger.info("Installer Finished.");
+    logger.info(name + " Finished.");
 
     return !wizard.wasCanceled();
   }
@@ -372,6 +376,16 @@ public class Installer
   public static boolean isConsoleMode()
   {
     return consoleMode;
+  }
+
+  /**
+   * Determines if uninstaller is running.
+   *
+   * @return true if running the uninstaller, false if running the installer.
+   */
+  public static boolean isUninstall()
+  {
+    return uninstall;
   }
 
   /**

@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2008 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -26,6 +26,7 @@ import java.util.regex.Pattern;
 import javax.swing.SwingUtilities;
 
 import org.apache.tools.ant.BuildEvent;
+import org.apache.tools.ant.BuildException;
 import org.apache.tools.ant.BuildListener;
 import org.apache.tools.ant.Project;
 import org.apache.tools.ant.Target;
@@ -48,7 +49,6 @@ import org.formic.ant.util.AntUtils;
 public class InstallAction
   implements BuildListener
 {
-  private static final String INSTALL_TARGET = "install";
   private static final Pattern STACK_ELEMENT =
     Pattern.compile("^\\s+at .*(.*)$");
   private static ArrayList CALL_TASKS = new ArrayList();
@@ -69,10 +69,24 @@ public class InstallAction
    */
   public InstallAction(InstallListener listener)
   {
+    this("install", listener);
+  }
+
+  /**
+   * Constructs a new InstallAction with the supplied install task name and
+   * InstallListener.
+   *
+   * @param taskName The name of the install task to run.
+   * @param listener The listener listening to install progress events.
+   */
+  public InstallAction(String taskName, InstallListener listener)
+  {
     this.listener = listener;
-    target = (Target)
-      Installer.getProject().getTargets().get(INSTALL_TARGET);
-    targetStack.add(INSTALL_TARGET);
+    target = (Target)Installer.getProject().getTargets().get(taskName);
+    if (target == null){
+      throw new BuildException("Task '" + taskName + "' not found.");
+    }
+    targetStack.add(taskName);
     Installer.getProject().addBuildListener(this);
     registerTasks(target.getTasks());
   }
@@ -107,7 +121,7 @@ public class InstallAction
     }
 
     try{
-      target.execute();
+      Installer.getProject().executeTarget(target.getName());
       tasks.clear();
     }finally{
       Installer.getProject().removeBuildListener(this);

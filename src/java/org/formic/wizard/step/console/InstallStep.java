@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2011 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2012 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -72,12 +72,22 @@ public class InstallStep
   }
 
   /**
+   * Gets the InstallAction to use for this step.
+   *
+   * @return an InstallAction instance.
+   */
+  protected InstallAction getAction()
+  {
+    return new InstallAction(this);
+  }
+
+  /**
    * {@inheritDoc}
    * @see org.formic.wizard.step.ConsoleStep#init()
    */
   public Component init()
   {
-    overallLabel = new JLabel(Installer.getString("install.initialize"));
+    overallLabel = new JLabel(Installer.getString(getName() + ".initialize"));
     overallProgress = new JProgressBar();
     overallProgress.setStringPainted(true);
 
@@ -144,15 +154,15 @@ public class InstallStep
       public void run()
       {
         try{
-          InstallAction action = new InstallAction(InstallStep.this);
+          InstallAction action = getAction();
           action.execute();
 
           SwingUtilities.invokeLater(new Runnable(){
             public void run() {
               overallProgress.setValue(overallProgress.getMaximum());
-              overallLabel.setText(Installer.getString("install.done"));
+              overallLabel.setText(Installer.getString(getName() + ".done"));
               taskProgress.setValue(taskProgress.getMaximum());
-              taskLabel.setText(Installer.getString("install.done"));
+              taskLabel.setText(Installer.getString(getName() + ".done"));
 
               setCancelEnabled(false);
             }
@@ -164,7 +174,7 @@ public class InstallStep
             public void run() {
               ConsoleDialogs.showError(error);
               overallLabel.setText(
-                  "install: " + Installer.getString("error.dialog.text"));
+                  getName() + ": " + Installer.getString("error.dialog.text"));
               showErrorButton.setVisible(true);
             }
           });
@@ -223,7 +233,7 @@ public class InstallStep
     private static final long serialVersionUID = 1L;
 
     public ShowErrorAction(){
-      super(Installer.getString("install.error.view"));
+      super(Installer.getString(".error.view"));
     }
 
     public void actionPerformed(ActionEvent e){
