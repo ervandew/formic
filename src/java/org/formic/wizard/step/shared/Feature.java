@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2010 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2013 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -31,11 +31,11 @@ public class Feature
   public static final String ENABLED_PROPERTY = "enabled";
 
   private String key;
-  private String title;
   private String info;
   private boolean enabled;
   private PropertyChangeSupport propertyChangeSupport;
   private String[] dependencies;
+  private String[] exclusives;
 
   /**
    * Constructs a new instance.
@@ -64,6 +64,28 @@ public class Feature
   {
     this(key, enabled);
     this.dependencies = dependencies;
+  }
+
+  /**
+   * Constructs a new instance.
+   *
+   * @param key The key for this instance.
+   * @param enabled True if the feature is enabled by default, false
+   * otherwise.
+   * @param dependencies Array of other feature keys, that are required for
+   * this feature to be installed.
+   * @param exclusives Array of other feature keys, that cannot be enabled at
+   * the same time as this feature.
+   */
+  public Feature(
+      String key,
+      boolean enabled,
+      String[] dependencies,
+      String[] exclusives)
+  {
+    this(key, enabled);
+    this.dependencies = dependencies;
+    this.exclusives = exclusives;
   }
 
   /**
@@ -138,6 +160,48 @@ public class Feature
   }
 
   /**
+   * Gets the array of features that cannot be selected when this feature is
+   * selected.
+   *
+   * @return Array of feature names.
+   */
+  public String[] getExclusives()
+  {
+    return this.exclusives;
+  }
+
+  /**
+   * Sets the array of features that cannot be selected when this feature is
+   * selected.
+   *
+   * @param exclusives Array of feature names.
+   */
+  public void setExclusives(String[] exclusives)
+  {
+    this.exclusives = exclusives;
+  }
+
+  /**
+   * Determines if this feature has the supplied feature in its exclusive list.
+   *
+   * @param key The key of the feature.
+   * @return True if the feature is in the exclusive list, false otherwise.
+   */
+  public boolean hasExclusive(String key)
+  {
+    if (exclusives == null || key == null){
+      return false;
+    }
+
+    for(int ii = 0; ii < exclusives.length; ii++){
+      if (exclusives[ii].equals(key)){
+        return true;
+      }
+    }
+    return false;
+  }
+
+  /**
    * Gets the info for this instance.
    *
    * @return The info.
@@ -155,25 +219,6 @@ public class Feature
   public void setInfo(String info)
   {
     this.info = info;
-  }
-
-  /**
-   * Sets the title for this feature.
-   *
-   * @param title The title.
-   */
-  public void setTitle(String title)
-  {
-    this.title = title;
-  }
-
-  /**
-   * {@inheritDoc}
-   * @see Object#toString()
-   */
-  public String toString()
-  {
-    return title;
   }
 
   /**

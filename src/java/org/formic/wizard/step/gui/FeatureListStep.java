@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2011 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2013 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -24,6 +24,7 @@ import java.awt.Dimension;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -123,7 +124,7 @@ public class FeatureListStep
     featureInfo.addHyperlinkListener(new HyperlinkListener());
 
     Feature[] features = provider.getFeatures();
-    JTable table = new JTable(features.length, 2){
+    JTable table = new JTable(features.length, 1){
       private static final long serialVersionUID = 1L;
       public Class getColumnClass(int column){
         return getValueAt(0, column).getClass();
@@ -146,7 +147,6 @@ public class FeatureListStep
       box.putClientProperty("feature", feature);
       featureMap.put(feature.getKey(), box);
 
-      feature.setTitle(Installer.getString(name));
       feature.setInfo(Installer.getString(
             getName() + "." + feature.getKey() + ".html"));
       feature.addPropertyChangeListener(new PropertyChangeListener(){
@@ -159,11 +159,9 @@ public class FeatureListStep
         }
       });
 
-      box.setText(null);
+      box.setText(Installer.getString(name));
       box.setBackground(table.getBackground());
-
       table.setValueAt(box, ii, 0);
-      table.setValueAt(feature, ii, 1);
     }
 
     FeatureListMouseListener mouseListener = new FeatureListMouseListener();
@@ -173,11 +171,11 @@ public class FeatureListStep
         JCheckBox box = (JCheckBox)featureMap.get(feature.getKey());
         box.setSelected(true);
         mouseListener.processDependencies(feature);
+        mouseListener.processExclusives(feature);
       }
     }
 
     table.setAutoResizeMode(JTable.AUTO_RESIZE_LAST_COLUMN);
-    table.getColumnModel().getColumn(0).setMaxWidth(20);
     table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     table.setShowHorizontalLines(false);
     table.setShowVerticalLines(false);
@@ -209,11 +207,12 @@ public class FeatureListStep
     protected void toggleSelection(JTable table, int row)
     {
       JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
-      Feature feature = (Feature)table.getModel().getValueAt(row, 1);
+      Feature feature = (Feature)box.getClientProperty("feature");
       box.doClick();
       feature.setEnabled(box.isSelected());
 
       processDependencies(feature);
+      processExclusives(feature);
 
       table.revalidate();
       table.repaint();
@@ -222,32 +221,71 @@ public class FeatureListStep
     protected void processDependencies(Feature feature)
     {
       String[] dependencies = feature.getDependencies();
-      if (dependencies != null){
-        for(int ii = 0; ii < dependencies.length; ii++){
-          String key = dependencies[ii];
-          JCheckBox box = (JCheckBox)featureMap.get(key);
-          if(feature.isEnabled()){
-            box.setEnabled(false);
-            box.setSelected(true);
-            Feature dfeature = (Feature)box.getClientProperty("feature");
-            if(!dfeature.isEnabled()){
-              dfeature.setEnabled(true);
-              processDependencies(dfeature);
-            }
-          }else{
-            // check if any other enabled feature has this as a dependency
-            boolean required = false;
-            Feature[] features = provider.getFeatures();
-            for(int jj = 0; jj < features.length; jj++){
-              JCheckBox fbox = (JCheckBox)featureMap.get(features[jj].getKey());
-              Feature f = (Feature)fbox.getClientProperty("feature");
-              if (f.isEnabled() && f.hasDependency(key)){
-                required = true;
-                break;
-              }
-            }
-            box.setEnabled(!required);
+      if (dependencies == null){
+        return;
+      }
+
+      for(int ii = 0; ii < dependencies.length; ii++){
+        String key = dependencies[ii];
+        JCheckBox box = (JCheckBox)featureMap.get(key);
+        if(feature.isEnabled()){
+          box.setEnabled(false);
+          box.setSelected(true);
+          Feature dfeature = (Feature)box.getClientProperty("feature");
+          if(!dfeature.isEnabled()){
+            dfeature.setEnabled(true);
+            processDependencies(dfeature);
+            processExclusives(dfeature);
           }
+        }else{
+          // check if any other enabled feature has this as a dependency
+          boolean required = false;
+          Feature[] features = provider.getFeatures();
+          for(int jj = 0; jj < features.length; jj++){
+            JCheckBox fbox = (JCheckBox)featureMap.get(features[jj].getKey());
+            Feature f = (Feature)fbox.getClientProperty("feature");
+            if (f.isEnabled() && f.hasDependency(key)){
+              required = true;
+              break;
+            }
+          }
+          box.setEnabled(!required);
+        }
+      }
+    }
+
+    protected void processExclusives(Feature feature)
+    {
+      String[] exclusives = feature.getExclusives();
+      if (exclusives == null){
+        return;
+      }
+
+      for(int ii = 0; ii < exclusives.length; ii++){
+        String key = exclusives[ii];
+        JCheckBox box = (JCheckBox)featureMap.get(key);
+        if(feature.isEnabled()){
+          box.setEnabled(false);
+          box.setSelected(false);
+          Feature efeature = (Feature)box.getClientProperty("feature");
+          if(efeature.isEnabled()){
+            efeature.setEnabled(false);
+            processDependencies(efeature);
+            processExclusives(efeature);
+          }
+        }else{
+          // check if any other enabled feature has this in its exclusive list
+          boolean exclusive = false;
+          Feature[] features = provider.getFeatures();
+          for(int jj = 0; jj < features.length; jj++){
+            JCheckBox fbox = (JCheckBox)featureMap.get(features[jj].getKey());
+            Feature f = (Feature)fbox.getClientProperty("feature");
+            if (f.isEnabled() && f.hasExclusive(key)){
+              exclusive = true;
+              break;
+            }
+          }
+          box.setEnabled(!exclusive);
         }
       }
     }
@@ -270,7 +308,13 @@ public class FeatureListStep
         JTable table = (JTable)e.getSource();
         int row = table.rowAtPoint(e.getPoint());
         int col = table.columnAtPoint(e.getPoint());
-        if(col == 0 && row > -1){
+        JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, col);
+        int height = table.getRowHeight(row);
+        // in our case we want the clicking of the checkbox label to render
+        // the feature info, but not to change the status of the checkbox.
+        // Before we had a separate JLabel, but then that requires extra work
+        // to change the text color when the checkbox is disabled/enabled.
+        if(col == 0 && row > -1 && e.getX() < height){
           toggleSelection(table, row);
         }
       }
@@ -371,8 +415,9 @@ public class FeatureListStep
     public void valueChanged(ListSelectionEvent e)
     {
       if(!e.getValueIsAdjusting()){
-        Feature feature = (Feature)
-          table.getModel().getValueAt(table.getSelectedRow(), 1);
+        JCheckBox box = (JCheckBox)
+          table.getModel().getValueAt(table.getSelectedRow(), 0);
+        Feature feature = (Feature)box.getClientProperty("feature");
         featureInfo.setText(feature.getInfo());
       }
     }
