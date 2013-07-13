@@ -228,6 +228,10 @@ public class FeatureListStep
       for(int ii = 0; ii < dependencies.length; ii++){
         String key = dependencies[ii];
         JCheckBox box = (JCheckBox)featureMap.get(key);
+        // feature may have been excluded from the list by the provider
+        if (box == null){
+          continue;
+        }
         if(feature.isEnabled()){
           box.setEnabled(false);
           box.setSelected(true);
@@ -264,6 +268,10 @@ public class FeatureListStep
       for(int ii = 0; ii < exclusives.length; ii++){
         String key = exclusives[ii];
         JCheckBox box = (JCheckBox)featureMap.get(key);
+        // feature may have been excluded from the list by the provider
+        if (box == null){
+          continue;
+        }
         if(feature.isEnabled()){
           box.setEnabled(false);
           box.setSelected(false);
