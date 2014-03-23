@@ -62,7 +62,7 @@ abstract class AbstractSyncWorker extends AbstractWorker
      */
     EventPump createDefaultEventPump()
     {
-        if (JREVersion.isJRE7()) {
+        if (JREVersion.isJRE7() || JREVersion.isJRE8()) {
             return new QueueEventPump();
         }
         if (JREVersion.isJRE141())

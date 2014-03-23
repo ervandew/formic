@@ -18,12 +18,22 @@ import java.security.PrivilegedAction;
  */
 class JREVersion
 {
+    private static Boolean jre8;
     private static Boolean jre7;
     private static Boolean jre141;
     private static Boolean jre140;
     private static Boolean jre14;
     private static Boolean jre13;
     private static Boolean jre12;
+
+    static boolean isJRE8()
+    {
+        if (jre8 == null)
+        {
+            jre8 = Boolean.valueOf(System.getProperty("java.version").startsWith("1.8"));
+        }
+        return jre8.booleanValue();
+    }
 
     static boolean isJRE7()
     {
