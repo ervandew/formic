@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2011  Eric Van Dewoestine
+ * Copyright (C) 2005 - 2014  Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -268,6 +268,9 @@ public class GuiWizard
               updateButtonStatus(model, ws, step);
             }
             updateDefaultButton();
+            if (model.isNextAvailable()){
+              buttonBar.getNextButton().grabFocus();
+            }
           }
         }
       }
