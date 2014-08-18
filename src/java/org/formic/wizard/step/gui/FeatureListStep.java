@@ -24,7 +24,6 @@ import java.awt.Dimension;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -147,8 +146,10 @@ public class FeatureListStep
       box.putClientProperty("feature", feature);
       featureMap.put(feature.getKey(), box);
 
-      feature.setInfo(Installer.getString(
-            getName() + "." + feature.getKey() + ".html"));
+      if (feature.getInfo() == null){
+        feature.setInfo(Installer.getString(
+              getName() + "." + feature.getKey() + ".html"));
+      }
       feature.addPropertyChangeListener(new PropertyChangeListener(){
         public void propertyChange(PropertyChangeEvent event){
           if(Feature.ENABLED_PROPERTY.equals(event.getPropertyName())){
@@ -161,13 +162,17 @@ public class FeatureListStep
 
       box.setText(Installer.getString(name));
       box.setBackground(table.getBackground());
+      if (!feature.isAvailable()){
+        box.setSelected(false);
+        box.setEnabled(false);
+      }
       table.setValueAt(box, ii, 0);
     }
 
     FeatureListMouseListener mouseListener = new FeatureListMouseListener();
     for (int ii = 0; ii < features.length; ii++){
       Feature feature = (Feature)features[ii];
-      if(feature.isEnabled()){
+      if(feature.isEnabled() && feature.isAvailable()){
         JCheckBox box = (JCheckBox)featureMap.get(feature.getKey());
         box.setSelected(true);
         mouseListener.processDependencies(feature);
@@ -208,14 +213,16 @@ public class FeatureListStep
     {
       JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, 0);
       Feature feature = (Feature)box.getClientProperty("feature");
-      box.doClick();
-      feature.setEnabled(box.isSelected());
+      if (feature.isAvailable()){
+        box.doClick();
+        feature.setEnabled(box.isSelected());
 
-      processDependencies(feature);
-      processExclusives(feature);
+        processDependencies(feature);
+        processExclusives(feature);
 
-      table.revalidate();
-      table.repaint();
+        table.revalidate();
+        table.repaint();
+      }
     }
 
     protected void processDependencies(Feature feature)
@@ -316,7 +323,6 @@ public class FeatureListStep
         JTable table = (JTable)e.getSource();
         int row = table.rowAtPoint(e.getPoint());
         int col = table.columnAtPoint(e.getPoint());
-        JCheckBox box = (JCheckBox)table.getModel().getValueAt(row, col);
         int height = table.getRowHeight(row);
         // in our case we want the clicking of the checkbox label to render
         // the feature info, but not to change the status of the checkbox.

@@ -1,6 +1,6 @@
 /**
  * Formic installer framework.
- * Copyright (C) 2005 - 2013 Eric Van Dewoestine
+ * Copyright (C) 2005 - 2014 Eric Van Dewoestine
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -33,6 +33,7 @@ public class Feature
   private String key;
   private String info;
   private boolean enabled;
+  private boolean available = true;
   private PropertyChangeSupport propertyChangeSupport;
   private String[] dependencies;
   private String[] exclusives;
@@ -89,7 +90,7 @@ public class Feature
   }
 
   /**
-   * Gets the key for this instance.
+   * Gets the key for this feature.
    *
    * @return The key.
    */
@@ -99,7 +100,7 @@ public class Feature
   }
 
   /**
-   * Determines if this instance is enabled.
+   * Determines if this feature is enabled.
    *
    * @return The enabled.
    */
@@ -109,7 +110,7 @@ public class Feature
   }
 
   /**
-   * Sets whether or not this instance is enabled.
+   * Sets whether or not this feature is enabled.
    *
    * @param enabled True if enabled, false otherwise.
    */
@@ -117,6 +118,26 @@ public class Feature
   {
     propertyChangeSupport.firePropertyChange(
         ENABLED_PROPERTY, this.enabled, this.enabled = enabled);
+  }
+
+  /**
+   * Determines if this feature is available for installation.
+   *
+   * @return The enabled.
+   */
+  public boolean isAvailable()
+  {
+    return this.available;
+  }
+
+  /**
+   * Sets whether or not this feature is available for installation.
+   *
+   * @param available True if available, false otherwise.
+   */
+  public void setAvailable(boolean available)
+  {
+    this.available = available;
   }
 
   /**
